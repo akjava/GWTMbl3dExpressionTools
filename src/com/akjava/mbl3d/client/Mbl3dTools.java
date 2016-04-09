@@ -7,6 +7,10 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.akjava.gwt.html5.client.download.HTML5Download;
+import com.akjava.gwt.html5.client.file.File;
+import com.akjava.gwt.html5.client.file.FileUploadForm;
+import com.akjava.gwt.html5.client.file.FileUtils;
+import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
 import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
@@ -53,17 +57,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.text.shared.Renderer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -71,7 +71,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.ValueListBox;
@@ -80,16 +79,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Mbl3dTools extends SimpleThreeAppEntryPoint {
+public class Mbl3dTools extends ThreeAppEntryPointWithControler {
 
-	private ValueListBox<Mblb3dExpression> expressionsListBox;
+	
 	private HorizontalPanel downloadPanel;
 	private SkinnedMesh mesh;
 	
-	private Map<String,LabeledInputRangeWidget2> ranges;
-	private List<Mblb3dExpression> expressionList;
 	
-	private VerticalPanel gui;
+	
 	private CombinedExpression combinedExpression;
 	private IntegerBox indexBox;
 	
@@ -100,6 +97,7 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 
 	@Override
 	public void onInitializedThree() {
+		//LogUtils.log("onInitializedThree");
 		renderer.setClearColor(0xffffff);//default is black?
 		
 		/*
@@ -219,82 +217,21 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 	}
 				
 				private void initUi() {
-					gui=createRightTopPopup();
+					
 					
 					TabPanel tab=new TabPanel();
-					gui.add(tab);
+					controlerRootPanel.add(tab);
 					
 					
-					VerticalPanel basic=new VerticalPanel();
-					tab.add(basic,"Basic");
+					basicPanel = new BasicExpressionPanel(mesh);
+					tab.add(basicPanel,"Basic");
 					
 					
 					
-					ranges=Maps.newHashMap();
-					Label expression=new Label("Expression");
 					
-					basic.add(expression);
 					
-					expressionsListBox = new ValueListBox<Mblb3dExpression>(new Renderer<Mblb3dExpression>() {
-						@Override
-						public String render(Mblb3dExpression object) {
-							if(object!=null){
-								return object.getName();
-							}
-							return "";
-						}
-
-						@Override
-						public void render(Mblb3dExpression object, Appendable appendable) throws IOException {
-							// TODO Auto-generated method stub
-							
-						}
-					});
-					expressionsListBox.addValueChangeHandler(new ValueChangeHandler<Mblb3dExpression>() {
-						@Override
-						public void onValueChange(ValueChangeEvent<Mblb3dExpression> event) {
-							
-							setMbl3dExpression(event.getValue());
-							
-						}
-					});
-					
-					HorizontalPanel hpanel=new HorizontalPanel();
-					hpanel.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
-					basic.add(hpanel);
-					
-					hpanel.add(expressionsListBox);
-					
-					Button prev=new Button("Prev",new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							Mblb3dExpression expression= expressionsListBox.getValue();
-							int index=expressionList.indexOf(expression);
-							index--;
-							if(index<0){
-								index=expressionList.size()-1;
-							}
-							expressionsListBox.setValue(expressionList.get(index),true);
-						}
-					});
-					hpanel.add(prev);
-					
-					Button next=new Button("Next",new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							Mblb3dExpression expression= expressionsListBox.getValue();
-							int index=expressionList.indexOf(expression);
-							index++;
-							if(index>=expressionList.size()){
-								index=0;
-							}
-							expressionsListBox.setValue(expressionList.get(index),true);
-						}
-					});
-					hpanel.add(next);
-					
+				
+					/*
 					Button shot=new Button("test",new ClickHandler() {
 						
 						@Override
@@ -308,56 +245,12 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 					
 					downloadPanel = new HorizontalPanel();
 					hpanel.add(downloadPanel);
+					*/
 					
 					
 					
 					
 					
-					Label morph=new Label("Morph");
-					basic.add(morph);
-					
-					JSParameter param=mesh.getMorphTargetDictionary().cast();
-					
-					String debug="";//for get key all
-					
-					JsArrayString keys=param.getKeys();
-					for(int i=0;i<keys.length();i++){
-						String key=keys.get(i);
-						final int index=param.getInt(key);
-						String originKey=key;
-						key=key.substring("Expressions_".length());
-						HorizontalPanel inputPanel=new HorizontalPanel();
-						final ToggleButton toggle=new ToggleButton(key, new ClickHandler() {
-							
-							@Override
-							public void onClick(ClickEvent event) {
-								//toggleClicked((ToggleButton)event.getSource());
-							}
-
-							
-						});
-						inputPanel.add(toggle);
-						
-						LabeledInputRangeWidget2 inputRange=new LabeledInputRangeWidget2(key, 0, 1, 0.01);
-						inputRange.getLabel().setVisible(false);
-						inputPanel.add(inputRange);
-						
-						ranges.put(originKey, inputRange);
-						inputRange.getTextBox().setHeight("12px");
-						
-						
-						debug+=key+"\n";
-						
-						
-						inputRange.setValue(0);
-						basic.add(inputPanel);
-						inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
-							@Override
-							public void onValueChange(ValueChangeEvent<Number> event) {
-								mesh.getMorphTargetInfluences().set(index, event.getValue().doubleValue());
-							}
-						});
-					}
 					//LogUtils.log(debug);
 					
 					THREE.XHRLoader().load("models/mbl3d/expressions.txt",new XHRLoadHandler() {
@@ -366,16 +259,16 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 
 						@Override
 						public void onLoad(String text) {
-							expressionList = Lists.newArrayList();
-							expressionList.add(null);//empty
+							final List<Mblb3dExpression> expressionList = Lists.newArrayList();
+							expressionList.add(null);//add empty
 							
 							List<String> names=CSVUtils.splitLinesWithGuava(text);
 							
 							AsyncMultiCaller<String> caller=new AsyncMultiCaller<String>(names) {
 								@Override
 								public void doFinally(boolean cancelled) {
-									expressionsListBox.setValue(expressionList.get(0));
-									expressionsListBox.setAcceptableValues(expressionList);
+									basicPanel.setExpressionList(expressionList);
+									
 									
 									//create graph
 									//pringDebug(expressionList);
@@ -409,83 +302,12 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 				}
 				
 				
-				/*
-				 * 320px
-				 */
-				protected VerticalPanel createRightTopPopup(){
-					popup=new PopupPanel();	
-					
-					
-					VerticalPanel root=new VerticalPanel();
-					popup.add(root);
-					
-					final VerticalPanel controler=new VerticalPanel();
-					controler.setWidth("320px");//some widget broke,like checkbox without parent size
-					controler.setSpacing(2);
-					
-					root.add(controler);
-					
-					final Button bt=new Button("Close Controls");
-					bt.setWidth("320px");
-					bt.addClickHandler(new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							controler.setVisible(!controler.isVisible());
-							if(controler.isVisible()){
-								bt.setText("Close Controls");
-							}else{
-								bt.setText("Open Controls");
-							}
-							updateGUI();
-						}
-					});
-					
-					root.add(bt);
-					root.setSpacing(2);
-					
-					//popup.show();
-					//moveToAroundRightTop(popup);
-					
-					//TODO keep
-					HandlerRegistration resizeHandler = Window.addResizeHandler(new ResizeHandler() {
-						@Override
-						public void onResize(ResizeEvent event) {
-							updateGUI();
-						}
-					});
-					
-					
-					popup.show();
-					moveToAroundRightTop(popup);
-					
-					return controler;
-				}
 				
-				protected void updateGUI(){
-					if(popup==null){
-						return;
-					}
-					popup.show();//for initial,show first before move
-					moveToAroundRightTop(popup);
-					
-				}
-				protected PopupPanel popup;
 				
-				private void moveToAroundRightTop(PopupPanel dialog){
-					int clientWidth=Window.getClientWidth();
-					int scrollTopPos=Window.getScrollTop();
-					int dw=dialog.getOffsetWidth();
-					
-					
-					
-					//LogUtils.log(clientWidth+","+scrollTopPos+","+dw);
-					
-					
-					dialog.setPopupPosition(clientWidth-dw, scrollTopPos+0);
-					
-				}
-	
+				
+				
+				
+	/*
 				private void doShot() {
 					String fileName=expressionsListBox.getValue()==null?"neutral":expressionsListBox.getValue().getName();
 					fileName+=".png";
@@ -493,6 +315,7 @@ public class Mbl3dTools extends SimpleThreeAppEntryPoint {
 					Anchor a=HTML5Download.get().generateBase64DownloadLink(url, "image/png", fileName, "download", true);
 					downloadPanel.add(a);
 				}
+				*/
 				
 					//fix r74 blender exporter blend keys
 					public JsArrayNumber convertMorphVertices(JSONArray morphTargetsVertices){
@@ -721,7 +544,8 @@ public Panel createPatternTab(){
 				//setIndex here
 				Mblb3dExpression expression=combinedExpression.getAt(value);
 				
-				setMbl3dExpression(expression);
+				updateClosedLabel(expression);
+				basicPanel.setMbl3dExpression(expression);
 			}
 		});
 		panel.add(h);
@@ -795,15 +619,17 @@ public Panel createPatternTab(){
 			public void onClick(ClickEvent event) {
 				if(reset.getText().equals("Neutral")){
 				
-					setMbl3dExpression(null);
-					
+					updateClosedLabel(null);
+					basicPanel.setMbl3dExpression(null);
 				reset.setText("Back");
 				prev.setEnabled(false);
 				next.setEnabled(false);
 				}else{
 					int index=indexBox.getValue();
 					Mblb3dExpression expression=combinedExpression.getAt(index);
-					setMbl3dExpression(expression);//setIndex not call fire event
+					updateClosedLabel(expression);
+					basicPanel.setMbl3dExpression(expression);
+					
 					reset.setText("Neutral");
 					prev.setEnabled(true);
 					next.setEnabled(true);
@@ -877,6 +703,84 @@ public Panel createPatternTab(){
 		
 		panel.add(emotionButtons);
 		
+		panel.add(new Label("Tools"));
+		
+		final HorizontalPanel p=new HorizontalPanel();
+		p.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
+		p.add(new Button("dump",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				List<String> lines=Lists.newArrayList();
+				for(int i=1;i<=3671;i++){
+					String line=null;
+					String type=storageControler.getValue(STORAGE_KEY+i, null);
+					String description=storageControler.getValue(STORAGE_DESCRIPTION_KEY+i, null);
+					if(type!=null || description!=null){
+						if(type==null){
+							type="";
+						}
+						line=i+"\t"+type;
+						if(description!=null){
+							line+="\t"+description;
+						}
+					}
+					if(line!=null){
+						lines.add(line);
+					}
+				}
+				String text=Joiner.on("\r\n").join(lines);
+				Anchor a=HTML5Download.get().generateTextDownloadLink(text, "dump.txt", "dump",true);
+				p.add(a);
+			}
+		}));
+		panel.add(p);
+		FileUploadForm uploadDump=FileUtils.createSingleTextFileUploadForm(new DataURLListener() {
+			
+			@Override
+			public void uploaded(File file, String text) {
+				
+				for(int i=1;i<=3671;i++){
+					storageControler.removeValue(STORAGE_KEY+i);
+					storageControler.removeValue(STORAGE_DESCRIPTION_KEY+i);
+				}
+				List<String[]> csvs=CSVUtils.csvTextToArrayList(text, '\t');
+				for(String[] csv:csvs){
+					String index=csv[0];
+					if(index.isEmpty()){
+						continue;
+					}
+					int id=ValuesUtils.toInt(index, -1);
+					if(id!=-1){
+						if(csv.length>1){
+							String type=csv[1];
+							if(!type.isEmpty()){
+							try {
+								storageControler.setValue(STORAGE_KEY+index, type);
+							} catch (StorageException e) {
+								LogUtils.log(e.getMessage());
+							}
+							}
+						}
+						if(csv.length>2){
+							String description=csv[2];
+							if(!description.isEmpty()){
+							try {
+								storageControler.setValue(STORAGE_DESCRIPTION_KEY+index, description);
+							} catch (StorageException e) {
+								LogUtils.log(e.getMessage());
+							}
+							}
+						}
+					}
+				}
+			}
+		}, true, "UTF-8");
+		p.add(uploadDump);
+		uploadDump.setAccept(FileUploadForm.ACCEPT_TXT);
+		
+		
+		
 		
 		return panel;
 	}
@@ -944,44 +848,11 @@ public Panel createPatternTab(){
 			return;
 		}
 		
-		ClosedResult result=Mblb3dExpression.findClosed(expression, expressionList);
+		ClosedResult result=basicPanel.findClosed(expression);
 		closedLabel.setText(result.getExpression().getName()+":"+result.getLength());
 	}
 	
-	protected void setMbl3dExpression(@Nullable Mblb3dExpression expression) {
-		updateClosedLabel(expression);
-		//TODO not set direct via label
-		for(String key:ranges.keySet()){
-			LabeledInputRangeWidget2 widget=ranges.get(key);
-			widget.setValue(0,true);
-		}
-			
-		//clear 0 first
-		/*
-		for(int i=0;i<mesh.getMorphTargetInfluences().length();i++){
-			mesh.getMorphTargetInfluences().set(i,0);
-		}
-		*/
-		
-		if(expression==null){
-			//no value reset
-			return;
-		}
-		
-		//set new values
-		for(String key:expression.getKeys()){
-			
-			LabeledInputRangeWidget2 widget=ranges.get(key);
-			double value=expression.get(key);
-			widget.setValue(value,true);
-			
-			/*
-			int index=mesh.getMorphTargetIndexByName(key);
-			double value=expression.get(key);
-			mesh.getMorphTargetInfluences().set(index, value);
-			*/
-		}
-	}
+	
 	
 	public static  class CombinedExpression{
 		private List<Mblb3dExpression> brows;
@@ -1198,5 +1069,6 @@ public Panel createPatternTab(){
 	
 	private CheckBox hasValueCheck;
 	private EnterKeySupportTextBox descriptionBox;
+	private BasicExpressionPanel basicPanel;
 	
 }

@@ -75,7 +75,7 @@ public abstract class AbstractThreeApp implements AnimationCallback{
 	public abstract void init();
 	public abstract void onWindowResize();
 	
-	private HandlerRegistration resizeHandler;
+	protected HandlerRegistration resizeHandler;
 	//alternative to dat.GUI
 	
 	/*
