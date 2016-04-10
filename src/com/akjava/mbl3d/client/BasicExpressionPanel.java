@@ -24,13 +24,15 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class BasicExpressionPanel extends VerticalPanel{
+public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressionSetter{
 
 	private Map<String,LabeledInputRangeWidget2> ranges;
 	private List<Mblb3dExpression> expressionList;
 	private ValueListBox<Mblb3dExpression> expressionsListBox;
+	Mbl3dExpressionReceiver receiver;
 	
-	public BasicExpressionPanel(final Mesh morphMesh){
+	public BasicExpressionPanel(final Mesh morphMesh,final Mbl3dExpressionReceiver receiver){
+		this.receiver=receiver;
 		ranges=Maps.newHashMap();
 		Label expression=new Label("Expression");
 		
@@ -97,7 +99,38 @@ public class BasicExpressionPanel extends VerticalPanel{
 		});
 		hpanel.add(next);
 		
-		//TODO make export panel
+		Button store=new Button("Store",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Mblb3dExpression expression= new Mblb3dExpression();
+				
+				for(String key:ranges.keySet()){
+					LabeledInputRangeWidget2 widget=ranges.get(key);
+					expression.set(key, widget.getValue());
+				}
+				receiver.receive(expression,false);
+			}
+		});
+		hpanel.add(store);
+		
+		Button overwrite=new Button("Over..",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Mblb3dExpression expression= new Mblb3dExpression();
+				
+				for(String key:ranges.keySet()){
+					LabeledInputRangeWidget2 widget=ranges.get(key);
+					expression.set(key, widget.getValue());
+				}
+				receiver.receive(expression,true);
+			}
+		});
+		hpanel.add(overwrite);
+		overwrite.setTitle("Overwrite current selection");
+		
+		
 		
 		Label morph=new Label("Morph");
 		this.add(morph);
@@ -147,7 +180,7 @@ public class BasicExpressionPanel extends VerticalPanel{
 		}
 	}
 	
-	protected void setMbl3dExpression(@Nullable Mblb3dExpression expression) {
+	public void setMbl3dExpression(@Nullable Mblb3dExpression expression) {
 		//updateClosedLabel(expression);
 		
 		//TODO not set direct via label

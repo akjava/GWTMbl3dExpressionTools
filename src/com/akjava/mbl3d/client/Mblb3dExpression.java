@@ -23,6 +23,9 @@ public void setName(String name) {
 	this.name = name;
 }
 
+public Mblb3dExpression(){
+	this("");
+}
 public Mblb3dExpression(String name){
 	this.name=name;
 	map=new LinkedHashMap<String, Double>();
