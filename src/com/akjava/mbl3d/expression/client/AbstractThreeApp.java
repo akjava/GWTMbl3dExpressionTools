@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import com.akjava.gwt.lib.client.LogUtils;
 import com.google.gwt.animation.client.AnimationScheduler;

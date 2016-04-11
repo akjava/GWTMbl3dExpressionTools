@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

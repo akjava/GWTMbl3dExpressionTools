@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.objects.Mesh;
-import com.akjava.mbl3d.client.Mblb3dExpression.ClosedResult;
+import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.ClickEvent;

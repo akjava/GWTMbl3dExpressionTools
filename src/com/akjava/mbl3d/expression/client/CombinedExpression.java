@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 

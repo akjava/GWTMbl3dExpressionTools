@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Mbl3dTools extends ThreeAppEntryPointWithControler implements Mbl3dExpressionReceiver {
+public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler implements Mbl3dExpressionReceiver {
 
 	
 	private HorizontalPanel downloadPanel;

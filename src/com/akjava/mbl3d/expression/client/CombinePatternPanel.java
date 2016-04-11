@@ -1,4 +1,4 @@
-package com.akjava.mbl3d.client;
+package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
-import com.akjava.mbl3d.client.Mblb3dExpression.ClosedResult;
+import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.dom.client.ClickEvent;
