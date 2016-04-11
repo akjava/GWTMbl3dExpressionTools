@@ -217,9 +217,11 @@ public class DataListPanel extends VerticalPanel{
 		SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
 		dataList.addData(textData);
 		
+		
 		LogUtils.log(textData.getId());
 		
 		dataObjects.addItem(data);
+		dataObjects.setSelected(data, true);
 	}
 	
 	public Mblb3dExpression convertToExpression(@Nullable Mbl3dData data){
