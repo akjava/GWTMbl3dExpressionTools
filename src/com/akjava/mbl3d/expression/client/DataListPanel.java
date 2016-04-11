@@ -1,5 +1,6 @@
 package com.akjava.mbl3d.expression.client;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,9 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataConverter;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparator;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
 import com.google.common.collect.Lists;
@@ -25,6 +28,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -38,9 +43,9 @@ public class DataListPanel extends VerticalPanel{
 	
 	private StorageDataList dataList;
 	private EasyCellTableObjects<Mbl3dData> dataObjects;
-	private Mbl3dExpressionSetter mbl3dExpressionSetter;
+	private BasicExpressionPanel mbl3dExpressionSetter;
 	private Mbl3dDataEditor editor;
-	public DataListPanel(StorageControler storageControler,final Mbl3dExpressionSetter mbl3dExpressionSetter){
+	public DataListPanel(StorageControler storageControler,final BasicExpressionPanel mbl3dExpressionSetter){
 		dataList = new StorageDataList(storageControler,StorageKeys.DATA_LIST_KEY);
 		this.mbl3dExpressionSetter=mbl3dExpressionSetter;
 		
@@ -89,6 +94,9 @@ public class DataListPanel extends VerticalPanel{
 						}
 					});
 			    	bts.add(removeBt);
+			    	
+			    	comparator=new Mbl3dDataComparator(emotions);
+			    	updateListData();
 				
 			}
 		});
@@ -167,6 +175,7 @@ public class DataListPanel extends VerticalPanel{
 				driver.edit(selection);
 				
 				mbl3dExpressionSetter.setMbl3dExpression(convertToExpression(selection));
+				mbl3dExpressionSetter.setOverwriteEnable(true);
 			}
 		};
 		
@@ -184,15 +193,36 @@ public class DataListPanel extends VerticalPanel{
 		dataObjects.update();
 		
 		add(table);
+		
+		HorizontalPanel panel=new HorizontalPanel();
+		add(panel);
+		Mbl3dDataComparatorValueBox sortBox = new Mbl3dDataComparatorValueBox();
+		panel.add(sortBox);
+		sortBox.addValueChangeHandler(new ValueChangeHandler<Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Mbl3dDataComparatorValue> event) {
+				if(comparator==null){
+					return;
+				}
+				comparator.setOrder(event.getValue().getMode());
+				updateListData();
+			}
+		});
 	}
+	private Mbl3dDataComparator comparator;
 	
+	protected void updateListData() {
+		Collections.sort(dataObjects.getDatas(), comparator);
+		dataObjects.update();
+	}
+
 	private void doUpdate() {
 		Mbl3dData data=driver.flush();
 		if(data!=null){
 			SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
 			
 			dataList.updateData(textData);
-			dataObjects.update();
+			updateListData();
 		}
 	}
 	
@@ -215,10 +245,9 @@ public class DataListPanel extends VerticalPanel{
 		data.setCdate(System.currentTimeMillis());
 		
 		SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
-		dataList.addData(textData);
+		int id=dataList.addData(textData);
 		
-		
-		LogUtils.log(textData.getId());
+		data.setId(id);
 		
 		dataObjects.addItem(data);
 		dataObjects.setSelected(data, true);
@@ -248,6 +277,8 @@ public class DataListPanel extends VerticalPanel{
 	
 	 interface Driver extends SimpleBeanEditorDriver< Mbl3dData,  Mbl3dDataEditor> {}
 	 Driver driver = GWT.create(Driver.class);
+
+	
 
 	public void onModuleLoad() {
 		

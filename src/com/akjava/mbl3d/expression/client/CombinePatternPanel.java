@@ -125,7 +125,8 @@ public class CombinePatternPanel extends VerticalPanel{
 				Mblb3dExpression expression=combinedExpression.getAt(value);
 				
 				updateClosedLabel(expression);
-				basicPanel.setMbl3dExpression(expression);
+				updateBasicPanelExpression(expression);
+				
 			}
 		});
 		this.add(h);
@@ -204,7 +205,7 @@ public class CombinePatternPanel extends VerticalPanel{
 				if(reset.getText().equals("Neutral")){
 				
 					updateClosedLabel(null);
-					basicPanel.setMbl3dExpression(null);
+					updateBasicPanelExpression(null);
 				reset.setText("Back");
 				prev.setEnabled(false);
 				next.setEnabled(false);
@@ -212,7 +213,7 @@ public class CombinePatternPanel extends VerticalPanel{
 					int index=indexBox.getValue();
 					Mblb3dExpression expression=combinedExpression.getAt(index);
 					updateClosedLabel(expression);
-					basicPanel.setMbl3dExpression(expression);
+					updateBasicPanelExpression(expression);
 					
 					reset.setText("Neutral");
 					prev.setEnabled(true);
@@ -364,6 +365,11 @@ public class CombinePatternPanel extends VerticalPanel{
 		uploadDump.setAccept(FileUploadForm.ACCEPT_TXT);
 	}
 	
+	protected void updateBasicPanelExpression(Mblb3dExpression expression) {
+		basicPanel.setMbl3dExpression(expression);
+		basicPanel.setOverwriteEnable(false);//changed
+	}
+
 	public void selectEmotion(Emotion emotion){
 		String key=StorageKeys.STORAGE_KEY+indexBox.getValue();
 		

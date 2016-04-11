@@ -154,6 +154,7 @@ public  class Mbl3dDataEditor extends VerticalPanel implements Editor<Mbl3dData>
 			String name=value.getName()!=null?value.getName():"";
 			nameBox.setValue(name);
 			
-			dateLabel.setText(DataListPanel.dateFormat.format(new Date(value.getCdate())));
+			String id="#"+value.getId()+" ";
+			dateLabel.setText(id+DataListPanel.dateFormat.format(new Date(value.getCdate())));
 		}
 }

@@ -24,12 +24,13 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressionSetter{
+public class BasicExpressionPanel extends VerticalPanel {
 
 	private Map<String,LabeledInputRangeWidget2> ranges;
 	private List<Mblb3dExpression> expressionList;
 	private ValueListBox<Mblb3dExpression> expressionsListBox;
 	Mbl3dExpressionReceiver receiver;
+	private Button overwriteButton;
 	
 	public BasicExpressionPanel(final Mesh morphMesh,final Mbl3dExpressionReceiver receiver){
 		this.receiver=receiver;
@@ -58,6 +59,7 @@ public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressi
 			public void onValueChange(ValueChangeEvent<Mblb3dExpression> event) {
 				
 				setMbl3dExpression(event.getValue());
+				setOverwriteEnable(false);
 				
 			}
 		});
@@ -114,7 +116,7 @@ public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressi
 		});
 		hpanel.add(store);
 		
-		Button overwrite=new Button("Over..",new ClickHandler() {
+		overwriteButton = new Button("Over..",new ClickHandler() {
 			
 			@Override
 			public void onClick(ClickEvent event) {
@@ -127,9 +129,9 @@ public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressi
 				receiver.receive(expression,true);
 			}
 		});
-		hpanel.add(overwrite);
-		overwrite.setTitle("Overwrite current selection");
-		
+		hpanel.add(overwriteButton);
+		overwriteButton.setTitle("Overwrite current selection");
+		overwriteButton.setEnabled(false);
 		
 		
 		Label morph=new Label("Morph");
@@ -178,6 +180,10 @@ public class BasicExpressionPanel extends VerticalPanel implements Mbl3dExpressi
 				}
 			});
 		}
+	}
+	
+	public void setOverwriteEnable(boolean enabled){
+		overwriteButton.setEnabled(enabled);
 	}
 	
 	public void setMbl3dExpression(@Nullable Mblb3dExpression expression) {
