@@ -1,6 +1,5 @@
 package com.akjava.mbl3d.expression.client;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,30 +15,22 @@ import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.ValuesUtils;
-import com.google.common.base.Converter;
-import com.google.common.base.Joiner;
-import com.google.common.base.Joiner.MapJoiner;
-import com.google.common.base.Splitter;
-import com.google.common.base.Splitter.MapSplitter;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataConverter;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.editor.client.Editor;
-import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.SimpleBeanEditorDriver;
-import com.google.gwt.editor.client.ValueAwareEditor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataListPanel extends VerticalPanel{
@@ -125,11 +116,11 @@ public class DataListPanel extends VerticalPanel{
 				};
 				table.addColumn(typeColumn);
 				
-				TextColumn<Mbl3dData> descriptionColumn=new TextColumn<Mbl3dData>() {
+				TextColumn<Mbl3dData> nameColumn=new TextColumn<Mbl3dData>() {
 					@Override
 					public String getValue(Mbl3dData object) {
-						if(object.getDescription()!=null){
-							return object.getDescription();
+						if(object.getName()!=null){
+							return object.getName();
 						}
 						
 						
@@ -137,8 +128,27 @@ public class DataListPanel extends VerticalPanel{
 						return "";
 					}
 				};
-				table.addColumn(descriptionColumn);
+				table.addColumn(nameColumn);
 				
+				TextColumn<Mbl3dData> descriptionColumn=new TextColumn<Mbl3dData>() {
+					@Override
+					public String getValue(Mbl3dData object) {
+						if(object.getDescription()!=null){
+							return object.getDescription();
+						}
+						
+						if(object.getName()==null && object.getType()==null){
+							return dateFormat.format(new Date(object.getCdate()));
+						}
+						
+						return "";
+					}
+				};
+				table.addColumn(descriptionColumn);
+				table.setColumnWidth(2, "200px");
+				
+				
+				/*
 				TextColumn<Mbl3dData> dateColumn=new TextColumn<Mbl3dData>() {
 					@Override
 					public String getValue(Mbl3dData object) {
@@ -146,10 +156,11 @@ public class DataListPanel extends VerticalPanel{
 					}
 				};
 				table.addColumn(dateColumn);
+				*/
 			}
 		};
 		
-		dataObjects = new EasyCellTableObjects<DataListPanel.Mbl3dData>(table) {
+		dataObjects = new EasyCellTableObjects<Mbl3dData>(table) {
 			@Override
 			public void onSelect(Mbl3dData selection) {
 				
@@ -178,59 +189,16 @@ public class DataListPanel extends VerticalPanel{
 	private void doUpdate() {
 		Mbl3dData data=driver.flush();
 		if(data!=null){
-			String text=new Mbl3dDataConverter().reverse().convert(data);
-			dataList.updateData(data.getId(), "", text);
+			SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
+			
+			dataList.updateData(textData);
 			dataObjects.update();
 		}
 	}
 	
-	public static class Mbl3dDataSimpleTextConverter extends Converter<SimpleTextData,Mbl3dData>{
-		Mbl3dDataConverter converter=new Mbl3dDataConverter();
-		@Override
-		protected Mbl3dData doForward(SimpleTextData data) {
-			Mbl3dData mData=converter.convert(data.getData());
-			mData.setId(data.getId());
-			mData.setCdate(data.getCdate());
-			return mData;
-		}
-
-		@Override
-		protected SimpleTextData doBackward(Mbl3dData data) {
-			SimpleTextData sData=new SimpleTextData("",converter.reverse().convert(data));
-			sData.setId(data.getId());
-			sData.setCdate(data.getCdate());
-			return sData;
-		}
-		
-	}
+	
 	//I'm not sure split 2 classes?
-	public static class Mbl3dDataConverter extends Converter<String,Mbl3dData>{
-		public static final MapSplitter splitter=Splitter.on("\t").withKeyValueSeparator("\f");
-		public static final MapJoiner joiner=Joiner.on("\t").withKeyValueSeparator("\f");
-		@Override
-		protected Mbl3dData doForward(String text) {
-			Map<String,String> map=Maps.newHashMap(splitter.split(text));
-			
-			String type=map.remove("type");
-			String description=map.remove("description");
-			
-			
-			return new Mbl3dData(type, description, map);
-		}
 
-		@Override
-		protected String doBackward(Mbl3dData data) {
-			Map<String,String> copy=Maps.newHashMap(data.getValues());
-			if(data.getType()!=null){
-				copy.put("type", data.getType());
-			}
-			if(data.getDescription()!=null){
-				copy.put("description", data.getDescription());
-			}
-			
-			return joiner.join(copy);
-		}	
-	}
 	
 	
 	private Map<String,String> mblb3dExpressionToMap(Mblb3dExpression expression){
@@ -241,13 +209,15 @@ public class DataListPanel extends VerticalPanel{
 		return values;
 	}
 	
-	public void add(Mblb3dExpression expression,String type,String description){
+	public void add(Mblb3dExpression expression,String name,String type,String description){
 		Map<String,String> values=mblb3dExpressionToMap(expression);
-		Mbl3dData data=new Mbl3dData(type,description,values);
+		Mbl3dData data=new Mbl3dData(name,type,description,values);
 		data.setCdate(System.currentTimeMillis());
-		String text=new Mbl3dDataConverter().reverse().convert(data);
-		int id=dataList.addData("", text);
-		data.setId(id);
+		
+		SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
+		dataList.addData(textData);
+		
+		LogUtils.log(textData.getId());
 		
 		dataObjects.addItem(data);
 	}
@@ -262,6 +232,9 @@ public class DataListPanel extends VerticalPanel{
 			if(key.equals("description")){
 				continue;
 			}
+			if(key.equals("name")){
+				continue;
+			}
 			expression.set(key, ValuesUtils.toDouble(data.getValues().get(key), 0));
 		}
 		}
@@ -269,53 +242,7 @@ public class DataListPanel extends VerticalPanel{
 	}
 	
 	
-	public static class Mbl3dData{
-		private long cdate;
-		public long getCdate() {
-			return cdate;
-		}
-		public void setCdate(long cdate) {
-			this.cdate = cdate;
-		}
-		private int id;
-		public int getId() {
-			return id;
-		}
-		public void setId(int id) {
-			this.id = id;
-		}
-		private String type;
-		public String getType() {
-			return type;
-		}
-		public void setType(String type) {
-			this.type = type;
-		}
-		public String getDescription() {
-			return description;
-		}
-		public void setDescription(String description) {
-			this.description = description;
-		}
-		public Map<String, String> getValues() {
-			return values;
-		}
-		public void setValues(Map<String, String> values) {
-			this.values = values;
-		}
-		public Mbl3dData(String type, String description, Map<String, String> values) {
-			super();
-			this.type = type;
-			this.description = description;
-			this.values = values;
-		}
-		private String description;
-		private Map<String,String> values;
-		
-		public String toString(){
-			return type+","+description;
-		}
-	}
+	
 	
 	 interface Driver extends SimpleBeanEditorDriver< Mbl3dData,  Mbl3dDataEditor> {}
 	 Driver driver = GWT.create(Driver.class);
@@ -331,116 +258,6 @@ public class DataListPanel extends VerticalPanel{
 }
 
 	
-	public class Mbl3dDataEditor extends VerticalPanel implements Editor<Mbl3dData>,ValueAwareEditor<Mbl3dData>{
-		/*
-		 * watch out start with null
-		 */
-		private List<Emotion> emotions;
-		private ValueListBox<Emotion> emotionsBox;
-		private TextBox descriptionBox;
-		private Mbl3dData value;
-		public Mbl3dData getValue() {
-			return value;
-		}
-		public Mbl3dDataEditor(List<Emotion> emotions){
-			this.emotions=Lists.newArrayList(emotions);
-			this.emotions.add(0, null);
-			emotionsBox = new ValueListBox<Emotion>(new Renderer<Emotion>() {
-
-				@Override
-				public String render(Emotion object) {
-					if(object!=null){
-						return object.getPrimary()+" - "+object.getSecondary();
-					}
-					return "";
-				}
-
-				@Override
-				public void render(Emotion object, Appendable appendable) throws IOException {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			emotionsBox.setAcceptableValues(emotions);
-			
-			HorizontalPanel h1=new HorizontalPanel();
-			this.add(h1);
-			Label type=new Label("type");
-			type.setWidth("100px");
-			h1.add(type);
-			h1.add(emotionsBox);
-			
-			//description text-area
-			HorizontalPanel h2=new HorizontalPanel();
-			this.add(h2);
-			Label description=new Label("description");
-			description.setWidth("100px");
-			h2.add(description);
-			
-			descriptionBox = new TextBox();
-			h2.add(descriptionBox);
-			
-			//TODO link to basic panel
-		}
-		@Override
-			public void setDelegate(EditorDelegate<Mbl3dData> delegate) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void flush() {
-				if(value==null){
-					return;
-				}
-				Emotion emotion=emotionsBox.getValue();
-				String type=emotion==null?null:emotion.getSecondary();
-				
-				String description=descriptionBox.getText();
-				if(description.isEmpty()){
-					description=null;
-				}
-				
-				value.setType(type);
-				value.setDescription(description);
-				
-			}
-
-			@Override
-			public void onPropertyChange(String... paths) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void setValue(Mbl3dData value) {
-				this.value=value;
-				if(value==null){
-					emotionsBox.setEnabled(false);
-					descriptionBox.setEnabled(false);
-					
-					emotionsBox.setValue(null);
-					descriptionBox.setValue("");
-					return;
-				}else{
-					emotionsBox.setEnabled(true);
-					descriptionBox.setEnabled(true);
-				}
-				
-				emotionsBox.setValue(null);
-				for(Emotion emotion:emotions){
-					if(emotion==null){
-						continue;
-					}
-					if(emotion.getSecondary().equals(value.getType())){
-						emotionsBox.setValue(emotion);
-					}
-				}
-				String description=value.getDescription()!=null?value.getDescription():"";
-				descriptionBox.setValue(description);
-				
-			}
-	}
 
 
 	public void overwrite(Mblb3dExpression expression) {

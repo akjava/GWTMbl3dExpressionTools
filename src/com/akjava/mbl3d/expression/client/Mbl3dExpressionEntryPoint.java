@@ -392,7 +392,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		if(overwrite){
 		dataListPanel.overwrite(expression);
 		}else{
-		dataListPanel.add(expression, null, null);
+		dataListPanel.add(expression,null, null, null);
 		
 		}
 		tab.selectTab(2);//data list
