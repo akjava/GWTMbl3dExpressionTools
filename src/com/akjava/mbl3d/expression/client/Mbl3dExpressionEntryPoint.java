@@ -239,7 +239,6 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					controlerRootPanel.add(tab);
 					
 					
-					
 					tab.add(createBasicPanel(),"Basic");
 					
 					
@@ -267,10 +266,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					tab.add(createPatternTab(),"Pattern");
 					
-					tab.selectTab(0);//for debug;
+					
 					
 					tab.add(createDataListTab(),"DataList");
 					
+					tab.add(cratePreferenceTab(),"Preference");
+					
+					//tab.selectTab(3);//for debug;
 				}
 				
 				
@@ -289,6 +291,12 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				}
 				*/
 				
+					private Widget cratePreferenceTab() {
+					PreferenceTab preferenceTab=new PreferenceTab(dataListPanel);
+					//if need set
+					return preferenceTab;
+				}
+
 					private Panel createDataListTab() {
 					dataListPanel = new DataListPanel(storageControler,basicPanel);
 					

@@ -3,6 +3,7 @@ package com.akjava.mbl3d.expression.client.datalist;
 import java.util.Comparator;
 import java.util.List;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.mbl3d.expression.client.Emotion;
 
 
@@ -10,8 +11,10 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 	private  int order;
 	private List<Emotion> emotions;
 	
-	public Mbl3dDataComparator(List<Emotion> emotions) {
+	public Mbl3dDataComparator() {
 		super();
+	}
+	public void setEmotions(List<Emotion> emotions) {
 		this.emotions = emotions;
 	}
 	public int getOrder() {
@@ -27,14 +30,20 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 	public static final int ORDER_TYPE=4;
 	@Override
 	public int compare(Mbl3dData o1, Mbl3dData o2) {
+		
 		if(order==ORDER_ID_DESC){
 			return o2.getId()-o1.getId();
 		}
 		if(order==ORDER_AZ){
-			return o1.getName().compareTo(o2.getName());
+			String name1=o1.getName()!=null?o1.getName():"";
+			String name2=o2.getName()!=null?o2.getName():"";
+			return name1.compareTo(name2);
 		}
 		if(order==ORDER_ZA){
-			return o2.getName().compareTo(o1.getName());
+			String name1=o1.getName()!=null?o1.getName():"";
+			String name2=o2.getName()!=null?o2.getName():"";
+
+			return name2.compareTo(name1);
 		}
 		if(order==ORDER_TYPE){
 			return findEmotionAt(o1) - findEmotionAt(o2);

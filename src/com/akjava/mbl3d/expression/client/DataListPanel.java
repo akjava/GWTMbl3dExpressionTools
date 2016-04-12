@@ -11,6 +11,7 @@ import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageDataList;
 import com.akjava.gwt.lib.client.datalist.SimpleTextData;
+import com.akjava.gwt.lib.client.datalist.SimpleTextDatasOwner;
 import com.akjava.gwt.lib.client.widget.cell.EasyCellTableObjects;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.three.client.js.THREE;
@@ -38,7 +39,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class DataListPanel extends VerticalPanel{
+public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner{
 	public static DateTimeFormat dateFormat=DateTimeFormat.getFormat("yy/MM/dd HH:mm");
 	
 	private StorageDataList dataList;
@@ -95,7 +96,8 @@ public class DataListPanel extends VerticalPanel{
 					});
 			    	bts.add(removeBt);
 			    	
-			    	comparator=new Mbl3dDataComparator(emotions);
+			    	comparator.setEmotions(emotions);
+			    	
 			    	updateListData();
 				
 			}
@@ -180,17 +182,10 @@ public class DataListPanel extends VerticalPanel{
 		};
 		
 		
-		
+		comparator=new Mbl3dDataComparator();
+		comparator.setOrder(Mbl3dDataComparator.ORDER_ID_DESC);
 		//load
-		List<Mbl3dData> datas=Lists.newArrayList(
-				new Mbl3dDataSimpleTextConverter().convertAll(dataList.getDataList())
-				);
-		
-		//datas.add(new Mbl3dData("hello", "world", null));
-		//datas.add(new Mbl3dData("hello2", "world", null));
-		
-		dataObjects.setDatas(datas);
-		dataObjects.update();
+		initializeListData();
 		
 		add(table);
 		
@@ -211,6 +206,19 @@ public class DataListPanel extends VerticalPanel{
 	}
 	private Mbl3dDataComparator comparator;
 	
+	public void initializeListData(){
+		List<Mbl3dData> datas=Lists.newArrayList(
+				new Mbl3dDataSimpleTextConverter().convertAll(dataList.getDataList())
+				);
+		
+		LogUtils.log("size:"+datas.size());
+		for(int i=0;i<datas.size();i++){
+			LogUtils.log(i+","+datas.get(i));
+		}
+		
+		dataObjects.setDatas(datas);
+		updateListData();
+	}
 	protected void updateListData() {
 		Collections.sort(dataObjects.getDatas(), comparator);
 		dataObjects.update();
@@ -301,5 +309,9 @@ public class DataListPanel extends VerticalPanel{
 		editor.getValue().setValues(mblb3dExpressionToMap(expression));
 		//editor.getValue().
 		doUpdate();
+	}
+	@Override
+	public StorageDataList getStorageDataList() {
+		return dataList;
 	}
 }
