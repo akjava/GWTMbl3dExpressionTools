@@ -53,16 +53,21 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	private int windowHalfY;
 	
 	
-	
+	public static Mbl3dExpressionEntryPoint instance;
 	
 	
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
 		return GWTParamUtils.WebGLRenderer().preserveDrawingBuffer(true);
 	}
+	
+	public String toImageDataUrl(){
+		return renderer.gwtPngDataUrl();
+	}
 
 	@Override
 	public void onInitializedThree() {
+		instance=this;
 		//LogUtils.log("onInitializedThree");
 		renderer.setClearColor(0xffffff);//default is black?
 		
@@ -272,7 +277,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					tab.add(cratePreferenceTab(),"Preference");
 					
-					//tab.selectTab(3);//for debug;
+					tab.selectTab(0);
 				}
 				
 				

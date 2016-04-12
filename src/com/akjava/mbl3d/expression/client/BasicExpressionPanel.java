@@ -109,7 +109,13 @@ public class BasicExpressionPanel extends VerticalPanel {
 				
 				for(String key:ranges.keySet()){
 					LabeledInputRangeWidget2 widget=ranges.get(key);
-					expression.set(key, widget.getValue());
+					
+					//need only
+					double value=widget.getValue();
+					if(value!=0){
+						expression.set(key, value);
+					}
+					
 				}
 				receiver.receive(expression,false);
 			}
@@ -124,7 +130,11 @@ public class BasicExpressionPanel extends VerticalPanel {
 				
 				for(String key:ranges.keySet()){
 					LabeledInputRangeWidget2 widget=ranges.get(key);
-					expression.set(key, widget.getValue());
+					//need only
+					double value=widget.getValue();
+					if(value!=0){
+						expression.set(key, value);
+					}
 				}
 				receiver.receive(expression,true);
 			}

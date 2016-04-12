@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageDataList;
@@ -35,8 +36,10 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner{
@@ -190,7 +193,10 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		add(table);
 		
 		HorizontalPanel panel=new HorizontalPanel();
+		panel.setVerticalAlignment(ALIGN_MIDDLE);
 		add(panel);
+		panel.add(new Label("Order:"));
+		
 		Mbl3dDataComparatorValueBox sortBox = new Mbl3dDataComparatorValueBox();
 		panel.add(sortBox);
 		sortBox.addValueChangeHandler(new ValueChangeHandler<Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue>() {
@@ -203,6 +209,65 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				updateListData();
 			}
 		});
+		
+		HorizontalPanel toolsPanel=new HorizontalPanel();
+		toolsPanel.setVerticalAlignment(ALIGN_MIDDLE);
+		add(toolsPanel);
+		toolsPanel.add(new Label("Tools:"));
+		
+		final HorizontalPanel dlPanel=new HorizontalPanel();
+		dlPanel.setSpacing(4);
+		
+		Button imageBt=new Button("Image",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				//still confusing how to handle non indexed data.
+				String fileBaseName="unknown";
+				Mbl3dData selection=dataObjects.getSelection();
+				if(selection==null){
+					Window.alert("export only selection");
+					return;
+				}
+				
+				if(selection!=null && selection.getName()!=null){
+					fileBaseName=selection.getName();
+				}
+				
+				String url=Mbl3dExpressionEntryPoint.instance.toImageDataUrl();
+				Anchor a=HTML5Download.get().generateBase64DownloadLink(url, "image/png", fileBaseName+".png", "Download", true);
+				dlPanel.clear();
+				dlPanel.add(a);
+			}
+		});
+		toolsPanel.add(imageBt);
+		Button jsonBt=new Button("JSON",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String fileBaseName="unknown";
+				Mbl3dData selection=dataObjects.getSelection();
+				if(selection==null){
+					Window.alert("export only selection");
+					return;
+				}
+				
+				if(selection!=null && selection.getName()!=null){
+					fileBaseName=selection.getName();
+				}
+				
+				//new Mbl
+				Mblb3dExpression expression=convertToExpression(selection);
+				String json=new Mbl3dExpressionConverter().reverse().convert(expression);
+				
+				
+				
+				Anchor a=HTML5Download.get().generateTextDownloadLink(json, fileBaseName+".json", "Download", true);
+				dlPanel.clear();
+				dlPanel.add(a);
+			}
+		});
+		toolsPanel.add(jsonBt);
+		toolsPanel.add(dlPanel);
+		
 	}
 	private Mbl3dDataComparator comparator;
 	
@@ -259,6 +324,8 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		
 		dataObjects.addItem(data);
 		dataObjects.setSelected(data, true);
+		
+		updateListData();//sort
 	}
 	
 	public Mblb3dExpression convertToExpression(@Nullable Mbl3dData data){
@@ -279,6 +346,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		}
 		return expression;
 	}
+	
 	
 	
 	

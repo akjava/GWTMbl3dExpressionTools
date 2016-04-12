@@ -3,6 +3,7 @@ package com.akjava.mbl3d.expression.client;
 import java.util.Set;
 
 import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.google.common.base.Converter;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -58,9 +59,35 @@ public class Mbl3dExpressionConverter extends Converter<String, Mblb3dExpression
 	}
 
 	@Override
-	protected String doBackward(Mblb3dExpression b) {
-		// TODO Auto-generated method stub
-		return null;
+	protected String doBackward(Mblb3dExpression data) {
+		JSONObject root=new JSONObject();
+		
+		JSParameter parameter=JSParameter.createParameter();
+		for(String key:data.getKeys()){
+			double value=data.get(key);
+			if(value==0){
+				continue;
+			}
+			double convertedValue=0;
+			if(key.endsWith("_min")){
+				convertedValue=0.5-value/2;
+			}else if(key.endsWith("_max")){
+				convertedValue=0.5+value/2;
+			}else{
+				LogUtils.log("invalid key skipped:"+key);
+				continue;
+			}
+			String convertedKey=key.substring(0,key.length()-4);
+			if(parameter.exists(convertedKey)){
+				LogUtils.log("invalidly conflict key.overwrited:"+key);
+			}
+			parameter.set(convertedKey, convertedValue);
+		}
+		
+		JSONObject structuralValue=new JSONObject(parameter);
+		root.put("structural", structuralValue);
+		
+		return root.toString();
 	}
 
 }
