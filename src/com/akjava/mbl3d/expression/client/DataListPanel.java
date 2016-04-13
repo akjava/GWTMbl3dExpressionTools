@@ -283,6 +283,22 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 	protected void updateListData() {
 		Collections.sort(dataObjects.getDatas(), comparator);
 		dataObjects.update();
+		
+		//fix page selection
+		if(dataObjects.isSelected()){
+			int index=dataObjects.getSelectedIndex().get()+1;
+			int pageSize=dataObjects.getSimpleCellTable().getPager().getPageSize();
+			
+			//LogUtils.log(index+","+pageSize);
+			
+			if(index>pageSize){
+				int page=index/pageSize;
+				dataObjects.getSimpleCellTable().getPager().setPage(page);
+				//LogUtils.log(page);
+			}
+		}
+		
+		
 	}
 
 	private void doUpdate() {
