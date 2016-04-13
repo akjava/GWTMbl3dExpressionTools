@@ -6,10 +6,15 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
+import com.google.common.base.Converter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -159,20 +164,18 @@ public class BasicExpressionPanel extends VerticalPanel {
 			String originKey=key;
 			key=key.substring("Expressions_".length());
 			HorizontalPanel inputPanel=new HorizontalPanel();
-			final ToggleButton toggle=new ToggleButton(key, new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					//toggleClicked((ToggleButton)event.getSource());
-				}
-
-				
-			});
-			inputPanel.add(toggle);
 			
-			LabeledInputRangeWidget2 inputRange=new LabeledInputRangeWidget2(key, 0, 1, 0.01);
+			Label nameLabel=new Label(key);
+			
+			
+			inputPanel.add(nameLabel);
+			nameLabel.setWidth("85px");
+			
+			
+			
+			final LabeledInputRangeWidget2 inputRange=new LabeledInputRangeWidget2(key, 0, 1, 0.01);
 			inputRange.getLabel().setVisible(false);
-			inputPanel.add(inputRange);
+			inputRange.getRange().setWidth("110px");
 			
 			ranges.put(originKey, inputRange);
 			inputRange.getTextBox().setHeight("12px");
@@ -182,6 +185,26 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			
 			inputRange.setValue(0);
+			
+			Button zeorBt=new Button("0",new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					inputRange.setValue(0, true);
+				}
+			});
+			inputPanel.add(zeorBt);
+			Button fullBt=new Button("1",new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					inputRange.setValue(1, true);
+				}
+			});
+			inputPanel.add(fullBt);
+			
+			inputPanel.add(inputRange);
+			
 			this.add(inputPanel);
 			inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
 				@Override
@@ -236,7 +259,40 @@ public class BasicExpressionPanel extends VerticalPanel {
 		this.expressionList=expressionList;
 		expressionsListBox.setValue(expressionList.get(0));
 		expressionsListBox.setAcceptableValues(expressionList);
+		
+		//testConverter();
 	}
+	private void testConverter(List<Mblb3dExpression> expressionList){
+		Mbl3dExpressionConverter converter=new Mbl3dExpressionConverter();
+		Converter<Mblb3dExpression, String> reverse=new Mbl3dExpressionConverter().reverse();
+		//test
+		for(Mblb3dExpression expression:expressionList){
+			if(expression==null){
+				continue;
+			}
+			String json=reverse.convert(expression);
+			Mblb3dExpression converted=converter.convert(json);
+			LogUtils.log(expression.getName());
+			
+			new MapDifferenceLogger<String,Double>().compare(expression.getMap(),converted.getMap());
+			
+		}
+	}
+	
+	public static class MapDifferenceLogger<T,E>{
+		public boolean compare(Map<T,E> map1,Map<T,E> map2){
+			MapDifference<T, E> difference=Maps.difference(map1,map2);
+			boolean result=difference.areEqual();
+			if(!result){
+				Map<T,ValueDifference<E>> diffs=difference.entriesDiffering();
+				for(T key:diffs.keySet()){
+					LogUtils.log(key+","+diffs.get(key).leftValue()+","+diffs.get(key).rightValue());
+				}
+			}
+			return result;
+		}
+	}
+	
 	public ClosedResult findClosed(Mblb3dExpression expression){
 		return Mblb3dExpression.findClosed(expression, expressionList);
 	}

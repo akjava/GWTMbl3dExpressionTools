@@ -13,6 +13,10 @@ public class Mblb3dExpression {
 
 
 private Map<String,Double> map;
+public Map<String, Double> getMap() {
+	return map;
+}
+
 private String name;
 
 public String getName() {

@@ -276,10 +276,6 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				new Mbl3dDataSimpleTextConverter().convertAll(dataList.getDataList())
 				);
 		
-		LogUtils.log("size:"+datas.size());
-		for(int i=0;i<datas.size();i++){
-			LogUtils.log(i+","+datas.get(i));
-		}
 		
 		dataObjects.setDatas(datas);
 		updateListData();
@@ -313,10 +309,11 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 	}
 	
 	public void add(Mblb3dExpression expression,String name,String type,String description){
+		
 		Map<String,String> values=mblb3dExpressionToMap(expression);
 		Mbl3dData data=new Mbl3dData(name,type,description,values);
 		data.setCdate(System.currentTimeMillis());
-		
+	
 		SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
 		int id=dataList.addData(textData);
 		
@@ -324,7 +321,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		
 		dataObjects.addItem(data);
 		dataObjects.setSelected(data, true);
-		
+	
 		updateListData();//sort
 	}
 	

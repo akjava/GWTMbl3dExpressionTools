@@ -47,7 +47,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler implements Mbl3dExpressionReceiver {
 
 	
-	private HorizontalPanel downloadPanel;
 	private SkinnedMesh mesh;
 	private int windowHalfX;
 	private int windowHalfY;
@@ -305,6 +304,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					private Panel createDataListTab() {
 					dataListPanel = new DataListPanel(storageControler,basicPanel);
 					
+					
+					
 					return dataListPanel;
 				}
 
@@ -339,6 +340,12 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 	}
 	
+	
+	
+	public void setSelectedTab(int index){
+		tab.selectTab(index);
+	}
+	
 	int mouseX;
 	int mouseY;
 	protected void onDocumentMouseMove(MouseMoveEvent event) {
@@ -369,10 +376,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	
 	private Panel createPatternTab(){
-		CombinePatternPanel panel=new CombinePatternPanel(storageControler, basicPanel);
+		combinePatternPanel = new CombinePatternPanel(storageControler, basicPanel);
 		
 		
-		return panel;
+		return combinePatternPanel;
 	}
 	
 
@@ -394,11 +401,24 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	private BasicExpressionPanel basicPanel;
 	private DataListPanel dataListPanel;
+	public BasicExpressionPanel getBasicPanel() {
+		return basicPanel;
+	}
+
+	public DataListPanel getDataListPanel() {
+		return dataListPanel;
+	}
+
 	private TabPanel tab;
+	private CombinePatternPanel combinePatternPanel;
 
 
 
 
+
+	public CombinePatternPanel getCombinePatternPanel() {
+		return combinePatternPanel;
+	}
 
 	@Override
 	public void receive(Mblb3dExpression expression,boolean overwrite) {

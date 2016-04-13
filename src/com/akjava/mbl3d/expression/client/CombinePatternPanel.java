@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.eclipse.jetty.util.StringUtil;
+
 import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
@@ -17,6 +19,7 @@ import com.akjava.gwt.lib.client.widget.EnterKeySupportTextBox;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.CSVUtils;
+import com.akjava.lib.common.utils.StringUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
 import com.google.common.base.Joiner;
@@ -34,6 +37,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class CombinePatternPanel extends VerticalPanel{
@@ -49,9 +53,8 @@ public class CombinePatternPanel extends VerticalPanel{
 	
 	private BasicExpressionPanel basicPanel;
 	
-
 	private CheckBox hasValueCheck;
-	
+	private EmotionsData emotionsData;
 	public CombinePatternPanel(final StorageControler storageControler,final BasicExpressionPanel basicPanel){
 		this.storageControler=storageControler;
 		this.basicPanel=basicPanel;
@@ -70,10 +73,14 @@ public class CombinePatternPanel extends VerticalPanel{
 		
 		THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
 			
+			
+
 			@Override
 			public void onLoad(String text) {
 				emotions=new EmotionCsvConverter().convert(text);
 				
+				//update selectio here
+				updateSelectionBox(indexBox.getValue());
 				//debug
 				
 				for(final Emotion e:emotions){
@@ -89,7 +96,13 @@ public class CombinePatternPanel extends VerticalPanel{
 					bt.setWidth("200px");
 				}
 				
-				
+				emotionsData = new EmotionsData(emotions);
+				for(String name:emotionsData.getPrimaryNames()){
+					typeFilterBox.addItem(name);
+				}
+				for(String name:emotionsData.getSecondaryNames()){
+					typeFilterBox.addItem(name);
+				}
 			}
 		});
 		
@@ -122,10 +135,10 @@ public class CombinePatternPanel extends VerticalPanel{
 				updateSelectionBox(value);
 				
 				//setIndex here
-				Mblb3dExpression expression=combinedExpression.getAt(value);
+				selectedExpression=combinedExpression.getAt(value);
 				
-				updateClosedLabel(expression);
-				updateBasicPanelExpression(expression);
+				updateClosedLabel(selectedExpression);
+				updateBasicPanelExpression(selectedExpression);
 				
 			}
 		});
@@ -144,7 +157,7 @@ public class CombinePatternPanel extends VerticalPanel{
 						}
 						//check
 						String emotion=storageControler.getValue(StorageKeys.STORAGE_KEY+index, null);
-						if(emotion!=null){
+						if(validateFilterEmotion(emotion)){
 							break;
 						}
 						index--;
@@ -176,7 +189,7 @@ public class CombinePatternPanel extends VerticalPanel{
 						}
 						//check
 						String emotion=storageControler.getValue(StorageKeys.STORAGE_KEY+index, null);
-						if(emotion!=null){
+						if(validateFilterEmotion(emotion)){
 							break;
 						}
 						index++;
@@ -210,10 +223,12 @@ public class CombinePatternPanel extends VerticalPanel{
 				prev.setEnabled(false);
 				next.setEnabled(false);
 				}else{
+					copyToListBt.setEnabled(true);
 					int index=indexBox.getValue();
-					Mblb3dExpression expression=combinedExpression.getAt(index);
-					updateClosedLabel(expression);
-					updateBasicPanelExpression(expression);
+					//need initial
+					selectedExpression=combinedExpression.getAt(index);
+					updateClosedLabel(selectedExpression);
+					updateBasicPanelExpression(selectedExpression);
 					
 					reset.setText("Neutral");
 					prev.setEnabled(true);
@@ -223,8 +238,26 @@ public class CombinePatternPanel extends VerticalPanel{
 		});
 		h.add(reset);
 		
+		
+		
+		
+		HorizontalPanel filterPanel=new HorizontalPanel();
+		this.add(filterPanel);
+	
 		hasValueCheck = new CheckBox("has value only");
-		h.add(hasValueCheck);
+		filterPanel.add(hasValueCheck);
+		hasValueCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				typeFilterBox.setEnabled(event.getValue());
+			}
+		});
+		
+		typeFilterBox = new ListBox();
+		typeFilterBox.setEnabled(false);
+		typeFilterBox.addItem("");
+		typeFilterBox.setSelectedIndex(0);
+		filterPanel.add(typeFilterBox);
 		
 		
 		HorizontalPanel closedPanel=new HorizontalPanel();
@@ -273,7 +306,10 @@ public class CombinePatternPanel extends VerticalPanel{
 		});
 		
 		int index=indexBox.getValue();
-		descriptionBox.setValue(storageControler.getValue(StorageKeys.STORAGE_DESCRIPTION_KEY+index,""));
+		//updateSelectionBox(index);
+		
+		//descriptionBox.setValue(storageControler.getValue(StorageKeys.STORAGE_DESCRIPTION_KEY+index,""));
+		
 		//check stored or not
 		descriptionBox.addKeyUpHandler(new KeyUpHandler() {
 		    @Override
@@ -290,6 +326,22 @@ public class CombinePatternPanel extends VerticalPanel{
 		
 		this.add(new Label("Tools"));
 		
+		final HorizontalPanel copyPanel=new HorizontalPanel();
+		this.add(copyPanel);
+		
+		copyToListBt = new Button("Copy to DataList",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				doCopyToDataList();
+				
+			}
+		});
+		copyPanel.add(copyToListBt);
+		copyToListBt.setEnabled(false);
+		
+		//TODO move to preference
 		final HorizontalPanel p=new HorizontalPanel();
 		p.setVerticalAlignment(VerticalPanel.ALIGN_MIDDLE);
 		p.add(new Button("dump",new ClickHandler() {
@@ -365,6 +417,34 @@ public class CombinePatternPanel extends VerticalPanel{
 		uploadDump.setAccept(FileUploadForm.ACCEPT_TXT);
 	}
 	
+	protected void doCopyToDataList() {
+		if(selectedExpression==null){
+			LogUtils.log("doCopyToDataList:need selection");
+			return;
+		}
+		
+		String description=descriptionBox.getText();
+		if(description.isEmpty()){
+			description=null;
+		}
+		//i believe static access smart 
+		Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
+		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
+	}
+
+	private boolean validateFilterEmotion(String emotion){
+		String typeFilter=typeFilterBox.getValue(typeFilterBox.getSelectedIndex());
+		if(typeFilter.isEmpty()){
+			return emotion!=null;
+		}
+		if(Character.isUpperCase(typeFilter.charAt(0))){
+			List<String> secondaries=emotionsData.getSecondaryNameByPrimaryName(typeFilter);
+			return secondaries.contains(emotion);
+		}else {
+			return typeFilter.equals(emotion);
+		}
+	}
+	
 	protected void updateBasicPanelExpression(Mblb3dExpression expression) {
 		basicPanel.setMbl3dExpression(expression);
 		basicPanel.setOverwriteEnable(false);//changed
@@ -387,11 +467,13 @@ public class CombinePatternPanel extends VerticalPanel{
 		updateSelectionBox(indexBox.getValue());
 	}
 	
+	private Mblb3dExpression selectedExpression;
+	private String selectedEmotion;
 	protected void updateSelectionBox(int value) {
-		String emotion=storageControler.getValue(StorageKeys.STORAGE_KEY+value, null);
+		selectedEmotion=storageControler.getValue(StorageKeys.STORAGE_KEY+value, null);
 		String label="Type:";
-		if(emotion!=null){
-			Emotion em=Emotion.findEmotionBySecondaryName(emotion,emotions);
+		if(selectedEmotion!=null){
+			Emotion em=Emotion.findEmotionBySecondaryName(selectedEmotion,emotions);
 			label+=em.toString();
 		}
 		
@@ -411,6 +493,12 @@ public class CombinePatternPanel extends VerticalPanel{
 		closedLabel.setText(result.getExpression().getName()+":"+result.getLength());
 	}
 	Label closedLabel;
+
+
+	private ListBox typeFilterBox;
+
+
+	private Button copyToListBt;
 	
 	private void setIndex(int index){
 		indexBox.setValue(index,true);
