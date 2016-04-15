@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
@@ -21,9 +22,14 @@ import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparator;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
+import com.google.common.base.Joiner;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
@@ -38,6 +44,7 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -94,6 +101,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 							if(data!=null){
 								dataList.clearData(data.getId());
 								dataObjects.removeItem(data);
+								updateListData();
 							}
 						}
 					});
@@ -197,6 +205,8 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		add(panel);
 		panel.add(new Label("Order:"));
 		
+	
+		
 		Mbl3dDataComparatorValueBox sortBox = new Mbl3dDataComparatorValueBox();
 		panel.add(sortBox);
 		sortBox.addValueChangeHandler(new ValueChangeHandler<Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue>() {
@@ -209,6 +219,17 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				updateListData();
 			}
 		});
+		
+		CheckBox autoMovePageCheck=new CheckBox("autoMovePage");
+		autoMovePageCheck.setValue(true);
+		
+		autoMovePageCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				autoMovePage=event.getValue();
+			}
+		});
+		panel.add(autoMovePageCheck);
 		
 		HorizontalPanel toolsPanel=new HorizontalPanel();
 		toolsPanel.setVerticalAlignment(ALIGN_MIDDLE);
@@ -280,10 +301,24 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		dataObjects.setDatas(datas);
 		updateListData();
 	}
+	
+	private boolean autoMovePage=true;
 	protected void updateListData() {
+		int currentPage=dataObjects.getSimpleCellTable().getPager().getPage();
+		
 		Collections.sort(dataObjects.getDatas(), comparator);
 		dataObjects.update();
 		
+		//test
+		Stopwatch watch=Stopwatch.createStarted();
+		for(Mbl3dData data:dataObjects.getDatas()){
+			//String key=getEyesKey(data);
+			//LogUtils.log(key);
+		}
+		//LogUtils.log(watch.elapsed(TimeUnit.MILLISECONDS));
+		
+		
+		if(autoMovePage){
 		//fix page selection
 		if(dataObjects.isSelected()){
 			int index=dataObjects.getSelectedIndex().get()+1;
@@ -297,16 +332,22 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				//LogUtils.log(page);
 			}
 		}
-		
-		
+		}else{
+			//possible bug if deleted go first page
+			int needSize=currentPage*dataObjects.getSimpleCellTable().getPager().getPageSize();
+			if(dataObjects.getDatas().size()>=needSize){
+				dataObjects.getSimpleCellTable().getPager().setPage(currentPage);
+			}
+		}
 	}
 
 	private void doUpdate() {
 		Mbl3dData data=driver.flush();
 		if(data!=null){
+			//write storage
 			SimpleTextData textData=new Mbl3dDataSimpleTextConverter().reverse().convert(data);
-			
 			dataList.updateData(textData);
+			
 			updateListData();
 		}
 	}
@@ -369,17 +410,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 
 	
 
-	public void onModuleLoad() {
-		
 
-
-	
-	
-	
-	
-}
-
-	
 
 
 	public void overwrite(Mblb3dExpression expression) {

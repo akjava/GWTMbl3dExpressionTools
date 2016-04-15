@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.mbl3d.expression.client.Emotion;
+import com.google.common.collect.ComparisonChain;
 
 
 public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
@@ -31,13 +32,18 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 	@Override
 	public int compare(Mbl3dData o1, Mbl3dData o2) {
 		
+		
+		
 		if(order==ORDER_ID_DESC){
 			return o2.getId()-o1.getId();
 		}
 		if(order==ORDER_AZ){
+			return ComparisonChain.start().compare(o1.getName(),o2.getName()).result();
+			/*
 			String name1=o1.getName()!=null?o1.getName():"";
 			String name2=o2.getName()!=null?o2.getName():"";
 			return name1.compareTo(name2);
+			*/
 		}
 		if(order==ORDER_ZA){
 			String name1=o1.getName()!=null?o1.getName():"";
@@ -46,7 +52,20 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 			return name2.compareTo(name1);
 		}
 		if(order==ORDER_TYPE){
-			return findEmotionAt(o1) - findEmotionAt(o2);
+			//return findEmotionAt(o1) -  findEmotionAt(o2);
+			/*
+			 * some how not good at null handling(getName());
+			 */
+			
+			return ComparisonChain.start().compare(findEmotionAt(o1), findEmotionAt(o2))
+					.compare(o1.getName()!=null?o1.getName():"", o2.getName()!=null?o2.getName():"")
+					.compare(Mbl3dDataUtils.getEyesKey(o1), Mbl3dDataUtils.getEyesKey(o2))
+					.compare(Mbl3dDataUtils.getMouthKey(o1), Mbl3dDataUtils.getMouthKey(o2))
+					.compare(o1.getDescription(),o2.getDescription())
+					.compare(o1.getId(), o2.getId())
+			.result();
+			
+			
 		}		
 		//ORDER_ID
 		return o1.getId()-o2.getId();

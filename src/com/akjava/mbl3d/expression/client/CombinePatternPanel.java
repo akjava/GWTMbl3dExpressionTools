@@ -244,7 +244,7 @@ public class CombinePatternPanel extends VerticalPanel{
 		HorizontalPanel filterPanel=new HorizontalPanel();
 		this.add(filterPanel);
 	
-		hasValueCheck = new CheckBox("has value only");
+		hasValueCheck = new CheckBox("has emotion only");
 		filterPanel.add(hasValueCheck);
 		hasValueCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
@@ -415,6 +415,25 @@ public class CombinePatternPanel extends VerticalPanel{
 		}, true, "UTF-8");
 		p.add(uploadDump);
 		uploadDump.setAccept(FileUploadForm.ACCEPT_TXT);
+		
+		Button test=new Button("doCopyToHasEmotionDataListAll",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				doCopyToHasEmotionDataListAll();
+			}
+		});
+		add(test);
+	}
+	
+	public boolean hasEmotion(int index){
+		String emotion=getEmotion(index);
+		return emotion!=null;
+	}
+	public String getEmotion(int index){
+		return storageControler.getValue(StorageKeys.STORAGE_KEY+index, null);
+	}
+	public String getDescription(int index){
+		return storageControler.getValue(StorageKeys.STORAGE_DESCRIPTION_KEY+index, null);
 	}
 	
 	protected void doCopyToDataList() {
@@ -422,6 +441,31 @@ public class CombinePatternPanel extends VerticalPanel{
 			LogUtils.log("doCopyToDataList:need selection");
 			return;
 		}
+		
+		String description=descriptionBox.getText();
+		if(description.isEmpty()){
+			description=null;
+		}
+		//i believe static access smart 
+		Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
+		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
+	}
+	
+	protected void doCopyToHasEmotionDataListAll() {
+		int size=combinedExpression.getIndexSize();
+
+		for(int i=0;i<size;i++){
+			if(hasEmotion(i)){
+				
+				Mblb3dExpression expression=combinedExpression.getAt(i);
+				String emotion=getEmotion(i);
+				String description=getDescription(i);
+				
+				Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(expression, null, emotion, description);
+				
+			}
+		}
+		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
 		
 		String description=descriptionBox.getText();
 		if(description.isEmpty()){
