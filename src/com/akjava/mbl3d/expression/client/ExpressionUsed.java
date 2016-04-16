@@ -40,7 +40,7 @@ public  class ExpressionUsed{
 		return name.indexOf("mouth")!=-1;
 	}
 	
-	public void setData(Mblb3dExpression data){
+	public void setData(Mbl3dExpression data){
 		
 		this.name=data.getName();
 		//LogUtils.log(name);

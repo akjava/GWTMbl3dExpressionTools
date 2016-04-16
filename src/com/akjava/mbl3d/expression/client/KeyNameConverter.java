@@ -51,7 +51,7 @@ public class KeyNameConverter {
 		return KEY_HEADER+type+simpleName;
 	}
 	
-	public static String convertToSimpleId(Mblb3dExpression expression){
+	public static String convertToSimpleId(Mbl3dExpression expression){
 		List<String> list=Lists.newArrayList(expression.getKeys());
 		Collections.sort(list);
 		List<String> brows=Lists.newArrayList();

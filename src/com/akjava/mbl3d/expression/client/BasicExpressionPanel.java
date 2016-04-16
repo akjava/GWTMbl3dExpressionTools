@@ -10,7 +10,7 @@ import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.objects.Mesh;
-import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
+import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
 import com.google.common.base.Converter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapDifference;
@@ -32,8 +32,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class BasicExpressionPanel extends VerticalPanel {
 
 	private Map<String,LabeledInputRangeWidget2> ranges;
-	private List<Mblb3dExpression> expressionList;
-	private ValueListBox<Mblb3dExpression> expressionsListBox;
+	private List<Mbl3dExpression> expressionList;
+	private ValueListBox<Mbl3dExpression> expressionsListBox;
 	Mbl3dExpressionReceiver receiver;
 	private Button overwriteButton;
 	
@@ -44,9 +44,9 @@ public class BasicExpressionPanel extends VerticalPanel {
 		
 		this.add(expression);
 		
-		expressionsListBox = new ValueListBox<Mblb3dExpression>(new Renderer<Mblb3dExpression>() {
+		expressionsListBox = new ValueListBox<Mbl3dExpression>(new Renderer<Mbl3dExpression>() {
 			@Override
-			public String render(Mblb3dExpression object) {
+			public String render(Mbl3dExpression object) {
 				if(object!=null){
 					return object.getName();
 				}
@@ -54,14 +54,14 @@ public class BasicExpressionPanel extends VerticalPanel {
 			}
 
 			@Override
-			public void render(Mblb3dExpression object, Appendable appendable) throws IOException {
+			public void render(Mbl3dExpression object, Appendable appendable) throws IOException {
 				// TODO Auto-generated method stub
 				
 			}
 		});
-		expressionsListBox.addValueChangeHandler(new ValueChangeHandler<Mblb3dExpression>() {
+		expressionsListBox.addValueChangeHandler(new ValueChangeHandler<Mbl3dExpression>() {
 			@Override
-			public void onValueChange(ValueChangeEvent<Mblb3dExpression> event) {
+			public void onValueChange(ValueChangeEvent<Mbl3dExpression> event) {
 				
 				setMbl3dExpression(event.getValue());
 				setOverwriteEnable(false);
@@ -80,7 +80,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				Mblb3dExpression expression= expressionsListBox.getValue();
+				Mbl3dExpression expression= expressionsListBox.getValue();
 				int index=expressionList.indexOf(expression);
 				index--;
 				if(index<0){
@@ -95,7 +95,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				Mblb3dExpression expression= expressionsListBox.getValue();
+				Mbl3dExpression expression= expressionsListBox.getValue();
 				int index=expressionList.indexOf(expression);
 				index++;
 				if(index>=expressionList.size()){
@@ -110,7 +110,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				Mblb3dExpression expression= new Mblb3dExpression();
+				Mbl3dExpression expression= new Mbl3dExpression();
 				
 				for(String key:ranges.keySet()){
 					LabeledInputRangeWidget2 widget=ranges.get(key);
@@ -131,7 +131,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				Mblb3dExpression expression= new Mblb3dExpression();
+				Mbl3dExpression expression= new Mbl3dExpression();
 				
 				for(String key:ranges.keySet()){
 					LabeledInputRangeWidget2 widget=ranges.get(key);
@@ -219,7 +219,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 		overwriteButton.setEnabled(enabled);
 	}
 	
-	public void setMbl3dExpression(@Nullable Mblb3dExpression expression) {
+	public void setMbl3dExpression(@Nullable Mbl3dExpression expression) {
 		//updateClosedLabel(expression);
 		
 		//TODO not set direct via label
@@ -254,24 +254,35 @@ public class BasicExpressionPanel extends VerticalPanel {
 			*/
 		}
 	}
+	public Mbl3dExpression currentRangesToMbl3dExpression() {
+		Mbl3dExpression expression=new Mbl3dExpression();
+		for(String key:ranges.keySet()){
+			LabeledInputRangeWidget2 widget=ranges.get(key);
+			if(widget.getValue()!=0){
+				expression.set(key, widget.getValue());
+			}
+		}
+		
+		return expression;
+	}
 
-	public void setExpressionList(List<Mblb3dExpression> expressionList) {
+	public void setExpressionList(List<Mbl3dExpression> expressionList) {
 		this.expressionList=expressionList;
 		expressionsListBox.setValue(expressionList.get(0));
 		expressionsListBox.setAcceptableValues(expressionList);
 		
 		//testConverter();
 	}
-	private void testConverter(List<Mblb3dExpression> expressionList){
+	private void testConverter(List<Mbl3dExpression> expressionList){
 		Mbl3dExpressionConverter converter=new Mbl3dExpressionConverter();
-		Converter<Mblb3dExpression, String> reverse=new Mbl3dExpressionConverter().reverse();
+		Converter<Mbl3dExpression, String> reverse=new Mbl3dExpressionConverter().reverse();
 		//test
-		for(Mblb3dExpression expression:expressionList){
+		for(Mbl3dExpression expression:expressionList){
 			if(expression==null){
 				continue;
 			}
 			String json=reverse.convert(expression);
-			Mblb3dExpression converted=converter.convert(json);
+			Mbl3dExpression converted=converter.convert(json);
 			LogUtils.log(expression.getName());
 			
 			new MapDifferenceLogger<String,Double>().compare(expression.getMap(),converted.getMap());
@@ -293,8 +304,8 @@ public class BasicExpressionPanel extends VerticalPanel {
 		}
 	}
 	
-	public ClosedResult findClosed(Mblb3dExpression expression){
-		return Mblb3dExpression.findClosed(expression, expressionList);
+	public ClosedResult findClosed(Mbl3dExpression expression){
+		return Mbl3dExpression.findClosed(expression, expressionList);
 	}
 	
 }

@@ -9,7 +9,7 @@ import com.akjava.gwt.lib.client.LogUtils;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 
-public class Mblb3dExpression {
+public class Mbl3dExpression {
 
 
 private Map<String,Double> map;
@@ -27,10 +27,10 @@ public void setName(String name) {
 	this.name = name;
 }
 
-public Mblb3dExpression(){
+public Mbl3dExpression(){
 	this("");
 }
-public Mblb3dExpression(String name){
+public Mbl3dExpression(String name){
 	this.name=name;
 	map=new LinkedHashMap<String, Double>();
 }
@@ -55,9 +55,9 @@ public String toString(){
 	return name+":"+Joiner.on(",").withKeyValueSeparator("=").join(map);
 }
 	
-public static Mblb3dExpression merge(Mblb3dExpression... expressions){
-	Mblb3dExpression base=new Mblb3dExpression("");
-	for(Mblb3dExpression expression:expressions){
+public static Mbl3dExpression merge(Mbl3dExpression... expressions){
+	Mbl3dExpression base=new Mbl3dExpression("");
+	for(Mbl3dExpression expression:expressions){
 		if(expression==null){
 			continue;
 		}
@@ -71,11 +71,11 @@ public static Mblb3dExpression merge(Mblb3dExpression... expressions){
 	}
 	return base;
 }
-public static ClosedResult findClosed(Mblb3dExpression source,List<Mblb3dExpression> expressions){
+public static ClosedResult findClosed(Mbl3dExpression source,List<Mbl3dExpression> expressions){
 	double length=Double.MAX_VALUE;
-	Mblb3dExpression closed=expressions.get(0);
+	Mbl3dExpression closed=expressions.get(0);
 	
-	for(Mblb3dExpression expression:expressions){
+	for(Mbl3dExpression expression:expressions){
 		if(expression==null){
 			continue;
 		}
@@ -89,18 +89,18 @@ public static ClosedResult findClosed(Mblb3dExpression source,List<Mblb3dExpress
 	return new ClosedResult(closed,length);
 }
 public static class ClosedResult{
-	Mblb3dExpression expression;
-	public ClosedResult(Mblb3dExpression closed, double length) {
+	Mbl3dExpression expression;
+	public ClosedResult(Mbl3dExpression closed, double length) {
 		super();
 		this.expression = closed;
 		this.length = length;
 	}
 	
-	public Mblb3dExpression getExpression() {
+	public Mbl3dExpression getExpression() {
 		return expression;
 	}
 
-	public void setExpression(Mblb3dExpression expression) {
+	public void setExpression(Mbl3dExpression expression) {
 		this.expression = expression;
 	}
 
@@ -113,7 +113,7 @@ public static class ClosedResult{
 	double length;
 }
 
-public double length(Mblb3dExpression expression){
+public double length(Mbl3dExpression expression){
 	double length=0;
 	Set<String> allKeys=Sets.newHashSet();
 	for(String key:getKeys()){

@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
 import com.akjava.gwt.html5.client.download.HTML5Download;
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageDataList;
 import com.akjava.gwt.lib.client.datalist.SimpleTextData;
@@ -22,14 +20,10 @@ import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparator;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
-import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
@@ -56,6 +50,14 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 	private EasyCellTableObjects<Mbl3dData> dataObjects;
 	private BasicExpressionPanel mbl3dExpressionSetter;
 	private Mbl3dDataEditor editor;
+
+	protected boolean playAnimationOnSelect;
+
+	protected boolean filterBrow=true;
+	protected boolean filterEyes=true;
+	protected boolean filterMouth=true;
+	
+	private Mbl3dExpression currentSelectedExpression;
 	public DataListPanel(StorageControler storageControler,final BasicExpressionPanel mbl3dExpressionSetter){
 		dataList = new StorageDataList(storageControler,StorageKeys.DATA_LIST_KEY);
 		this.mbl3dExpressionSetter=mbl3dExpressionSetter;
@@ -182,13 +184,20 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		};
 		
 		dataObjects = new EasyCellTableObjects<Mbl3dData>(table) {
+			
+
 			@Override
 			public void onSelect(Mbl3dData selection) {
 				
 				driver.edit(selection);
 				
-				mbl3dExpressionSetter.setMbl3dExpression(convertToExpression(selection));
+				currentSelectedExpression = convertToExpression(selection);
+				
 				mbl3dExpressionSetter.setOverwriteEnable(true);
+				
+				
+				updateRangeAndAnimation();
+				
 			}
 		};
 		
@@ -231,9 +240,87 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		});
 		panel.add(autoMovePageCheck);
 		
+		
+		HorizontalPanel animationPanel=new HorizontalPanel();
+		animationPanel.setVerticalAlignment(ALIGN_MIDDLE);
+		add(animationPanel);
+		
+		this.add(new Label("Animation:"));
+		
+		final CheckBox filterBrowCheck=new  CheckBox("brow");
+		filterBrowCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				filterBrow=event.getValue();
+				updateRangeAndAnimation();
+			}
+			
+		});
+		filterBrowCheck.setValue(true);
+		
+		final CheckBox filterEyesCheck=new  CheckBox("eyes");
+		filterEyesCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				filterEyes=event.getValue();
+				updateRangeAndAnimation();
+			}
+			
+		});
+		filterEyesCheck.setValue(true);
+		
+		final CheckBox filterMouthCheck=new  CheckBox("mouth");
+		filterMouthCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				filterMouth=event.getValue();
+				updateRangeAndAnimation();
+			}
+			
+		});
+		filterMouthCheck.setValue(true);
+		filterBrowCheck.setEnabled(false);
+		filterEyesCheck.setEnabled(false);
+		filterMouthCheck.setEnabled(false);
+		
+		CheckBox playAnimationCheck=new  CheckBox("play animtion");
+		playAnimationCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				playAnimationOnSelect=event.getValue();
+				if(event.getValue()){
+					filterBrowCheck.setEnabled(true);
+					filterEyesCheck.setEnabled(true);
+					filterMouthCheck.setEnabled(true);
+					
+					//set value instead call updateRangeAndAnimation();
+					filterBrowCheck.setValue(true);
+					filterEyesCheck.setValue(true);
+					filterMouthCheck.setValue(true);
+					filterMouth=true;
+					filterEyes=true;
+					filterBrow=true;
+				}else{
+					filterBrowCheck.setEnabled(false);
+					filterEyesCheck.setEnabled(false);
+					filterMouthCheck.setEnabled(false);
+				}
+				updateRangeAndAnimation();
+			}
+		});
+		animationPanel.add(playAnimationCheck);
+		animationPanel.add(filterBrowCheck);
+		animationPanel.add(filterEyesCheck);
+		animationPanel.add(filterMouthCheck);
+		
+		
 		HorizontalPanel toolsPanel=new HorizontalPanel();
 		toolsPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		add(toolsPanel);
+		
 		toolsPanel.add(new Label("Tools:"));
 		
 		final HorizontalPanel dlPanel=new HorizontalPanel();
@@ -254,7 +341,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 					fileBaseName=selection.getName();
 				}
 				
-				String url=Mbl3dExpressionEntryPoint.instance.toImageDataUrl();
+				String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();
 				Anchor a=HTML5Download.get().generateBase64DownloadLink(url, "image/png", fileBaseName+".png", "Download", true);
 				dlPanel.clear();
 				dlPanel.add(a);
@@ -276,7 +363,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				}
 				
 				//new Mbl
-				Mblb3dExpression expression=convertToExpression(selection);
+				Mbl3dExpression expression=convertToExpression(selection);
 				String json=new Mbl3dExpressionConverter().reverse().convert(expression);
 				
 				
@@ -289,6 +376,19 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		toolsPanel.add(jsonBt);
 		toolsPanel.add(dlPanel);
 		
+	}
+	protected void updateRangeAndAnimation() {
+		Mbl3dExpressionEntryPoint.INSTANCE.stopAnimation();
+		
+		mbl3dExpressionSetter.setMbl3dExpression(currentSelectedExpression);
+		
+		if(currentSelectedExpression==null){
+			return;
+		}
+		
+		if(playAnimationOnSelect){
+			Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(currentSelectedExpression,filterBrow,filterEyes,filterMouth);
+		}
 	}
 	private Mbl3dDataComparator comparator;
 	
@@ -357,7 +457,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 
 	
 	
-	private Map<String,String> mblb3dExpressionToMap(Mblb3dExpression expression){
+	private Map<String,String> mblb3dExpressionToMap(Mbl3dExpression expression){
 		Map<String,String> values=Maps.newHashMap();
 		for(String key:expression.getKeys()){
 			values.put(key, String.valueOf(expression.get(key)));
@@ -365,7 +465,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		return values;
 	}
 	
-	public void add(Mblb3dExpression expression,String name,String type,String description){
+	public void add(Mbl3dExpression expression,String name,String type,String description){
 		
 		Map<String,String> values=mblb3dExpressionToMap(expression);
 		Mbl3dData data=new Mbl3dData(name,type,description,values);
@@ -382,8 +482,8 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		updateListData();//sort
 	}
 	
-	public Mblb3dExpression convertToExpression(@Nullable Mbl3dData data){
-		Mblb3dExpression expression=new Mblb3dExpression("");
+	public Mbl3dExpression convertToExpression(@Nullable Mbl3dData data){
+		Mbl3dExpression expression=new Mbl3dExpression("");
 		if(data!=null){
 		for(String key:data.getValues().keySet()){
 			if(key.equals("type")){
@@ -413,7 +513,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 
 
 
-	public void overwrite(Mblb3dExpression expression) {
+	public void overwrite(Mbl3dExpression expression) {
 		if(editor.getValue()==null){
 			Window.alert("no data selected.click store button to add");
 			return;

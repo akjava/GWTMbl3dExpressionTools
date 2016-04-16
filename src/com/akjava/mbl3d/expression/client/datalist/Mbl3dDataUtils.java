@@ -11,7 +11,7 @@ public class Mbl3dDataUtils {
 			return "";
 		}
 		String key=Joiner.on("-").join(
-				FluentIterable.from(data.getValues().keySet()).filter(Mbl3dDataPredicates.getEyesOnly()).transform(Mbl3dDataFunctions.getShortenName())
+				FluentIterable.from(data.getValues().keySet()).filter(Mbl3dDataPredicates.passEyesOnly()).transform(Mbl3dDataFunctions.getShortenName())
 				);
 		return key;
 	}
@@ -20,7 +20,7 @@ public class Mbl3dDataUtils {
 			return "";
 		}
 		String key=Joiner.on("-").join(
-				FluentIterable.from(data.getValues().keySet()).filter(Mbl3dDataPredicates.getMouthOnly()).transform(Mbl3dDataFunctions.getShortenName())
+				FluentIterable.from(data.getValues().keySet()).filter(Mbl3dDataPredicates.passMouthOnly()).transform(Mbl3dDataFunctions.getShortenName())
 				);
 		return key;
 	}

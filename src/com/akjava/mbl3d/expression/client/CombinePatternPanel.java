@@ -21,7 +21,7 @@ import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.StringUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
-import com.akjava.mbl3d.expression.client.Mblb3dExpression.ClosedResult;
+import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -447,8 +447,8 @@ public class CombinePatternPanel extends VerticalPanel{
 			description=null;
 		}
 		//i believe static access smart 
-		Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
-		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
+		Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
+		Mbl3dExpressionEntryPoint.INSTANCE.setSelectedTab(2);
 	}
 	
 	protected void doCopyToHasEmotionDataListAll() {
@@ -457,23 +457,23 @@ public class CombinePatternPanel extends VerticalPanel{
 		for(int i=0;i<size;i++){
 			if(hasEmotion(i)){
 				
-				Mblb3dExpression expression=combinedExpression.getAt(i);
+				Mbl3dExpression expression=combinedExpression.getAt(i);
 				String emotion=getEmotion(i);
 				String description=getDescription(i);
 				
-				Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(expression, null, emotion, description);
+				Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().add(expression, null, emotion, description);
 				
 			}
 		}
-		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
+		Mbl3dExpressionEntryPoint.INSTANCE.setSelectedTab(2);
 		
 		String description=descriptionBox.getText();
 		if(description.isEmpty()){
 			description=null;
 		}
 		//i believe static access smart 
-		Mbl3dExpressionEntryPoint.instance.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
-		Mbl3dExpressionEntryPoint.instance.setSelectedTab(2);
+		Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().add(selectedExpression, null, selectedEmotion, description);
+		Mbl3dExpressionEntryPoint.INSTANCE.setSelectedTab(2);
 	}
 
 	private boolean validateFilterEmotion(String emotion){
@@ -489,7 +489,7 @@ public class CombinePatternPanel extends VerticalPanel{
 		}
 	}
 	
-	protected void updateBasicPanelExpression(Mblb3dExpression expression) {
+	protected void updateBasicPanelExpression(Mbl3dExpression expression) {
 		basicPanel.setMbl3dExpression(expression);
 		basicPanel.setOverwriteEnable(false);//changed
 	}
@@ -511,7 +511,7 @@ public class CombinePatternPanel extends VerticalPanel{
 		updateSelectionBox(indexBox.getValue());
 	}
 	
-	private Mblb3dExpression selectedExpression;
+	private Mbl3dExpression selectedExpression;
 	private String selectedEmotion;
 	protected void updateSelectionBox(int value) {
 		selectedEmotion=storageControler.getValue(StorageKeys.STORAGE_KEY+value, null);
@@ -527,7 +527,7 @@ public class CombinePatternPanel extends VerticalPanel{
 		selectionLabel.setText(label);
 	}
 
-	private void updateClosedLabel(@Nullable Mblb3dExpression expression){
+	private void updateClosedLabel(@Nullable Mbl3dExpression expression){
 		if(expression==null){
 			closedLabel.setText("");
 			return;

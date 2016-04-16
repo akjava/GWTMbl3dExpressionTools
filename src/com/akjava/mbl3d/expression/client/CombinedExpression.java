@@ -8,9 +8,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 public   class CombinedExpression{
-		private List<Mblb3dExpression> brows;
-		private List<Mblb3dExpression> eyes;
-		private List<Mblb3dExpression> mouths;
+		private List<Mbl3dExpression> brows;
+		private List<Mbl3dExpression> eyes;
+		private List<Mbl3dExpression> mouths;
 		private List<String> indexs=Lists.newArrayList();
 		
 		public int getIndexSize(){
@@ -39,7 +39,7 @@ public   class CombinedExpression{
 			String type=null;
 			//singles
 			eyes=Lists.newArrayList();
-			eyes.add(new Mblb3dExpression("eye"));//empty
+			eyes.add(new Mbl3dExpression("eye"));//empty
 			
 			type="eyes";
 			
@@ -53,7 +53,7 @@ public   class CombinedExpression{
 					if(j==1){
 						direction="min";
 					}
-					Mblb3dExpression expression=new Mblb3dExpression("eyes");
+					Mbl3dExpression expression=new Mbl3dExpression("eyes");
 					String name=Strings.padStart(String.valueOf(i+1), 2, '0');
 					String key=header+type+name+"_"+direction;
 					expression.set(key, 1);
@@ -68,7 +68,7 @@ public   class CombinedExpression{
 			String type=null;
 			//singles
 			mouths=Lists.newArrayList();
-			mouths.add(new Mblb3dExpression("mouth"));//empty
+			mouths.add(new Mbl3dExpression("mouth"));//empty
 			
 			type="mouth";
 			
@@ -96,7 +96,7 @@ public   class CombinedExpression{
 					if(j==1){
 						direction="min";
 					}
-					Mblb3dExpression expression=new Mblb3dExpression("mouth");
+					Mbl3dExpression expression=new Mbl3dExpression("mouth");
 					String name=Strings.padStart(String.valueOf(i+1), 2, '0');
 					String key=header+type+name+"_"+direction;
 					expression.set(key, 1);
@@ -107,29 +107,29 @@ public   class CombinedExpression{
 			}
 		}
 
-		public Mblb3dExpression getAt(int index){
+		public Mbl3dExpression getAt(int index){
 			String key=indexs.get(index);
 			return parseIndex(key);
 		}
 		
-		public Mblb3dExpression parseIndex(String key){
+		public Mbl3dExpression parseIndex(String key){
 			//LogUtils.log(key);
 			List<String> splittedKey=Lists.newArrayList(Splitter.on('-').split(key));
 			
-			Mblb3dExpression brow=brows.get(ValuesUtils.toInt(splittedKey.get(0), 0));
+			Mbl3dExpression brow=brows.get(ValuesUtils.toInt(splittedKey.get(0), 0));
 			
-			Mblb3dExpression eye=null;
+			Mbl3dExpression eye=null;
 			if(splittedKey.size()>1){
 				eye=eyes.get(ValuesUtils.toInt(splittedKey.get(1), 0));
 				
 			}
 			
-			Mblb3dExpression mouth=null;
+			Mbl3dExpression mouth=null;
 			if(splittedKey.size()>2){
 				mouth=mouths.get(ValuesUtils.toInt(splittedKey.get(2), 0));
 			}
 			
-			return Mblb3dExpression.merge(brow,eye,mouth);
+			return Mbl3dExpression.merge(brow,eye,mouth);
 		}
 		
 
@@ -141,7 +141,7 @@ public   class CombinedExpression{
 			String type=null;
 			//singles
 			brows=Lists.newArrayList();
-			brows.add(new Mblb3dExpression("brow"));//empty
+			brows.add(new Mbl3dExpression("brow"));//empty
 			
 			type="brow";
 			List<String> browNames=Lists.newArrayList();
@@ -151,7 +151,7 @@ public   class CombinedExpression{
 					if(j==1){
 						direction="min";
 					}
-					Mblb3dExpression expression=new Mblb3dExpression("brow");
+					Mbl3dExpression expression=new Mbl3dExpression("brow");
 					String name=Strings.padStart(String.valueOf(i+1), 2, '0')+"L";
 					String key=header+type+name+"_"+direction;
 					expression.set(key, 1);
@@ -168,7 +168,7 @@ public   class CombinedExpression{
 					if(j==1){
 						direction="min";
 					}
-					Mblb3dExpression expression=new Mblb3dExpression("brow");
+					Mbl3dExpression expression=new Mbl3dExpression("brow");
 					String name=Strings.padStart(String.valueOf(i+1), 2, '0')+"L";
 					String key=header+type+name+"_"+direction;
 					expression.set(key, 1);
@@ -202,7 +202,7 @@ public   class CombinedExpression{
 				if(j==1){
 					direction="min";
 				}
-				Mblb3dExpression expression=new Mblb3dExpression("brow");
+				Mbl3dExpression expression=new Mbl3dExpression("brow");
 				String name="03";
 				String key=header+type+name+"_"+direction;
 				expression.set(key, 1);
@@ -211,8 +211,8 @@ public   class CombinedExpression{
 			}
 		}
 		
-		public Mblb3dExpression makeMblb3dExpression(String name,String... keys){
-			Mblb3dExpression expression=new Mblb3dExpression(name);
+		public Mbl3dExpression makeMblb3dExpression(String name,String... keys){
+			Mbl3dExpression expression=new Mbl3dExpression(name);
 			for(String key:keys){
 				expression.set(key, 1);
 			}

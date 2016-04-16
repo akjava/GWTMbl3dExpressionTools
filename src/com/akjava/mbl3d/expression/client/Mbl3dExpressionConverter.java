@@ -15,10 +15,10 @@ import com.google.gwt.json.client.JSONValue;
  * @author aki
  *
  */
-public class Mbl3dExpressionConverter extends Converter<String, Mblb3dExpression>{
+public class Mbl3dExpressionConverter extends Converter<String, Mbl3dExpression>{
 
 	@Override
-	protected Mblb3dExpression doForward(String text) {
+	protected Mbl3dExpression doForward(String text) {
 		JSONValue value=JSONParser.parseStrict(text);
 		JSONObject object=value.isObject();
 		if(object==null){
@@ -33,7 +33,7 @@ public class Mbl3dExpressionConverter extends Converter<String, Mblb3dExpression
 		}
 		Set<String> keys=structuralObject.keySet();
 		
-		Mblb3dExpression data=new Mblb3dExpression(null);
+		Mbl3dExpression data=new Mbl3dExpression(null);
 		for(String key:keys){
 			JSONValue keyValue=structuralObject.get(key);
 			JSONNumber keyNumber=keyValue.isNumber();
@@ -59,7 +59,7 @@ public class Mbl3dExpressionConverter extends Converter<String, Mblb3dExpression
 	}
 
 	@Override
-	protected String doBackward(Mblb3dExpression data) {
+	protected String doBackward(Mbl3dExpression data) {
 		JSONObject root=new JSONObject();
 		
 		JSParameter parameter=JSParameter.createParameter();
