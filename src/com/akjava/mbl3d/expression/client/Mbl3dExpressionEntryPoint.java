@@ -453,14 +453,21 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			String trackName=".morphTargetInfluences["+index+"]";
 			double value=expression.get(key);
 			
+			double wait=0.3;
+			
 			JsArrayNumber times=JavaScriptObject.createArray().cast();
 			times.push(0);
 			times.push(duration);
 			times.push(duration*2);
+			/*
+			times.push(duration+wait);//wait pause
+			times.push(duration*2+wait);
+			*/
 			
 			JsArrayNumber values=JavaScriptObject.createArray().cast();
 			values.push(0);
 			values.push(value);
+			//values.push(value);
 			values.push(0);
 			
 			NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);

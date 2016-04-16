@@ -32,8 +32,12 @@ public class Mbl3dDataComparatorValueBox extends ValueListBox<Mbl3dDataComparato
 				new Mbl3dDataComparatorValue(1,"ID Desc"),
 				new Mbl3dDataComparatorValue(2,"Name"),
 				new Mbl3dDataComparatorValue(3,"Name Desc"),
-				new Mbl3dDataComparatorValue(4,"Type")
+				new Mbl3dDataComparatorValue(4,"Type"),
+				new Mbl3dDataComparatorValue(5,"Brow"),
+				new Mbl3dDataComparatorValue(6,"Eyes"),
+				new Mbl3dDataComparatorValue(7,"Mouth")
 				);
+		//TODO load value from last
 		setValue(values.get(1));//this type is popular
 		setAcceptableValues(values);
 	}

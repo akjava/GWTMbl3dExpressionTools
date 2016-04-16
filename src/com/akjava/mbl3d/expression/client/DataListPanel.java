@@ -17,6 +17,7 @@ import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.ValuesUtils;
+import com.akjava.mbl3d.expression.client.datalist.CellTableResources;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparator;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
@@ -120,9 +121,9 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 	    
 	    add(editorPanel);
 	    
-		
+	    CellTableResources.INSTANCE.cellTableStyle().ensureInjected();
 		//read
-		SimpleCellTable<Mbl3dData> table=new SimpleCellTable<Mbl3dData>(20) {
+		SimpleCellTable<Mbl3dData> table=new SimpleCellTable<Mbl3dData>(20,CellTableResources.INSTANCE) {
 			@Override
 			public void addColumns(CellTable<Mbl3dData> table) {
 				
@@ -152,6 +153,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 					}
 				};
 				table.addColumn(nameColumn);
+				
 				
 				TextColumn<Mbl3dData> descriptionColumn=new TextColumn<Mbl3dData>() {
 					@Override

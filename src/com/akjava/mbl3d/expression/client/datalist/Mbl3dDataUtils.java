@@ -24,4 +24,13 @@ public class Mbl3dDataUtils {
 				);
 		return key;
 	}
+	public static String getBrowKey(@Nullable Mbl3dData data){
+		if(data==null){
+			return "";
+		}
+		String key=Joiner.on("-").join(
+				FluentIterable.from(data.getValues().keySet()).filter(Mbl3dDataPredicates.passBrowOnly()).transform(Mbl3dDataFunctions.getShortenName())
+				);
+		return key;
+	}
 }
