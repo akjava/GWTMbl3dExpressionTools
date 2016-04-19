@@ -69,6 +69,10 @@ public class CanvasTexturePainter {
 		update();
 	}
 	
+	public List<Texture> getTextures() {
+		return textures;
+	}
+
 	public TextureLayers getTextureLayers() {
 		return textureLayers;
 	}
@@ -93,6 +97,9 @@ public class CanvasTexturePainter {
 		//get layers & make keys.if changed repaint & needUpdate
 	}
 	public String generateKey(){
+		if(textureLayers==null){
+			return "";
+		}
 		for(int i=0;i<textureLayers.size();i++){
 			map.put(i, String.valueOf(textureLayers.isVisible(i))+String.valueOf(textureLayers.getAlpha(i)));
 		}

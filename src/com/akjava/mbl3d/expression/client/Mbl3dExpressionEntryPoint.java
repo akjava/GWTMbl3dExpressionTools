@@ -16,6 +16,9 @@ import com.akjava.gwt.three.client.java.utils.MultiTextureLoader.MultiTextureLoa
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.AnimationMixer;
+import com.akjava.gwt.three.client.js.animation.AnimationMixerAction;
+import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
+import com.akjava.gwt.three.client.js.animation.tracks.BooleanKeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.core.Clock;
@@ -41,6 +44,7 @@ import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
@@ -50,7 +54,6 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -74,6 +77,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	public static Mbl3dExpressionEntryPoint INSTANCE;
 	
 	private AnimationMixer mixer;
+	
+	private CanvasTexturePainter canvasTexturePainter;
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
 		return GWTParamUtils.WebGLRenderer().preserveDrawingBuffer(true);
@@ -86,6 +91,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	@Override
 	public void onInitializedThree() {
+		
 		INSTANCE=this;
 		//LogUtils.log("onInitializedThree");
 		renderer.setClearColor(0);//default is black?
@@ -108,6 +114,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			}
 		});
 		
+		//test(1.0);
 		//light
 		
 		AmbientLight ambient = THREE.AmbientLight( 0xaaaaaa );//var ambient = new THREE.AmbientLight( 0xffffff );
@@ -160,8 +167,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 						double x=-0, y=-460,z= -100,s= 290;
 						
-						List<String> urls=Lists.newArrayList("models/mbl3d/eyeonly2.png",
-															 "models/mbl3d/test.png"
+						List<String> urls=Lists.newArrayList("models/mbl3d/body.png",
+								"models/mbl3d/eye_middle.png",
+								"models/mbl3d/eye_small.png",
+															 "models/mbl3d/test.png",
+															 "models/mbl3d/uv.png"
 								);
 						
 						
@@ -172,14 +182,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						
 						new MultiTextureLoader().load(urls, new MultiTextureLoaderListener() {
+							
+
 							@Override
 							public void onLoad(List<Texture> textures) {
-								CanvasTexturePainter painter=new CanvasTexturePainter(textures,null);
-								material.setMap(painter.getCanvasTexture());
+								canvasTexturePainter = new CanvasTexturePainter(textures,null);
+								material.setMap(canvasTexturePainter.getCanvasTexture());
 								//painter.getTextureLayers().setVisible(0, false);
-								painter.getTextureLayers().setVisible(1, true);
-								painter.update();
+								//canvasTexturePainter.getTextureLayers().setVisible(1, true);
+								canvasTexturePainter.update();
 								material.setNeedsUpdate(true);
+								
+								preferenceTab.setCanvasTexturePainter(canvasTexturePainter);
 							}
 							
 							@Override
@@ -241,7 +255,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						//MultiMaterial mat=THREE.MultiMaterial(materials );
 						
 						MultiMaterial mat=THREE.MultiMaterial(filterd);
-						LogUtils.log(mat);
+						
 						
 						//materials.push(material);
 						//material=mat.cast();
@@ -408,7 +422,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				*/
 				
 					private Widget cratePreferenceTab() {
-					PreferenceTab preferenceTab=new PreferenceTab(dataListPanel);
+					preferenceTab = new PreferenceTab(dataListPanel);
 					//if need set
 					return preferenceTab;
 				}
@@ -487,6 +501,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			mixer.update(clock.getDelta());
 		}
 		
+		if(canvasTexturePainter!=null){
+			canvasTexturePainter.update();
+		}
+		
 		renderer.render(scene, camera);
 	}
 
@@ -514,7 +532,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	
 
 	public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
-		
+		//test(1);
 		stopAnimation();
 		
 		if(mesh==null){
@@ -526,7 +544,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		double duration=1;
 		
-		JsArray<NumberKeyframeTrack> tracks=JavaScriptObject.createArray().cast();
+		JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
 		for(String key:expression.getKeys()){
 			boolean passed=false;
 			if(!passed && filterBrow && Mbl3dDataPredicates.passBrowOnly().apply(key)){
@@ -567,20 +585,106 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			
 			NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
 			tracks.push(track);
+			
+			
+			//test animation
+			
+			
+			
 		}
 
 		
+		//Mbl3dExpressionEntryPoint.INSTANCE.
+		//morph animation
 		AnimationClip clip=THREE.AnimationClip("test", -1, tracks);
-		Mbl3dExpressionEntryPoint.INSTANCE.getMixer().uncacheClip(clip);//same name cache that.
-		Mbl3dExpressionEntryPoint.INSTANCE.getMixer().clipAction(clip).play();
+		getMixer().uncacheClip(clip);//same name cache that.
+		getMixer().clipAction(clip).play();
+		
+		
+		//texture animation
+		JsArray<KeyframeTrack> tracks2=JavaScriptObject.createArray().cast();
+		
+		
+		tracks2.push(makeTextureAnimations(duration));
+		
+		AnimationClip clip2=THREE.AnimationClip("test2", -1, tracks2);
+		
+		getMixer().uncacheClip(clip2);//same name cache that.
+		
+		AnimationMixerAction action=getMixer().clipAction(clip2,canvasTexturePainter.getTextureLayers());
+		
+		action.play();
+		
 	}
 	
+	private KeyframeTrack makeTextureAnimations(double duration) {
+		String trackName=".visibles";
+		JsArrayNumber times=JavaScriptObject.createArray().cast();
+		
+		times.push(0);
+		times.push(duration);
+		times.push(duration*2);
+		
+		
+		JsArrayBoolean values=JavaScriptObject.createArray().cast();
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			if(i==0){
+				values.push(true);
+			}else{
+				values.push(false);
+			}
+		}
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			if(i==0){
+				values.push(true);
+			}else{
+				values.push(true);
+			}
+		}
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			if(i==0){
+				values.push(true);
+			}else{
+				values.push(false);
+			}
+		}
+		
+		//have multiple?
+		/*
+		values.push(false);
+		values.push(true);
+		values.push(false);
+		*/
+		
+		BooleanKeyframeTrack track=THREE.BooleanKeyframeTrack(trackName, times, values);
+	
+		return track;
+	}
+
 	public void stopAnimation() {
 		getMixer().stopAllAction();	
 	}
 	
+	/*
+	 	
+	 */
+	
+	public static final native AnimationClip test(double duration)/*-{
+	
+	//console.log($wnd.THREE.IntepolateDiscrete);
+	var times = [ 0, duration / 2, duration ], values = [ true, false, true ];
+
+	var trackName = '.visible';
 	
 	
+
+	var track = $wnd.THREE.BooleanKeyframeTrack( trackName, times, values );
+
+	return new $wnd.THREE.AnimationClip( null, duration, [ track ] );
+	}-*/;
 
 	private BasicExpressionPanel basicPanel;
 	private DataListPanel dataListPanel;
@@ -594,6 +698,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	private TabPanel tab;
 	private CombinePatternPanel combinePatternPanel;
+	private PreferenceTab preferenceTab;
 
 
 
