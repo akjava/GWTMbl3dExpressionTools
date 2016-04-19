@@ -169,6 +169,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						List<String> urls=Lists.newArrayList("models/mbl3d/body.png",
 								"models/mbl3d/eye_middle.png",
+								"models/mbl3d/eye_large.png",
 								"models/mbl3d/eye_small.png",
 															 "models/mbl3d/test.png",
 															 "models/mbl3d/uv.png"
@@ -602,10 +603,85 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		
 		//texture animation
+		
+		
+		
+		insertVisibleTextureAnimations(duration);
+		//insertAlphaTextureAnimations(duration);
+		
+		
+	}
+	
+	private List<Boolean> animationBoolean=Lists.newArrayList();
+	
+	public List<Boolean> getAnimationBoolean() {
+		return animationBoolean;
+	}
+	
+	public boolean isInitialTexture(int index){
+		return index==0 || index==1;
+	}
+	
+	private void insertAlphaTextureAnimations(double duration) {
+		
+		//init initial datas
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			canvasTexturePainter.getTextureLayers().setVisible(i, true);
+			if(isInitialTexture(i)){
+				canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
+			}else{
+				canvasTexturePainter.getTextureLayers().setAlpha(i, 0);
+			}
+		}
+		
 		JsArray<KeyframeTrack> tracks2=JavaScriptObject.createArray().cast();
 		
+		String trackName=".alphas";
+		JsArrayNumber times=JavaScriptObject.createArray().cast();
+		times.push(0);
+		times.push(duration);
+		times.push(duration*2);
 		
-		tracks2.push(makeTextureAnimations(duration));
+		
+		JsArrayNumber values=JavaScriptObject.createArray().cast();
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			if(i==0 || i==1){
+				values.push(1);
+			}else{
+				values.push(0);
+			}
+		}
+		
+		//changed value from ui
+		for(boolean value:animationBoolean){
+			if(value){
+				values.push(1);
+			}else{
+				values.push(0);
+			}
+			
+		}
+		
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			if(i==0 || i==1){
+				values.push(1);
+			}else{
+				values.push(0);
+			}
+		}
+		
+		//have multiple?
+		/*
+		values.push(false);
+		values.push(true);
+		values.push(false);
+		*/
+		
+		NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
+	
+		tracks2.push(track);
 		
 		AnimationClip clip2=THREE.AnimationClip("test2", -1, tracks2);
 		
@@ -614,38 +690,52 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		AnimationMixerAction action=getMixer().clipAction(clip2,canvasTexturePainter.getTextureLayers());
 		
 		action.play();
-		
 	}
-	
-	private KeyframeTrack makeTextureAnimations(double duration) {
+
+	private void insertVisibleTextureAnimations(double duration) {
+		
+		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+			canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
+			if(isInitialTexture(i)){
+				canvasTexturePainter.getTextureLayers().setVisible(i, true);
+			}else{
+				canvasTexturePainter.getTextureLayers().setVisible(i, false);
+			}
+		}
+		
+		JsArray<KeyframeTrack> tracks2=JavaScriptObject.createArray().cast();
+		
 		String trackName=".visibles";
 		JsArrayNumber times=JavaScriptObject.createArray().cast();
 		
 		times.push(0);
-		times.push(duration);
+		times.push(duration/2);
+		times.push(duration+duration/2);
 		times.push(duration*2);
 		
 		
 		JsArrayBoolean values=JavaScriptObject.createArray().cast();
 		
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
-			if(i==0){
+			if(isInitialTexture(i)){
 				values.push(true);
 			}else{
 				values.push(false);
 			}
 		}
 		
-		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
-			if(i==0){
-				values.push(true);
-			}else{
-				values.push(true);
-			}
+		//twice
+		for(boolean value:animationBoolean){
+			values.push(value);
 		}
 		
+		for(boolean value:animationBoolean){
+			values.push(value);
+		}
+		
+		
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
-			if(i==0){
+			if(isInitialTexture(i)){
 				values.push(true);
 			}else{
 				values.push(false);
@@ -661,7 +751,15 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		BooleanKeyframeTrack track=THREE.BooleanKeyframeTrack(trackName, times, values);
 	
-		return track;
+		tracks2.push(track);
+		
+		AnimationClip clip2=THREE.AnimationClip("test2", -1, tracks2);
+		
+		getMixer().uncacheClip(clip2);//same name cache that.
+		
+		AnimationMixerAction action=getMixer().clipAction(clip2,canvasTexturePainter.getTextureLayers());
+		
+		action.play();
 	}
 
 	public void stopAnimation() {

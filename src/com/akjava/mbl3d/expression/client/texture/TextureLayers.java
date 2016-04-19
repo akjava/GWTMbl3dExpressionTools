@@ -29,7 +29,7 @@ return this.alphas[index];
 public final  native void setVisible(int index,boolean  value)/*-{
 this.visibles[index]=value;
 }-*/;
-public final  native void setAlphas(int index,double  value)/*-{
+public final  native void setAlpha(int index,double  value)/*-{
 this.alphas[index]=value;
 }-*/;
 

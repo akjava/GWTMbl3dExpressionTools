@@ -19,8 +19,13 @@ import com.google.common.collect.Maps;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.ImageElement;
 
+/**
+ * not bad but slow.
+ * @author aki
+ *
+ */
 public class CanvasTexturePainter {
-	private TextureLayers textureLayers;//for mixer
+	private TextureLayers textureLayers;//for animation-mixer control
 	private Canvas canvas;
 	private String lastKey="";
 	private CanvasTexture canvasTexture;

@@ -1,12 +1,14 @@
 package com.akjava.mbl3d.expression.client;
 
-import com.akjava.gwt.lib.client.LogUtils;
+import java.util.List;
+
 import com.akjava.gwt.lib.client.datalist.SimpleTextDatasOwner;
 import com.akjava.gwt.three.client.js.textures.Texture;
 import com.akjava.lib.common.utils.FileNames;
 import com.akjava.mbl3d.expression.client.datalist.DumpRestoreClearPanel;
 import com.akjava.mbl3d.expression.client.player.PlayerPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
+import com.google.common.collect.Lists;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -40,6 +42,7 @@ public class PreferenceTab extends VerticalPanel{
 		generateCanvasTexturePainterPanel();
 	}
 	
+	private List<CheckBox> boxes=Lists.newArrayList();
 	public void generateCanvasTexturePainterPanel(){
 		canvasTexturePainterPanel.clear();
 	
@@ -50,14 +53,32 @@ public class PreferenceTab extends VerticalPanel{
 			
 			name=FileNames.getRemovedExtensionName(FileNames.asSlash().getFileName(name));
 			CheckBox check=new CheckBox(name);
-			check.setValue(canvasTexturePainter.getTextureLayers().isVisible(i));
+			//check.setValue(canvasTexturePainter.getTextureLayers().isVisible(i));
 			check.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Boolean> event) {
-					canvasTexturePainter.getTextureLayers().setVisible(index, event.getValue());
+					//
+					updateAnimationBoolean();
 				}
 			});
 			canvasTexturePainterPanel.add(check);
+			boxes.add(check);
 		}
+		
+		boxes.get(0).setValue(true);
+		boxes.get(1).setValue(true);
+		
+		canvasTexturePainter.getTextureLayers().setVisible(0, true);
+		canvasTexturePainter.getTextureLayers().setVisible(1, true);
+		
+		updateAnimationBoolean();
+	}
+
+	protected void updateAnimationBoolean() {
+		Mbl3dExpressionEntryPoint.INSTANCE.getAnimationBoolean().clear();
+		for(CheckBox box:boxes){
+			Mbl3dExpressionEntryPoint.INSTANCE.getAnimationBoolean().add(box.getValue());
+		}
+		
 	}
 }
