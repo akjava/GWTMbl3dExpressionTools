@@ -24,6 +24,7 @@ import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
+import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -184,6 +185,26 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				*/
 			}
 		};
+		//help navigato
+		table.getControlPanel().add(new Button("Next",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Mbl3dData selection=dataObjects.getSelection();
+				if(selection==null){
+					Optional<Mbl3dData> first=dataObjects.getFirst();
+					for(Mbl3dData data:first.asSet()){
+						dataObjects.setSelected(data, true);
+					}
+				}
+				
+				Optional<Mbl3dData> next=dataObjects.getNext(selection);
+				for(Mbl3dData data:next.asSet()){
+					dataObjects.setSelected(data, true);
+				}
+				updateListData();//for update selection;
+			}
+		}));
 		
 		dataObjects = new EasyCellTableObjects<Mbl3dData>(table) {
 			
@@ -423,12 +444,12 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		if(autoMovePage){
 		//fix page selection
 		if(dataObjects.isSelected()){
-			int index=dataObjects.getSelectedIndex().get()+1;
+			int index=dataObjects.getSelectedIndex().get();
 			int pageSize=dataObjects.getSimpleCellTable().getPager().getPageSize();
 			
 			//LogUtils.log(index+","+pageSize);
 			
-			if(index>pageSize){
+			if(index>=pageSize){
 				int page=index/pageSize;
 				dataObjects.getSimpleCellTable().getPager().setPage(page);
 				//LogUtils.log(page);

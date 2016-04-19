@@ -2,6 +2,8 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
+import com.akjava.gwt.lib.client.JavaScriptUtils;
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.experimental.AsyncMultiCaller;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
@@ -9,6 +11,8 @@ import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.core.BoundingBox;
 import com.akjava.gwt.three.client.gwt.loader.JSONLoaderObject;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
+import com.akjava.gwt.three.client.java.utils.MultiTextureLoader;
+import com.akjava.gwt.three.client.java.utils.MultiTextureLoader.MultiTextureLoaderListener;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.AnimationMixer;
@@ -23,24 +27,30 @@ import com.akjava.gwt.three.client.js.loaders.JSONLoader.JSONLoadHandler;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.gwt.three.client.js.materials.Material;
 import com.akjava.gwt.three.client.js.materials.MeshBasicMaterial;
+import com.akjava.gwt.three.client.js.materials.MeshPhongMaterial;
 import com.akjava.gwt.three.client.js.materials.MultiMaterial;
 import com.akjava.gwt.three.client.js.math.THREEMath;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
+import com.akjava.gwt.three.client.js.textures.Texture;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
+import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseWheelEvent;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -90,18 +100,25 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				onDocumentMouseMove(event);
 			}
 		});
+		rendererContainer.addMouseWheelHandler(new MouseWheelHandler() {
+			
+			@Override
+			public void onMouseWheel(MouseWheelEvent event) {
+				camera.getPosition().gwtIncrementZ(event.getDeltaY()*3);//for chrome only
+			}
+		});
 		
 		//light
 		
-		AmbientLight ambient = THREE.AmbientLight( 0xeeeeee );//var ambient = new THREE.AmbientLight( 0xffffff );
+		AmbientLight ambient = THREE.AmbientLight( 0xaaaaaa );//var ambient = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambient );
 
-		DirectionalLight directionalLight = THREE.DirectionalLight( 0x333333 );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
+		DirectionalLight directionalLight = THREE.DirectionalLight( 0x666666 );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
 		directionalLight.getPosition().set( -1, 1, 1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/white2.json#"+System.currentTimeMillis();//var url= "morph.json";
+				String url= "models/mbl3d/white5.json#"+System.currentTimeMillis();//var url= "morph.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 
@@ -143,15 +160,93 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 						double x=-0, y=-460,z= -100,s= 290;
 						
+						List<String> urls=Lists.newArrayList("models/mbl3d/eyeonly2.png",
+															 "models/mbl3d/test.png"
+								);
+						
+						
+						final MeshPhongMaterial material=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
+								.morphTargets(true)
+								);
+						
+						
+						
+						new MultiTextureLoader().load(urls, new MultiTextureLoaderListener() {
+							@Override
+							public void onLoad(List<Texture> textures) {
+								CanvasTexturePainter painter=new CanvasTexturePainter(textures,null);
+								material.setMap(painter.getCanvasTexture());
+								//painter.getTextureLayers().setVisible(0, false);
+								painter.getTextureLayers().setVisible(1, true);
+								painter.update();
+								material.setNeedsUpdate(true);
+							}
+							
+							@Override
+							public void onError(List<String> messages) {
+								for(String message:messages){
+									LogUtils.log(message);
+								}
+							}
+						});
+						
+						
+						
+						
+						
+						/*
+						Material material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(
+								THREE.TextureLoader().load("models/mbl3d/test.png"))
+								.morphTargets(true)
+								.transparent(true)
+								
+								);
+						*/
+						
+						
+						
 						JsArray<Material> materials=loadedObject.getMaterials();
 						for(int i=0;i<materials.length();i++){
 							MeshBasicMaterial m=materials.get(i).cast();//need cast GWT problem
 							m.setMorphTargets(true);
+							
+						}
+						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
+						//filterd.push(material);
+						
+						for(int i=0;i<materials.length();i++){
+							if(materials.get(i).getName().equals("White")){//eye & tooth
+								//LogUtils.log(i+" white");
+								//materials.set(i, material);
+								filterd.push(material);
+								continue;
+							}
+							
+							//body
+							if(materials.get(i).getName().equals("Pink02")){
+								//LogUtils.log(i+" pink02");
+								//this make problem ,i know when transparent?
+								//materials.get(i).setVisible(false);//allow modify
+								//materials.set(i, material);
+								filterd.push(material);
+								//filterd.push(THREE.MeshBasicMaterial());
+								continue;
+							}
+							filterd.push(materials.get(i));
 						}
 						
-						MultiMaterial mat=THREE.MultiMaterial(materials );//var mat=THREE.MultiMaterial( materials);//MultiMaterial mat=THREE.MultiMaterial( materials);//var mat=new THREE.MultiMaterial( materials);
-
-
+						//var mat=THREE.MultiMaterial( materials);//MultiMaterial mat=THREE.MultiMaterial( materials);//var mat=new THREE.MultiMaterial( materials);
+						
+					
+						//MultiMaterial mat=THREE.MultiMaterial(materials );
+						
+						MultiMaterial mat=THREE.MultiMaterial(filterd);
+						LogUtils.log(mat);
+						
+						//materials.push(material);
+						//material=mat.cast();
+						
+						
 						mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
 						mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
 						mesh.getPosition().set( x, y - bb.getMin().getY() * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
@@ -289,7 +384,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					
 					
-					tab.add(cratePreferenceTab(),"Preference");
+					tab.add(cratePreferenceTab(),"Misc");
 					
 					tab.selectTab(1);
 					
