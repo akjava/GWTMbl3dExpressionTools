@@ -1,17 +1,12 @@
 package com.akjava.mbl3d.expression.client.player;
 
-import com.akjava.gwt.three.client.gwt.JSParameter;
-import com.akjava.gwt.three.client.js.THREE;
-import com.akjava.gwt.three.client.js.animation.AnimationClip;
-import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
-import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
-import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
+import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayNumber;
+import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -37,6 +32,19 @@ public class PlayerPanel extends VerticalPanel{
 			}
 		});
 		buttons.add(stop);
+		
+		LabeledInputRangeWidget2 duration=new LabeledInputRangeWidget2("duraction", 0.1, 4, 0.1);
+		duration.getLabel().setWidth("60px");
+		duration.getRange().setWidth("80px");
+		buttons.add(duration);
+		duration.setValue(1);
+		duration.addtRangeListener(new ValueChangeHandler<Number>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<Number> event) {
+				Mbl3dExpressionEntryPoint.INSTANCE.setDuration(event.getValue().doubleValue());
+			}
+		});
 	}
 
 	protected void doPlay() {

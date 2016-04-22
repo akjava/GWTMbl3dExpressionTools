@@ -20,6 +20,7 @@ import com.akjava.gwt.three.client.js.animation.AnimationMixerAction;
 import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.BooleanKeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
+import com.akjava.gwt.three.client.js.animation.tracks.StringKeyframeTrack;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.core.Clock;
 import com.akjava.gwt.three.client.js.core.Geometry;
@@ -41,11 +42,13 @@ import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
+import com.akjava.mbl3d.expression.client.texture.TextureSwitcher;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayNumber;
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
@@ -79,6 +82,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	private AnimationMixer mixer;
 	
 	private CanvasTexturePainter canvasTexturePainter;
+	
+	private TextureSwitcher textureSwitcher;
+	
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
 		return GWTParamUtils.WebGLRenderer().preserveDrawingBuffer(true);
@@ -125,7 +131,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/white5.json#"+System.currentTimeMillis();//var url= "morph.json";
+				String url= "models/mbl3d/white.json#"+System.currentTimeMillis();//var url= "morph.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 
@@ -167,17 +173,24 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 						double x=-0, y=-460,z= -100,s= 290;
 						
-						List<String> urls=Lists.newArrayList("models/mbl3d/body.png",
-								"models/mbl3d/eye_middle.png",
+						List<String> urls=Lists.newArrayList("models/mbl3d/body.png", //"models/mbl3d/body.png",
+								"models/mbl3d/green_eye.png",
 								"models/mbl3d/eye_large.png",
 								"models/mbl3d/eye_small.png",
 															 "models/mbl3d/test.png",
+															 "models/mbl3d/redface1.png",
+															 "models/mbl3d/redface2.png",
+															 "models/mbl3d/redface3.png",
+															 "models/mbl3d/blueface1.png",
+															 
 															 "models/mbl3d/uv.png"
 								);
 						
 						
+						//shining eye
 						final MeshPhongMaterial material=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
+								.specular(0x555555).shininess(5)
 								);
 						
 						
@@ -187,12 +200,24 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 							@Override
 							public void onLoad(List<Texture> textures) {
+								textureSwitcher=TextureSwitcher.create();
+								textureSwitcher.setMaterial(material);
+								
 								canvasTexturePainter = new CanvasTexturePainter(textures,null);
-								material.setMap(canvasTexturePainter.getCanvasTexture());
+								canvasTexturePainter.getTextureLayers().setVisible(0, true);
+								canvasTexturePainter.getTextureLayers().setVisible(1, true);
+								canvasTexturePainter.update();
+								
+								String dataUrl=canvasTexturePainter.getCanvas().toDataUrl();
+								Texture defaultTexture=THREE.TextureLoader().load(dataUrl);
+								textureSwitcher.put("default", defaultTexture);
+								textureSwitcher.setSeletion("default");
+								
 								//painter.getTextureLayers().setVisible(0, false);
 								//canvasTexturePainter.getTextureLayers().setVisible(1, true);
-								canvasTexturePainter.update();
-								material.setNeedsUpdate(true);
+								//canvasTexturePainter.update();
+								
+								
 								
 								preferenceTab.setCanvasTexturePainter(canvasTexturePainter);
 							}
@@ -210,8 +235,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						
 						/*
+						 * for test
 						Material material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(
-								THREE.TextureLoader().load("models/mbl3d/test.png"))
+								THREE.TextureLoader().load("models/mbl3d/2048.png"))
 								.morphTargets(true)
 								.transparent(true)
 								
@@ -222,8 +248,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						JsArray<Material> materials=loadedObject.getMaterials();
 						for(int i=0;i<materials.length();i++){
-							MeshBasicMaterial m=materials.get(i).cast();//need cast GWT problem
+							MeshPhongMaterial m=materials.get(i).cast();//need cast GWT problem
 							m.setMorphTargets(true);
+							m.setSpecular(THREE.Color(0x555555));//less shine
+							m.setShininess(5);
 							
 						}
 						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
@@ -233,6 +261,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							if(materials.get(i).getName().equals("White")){//eye & tooth
 								//LogUtils.log(i+" white");
 								//materials.set(i, material);
+								
+								
+								
 								filterd.push(material);
 								continue;
 							}
@@ -245,6 +276,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								//materials.set(i, material);
 								filterd.push(material);
 								//filterd.push(THREE.MeshBasicMaterial());
+								
+								//filterd.push(materials.get(i));
 								continue;
 							}
 							filterd.push(materials.get(i));
@@ -262,7 +295,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						//material=mat.cast();
 						
 						
-						mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
+						mesh = THREE.SkinnedMesh( geometry, mat );
+						//mesh = THREE.SkinnedMesh( geometry, material2 );
+						
 						mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
 						mesh.getPosition().set( x, y - bb.getMin().getY() * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
 						mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
@@ -284,7 +319,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						initUi();
 						
 						
-						jsonLoader.load("models/mbl3d/onlyhair.json", new JSONLoadHandler() {
+						jsonLoader.load("models/mbl3d/hair2.json", new JSONLoadHandler() {
 							
 							/*
 							 * take care of materials.
@@ -297,7 +332,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								BoundingBox bb = geometry.getBoundingBox();
 								//LogUtils.log(bb);
 								
-								Mesh hair = THREE.Mesh( geometry, THREE.MeshLambertMaterial(GWTParamUtils.MeshLambertMaterial().color(0x553817)) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
+								Mesh hair = THREE.Mesh( geometry, THREE.MeshPhongMaterial(GWTParamUtils.
+										MeshPhongMaterial().color(0x553817).side(THREE.DoubleSide).specular(0xffffff).shininess(15)
+										) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
 								
 								//Mesh hair = THREE.Mesh( geometry, THREE.MultiMaterial(materials) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
 								//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
@@ -502,8 +539,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			mixer.update(clock.getDelta());
 		}
 		
-		if(canvasTexturePainter!=null){
-			canvasTexturePainter.update();
+		
+		if(textureSwitcher!=null){
+			textureSwitcher.update();
 		}
 		
 		renderer.render(scene, camera);
@@ -543,7 +581,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		JSParameter param=mesh.getMorphTargetDictionary().cast();
 		
-		double duration=1;
+		
 		
 		JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
 		for(String key:expression.getKeys()){
@@ -567,7 +605,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			String trackName=".morphTargetInfluences["+index+"]";
 			double value=expression.get(key);
 			
-			double wait=0.3;
+			
 			
 			JsArrayNumber times=JavaScriptObject.createArray().cast();
 			times.push(0);
@@ -605,13 +643,16 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		//texture animation
 		
 		
-		
-		insertVisibleTextureAnimations(duration);
+		insertSwitchTextureAnimations(duration);
+		//insertVisibleTextureAnimations(duration);
 		//insertAlphaTextureAnimations(duration);
 		
 		
 	}
 	
+	/**
+	 * modified when checkbox clicked
+	 */
 	private List<Boolean> animationBoolean=Lists.newArrayList();
 	
 	public List<Boolean> getAnimationBoolean() {
@@ -692,6 +733,54 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		action.play();
 	}
 
+private void insertSwitchTextureAnimations(double duration) {	
+	for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
+		canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
+	}
+	
+	for(int i=0;i<animationBoolean.size();i++){
+		canvasTexturePainter.getTextureLayers().setVisible(i, animationBoolean.get(i));
+	}
+	
+		canvasTexturePainter.update();//redraw here when need;
+		
+		textureSwitcher.put("canvas", canvasTexturePainter.getCanvasTexture());
+		
+		
+		JsArray<KeyframeTrack> tracks2=JavaScriptObject.createArray().cast();
+		
+		String trackName="."+TextureSwitcher.SELECTION_KEY;
+		
+		//create time keys
+		JsArrayNumber times=JavaScriptObject.createArray().cast();
+		times.push(0);
+		times.push(duration/2);
+		times.push(duration+duration/2);
+		times.push(duration*2);
+		
+		
+		JsArrayString values=JavaScriptObject.createArray().cast();
+		
+		values.push("default");
+		values.push("canvas");
+		values.push("canvas");
+		values.push("default");
+		
+		
+		
+		StringKeyframeTrack track=THREE.StringKeyframeTrack(trackName, times, values);
+	
+		tracks2.push(track);
+		
+		AnimationClip clip2=THREE.AnimationClip("test2", -1, tracks2);
+		
+		getMixer().uncacheClip(clip2);//always cacheed
+		
+		AnimationMixerAction action=getMixer().clipAction(clip2,textureSwitcher);
+		
+		action.play();
+	}
+	
 	private void insertVisibleTextureAnimations(double duration) {
 		
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
@@ -797,10 +886,19 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	private TabPanel tab;
 	private CombinePatternPanel combinePatternPanel;
 	private PreferenceTab preferenceTab;
+	private double duration=1;
 
 
 
 
+
+	public double getDuration() {
+		return duration;
+	}
+
+	public void setDuration(double duration) {
+		this.duration = duration;
+	}
 
 	public CombinePatternPanel getCombinePatternPanel() {
 		return combinePatternPanel;

@@ -27,6 +27,10 @@ import com.google.gwt.dom.client.ImageElement;
 public class CanvasTexturePainter {
 	private TextureLayers textureLayers;//for animation-mixer control
 	private Canvas canvas;
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
 	private String lastKey="";
 	private CanvasTexture canvasTexture;
 	private MapJoiner joiner=Joiner.on("-").withKeyValueSeparator("=");

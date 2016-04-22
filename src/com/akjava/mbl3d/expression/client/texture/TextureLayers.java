@@ -2,6 +2,11 @@ package com.akjava.mbl3d.expression.client.texture;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/**
+ * for calling from animation-mixer
+ * @author aki
+ *
+ */
 public class TextureLayers extends JavaScriptObject{
 protected TextureLayers(){}
 
