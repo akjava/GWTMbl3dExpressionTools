@@ -2,6 +2,7 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
+import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
@@ -28,6 +29,7 @@ import com.akjava.gwt.three.client.js.lights.AmbientLight;
 import com.akjava.gwt.three.client.js.lights.DirectionalLight;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader.JSONLoadHandler;
+import com.akjava.gwt.three.client.js.loaders.XHRLoader;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.gwt.three.client.js.materials.Material;
 import com.akjava.gwt.three.client.js.materials.MeshBasicMaterial;
@@ -40,6 +42,7 @@ import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.three.client.js.textures.Texture;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
+import com.akjava.lib.common.utils.HTMLUtils;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.akjava.mbl3d.expression.client.texture.TextureSwitcher;
@@ -173,6 +176,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 						double x=-0, y=-460,z= -100,s= 290;
 						
+						
+						
+						
+						/*
 						List<String> urls=Lists.newArrayList("models/mbl3d/body.png", //"models/mbl3d/body.png",
 								"models/mbl3d/green_eye.png",
 								"models/mbl3d/eye_large.png",
@@ -185,50 +192,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 															 
 															 "models/mbl3d/uv.png"
 								);
+						*/
 						
-						
-						//shining eye
+						//base body
 						final MeshPhongMaterial material=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
 								.specular(0x555555).shininess(5)
 								);
 						
+						loadTextures(material);
 						
 						
-						new MultiTextureLoader().load(urls, new MultiTextureLoaderListener() {
-							
-
-							@Override
-							public void onLoad(List<Texture> textures) {
-								textureSwitcher=TextureSwitcher.create();
-								textureSwitcher.setMaterial(material);
-								
-								canvasTexturePainter = new CanvasTexturePainter(textures,null);
-								canvasTexturePainter.getTextureLayers().setVisible(0, true);
-								canvasTexturePainter.getTextureLayers().setVisible(1, true);
-								canvasTexturePainter.update();
-								
-								String dataUrl=canvasTexturePainter.getCanvas().toDataUrl();
-								Texture defaultTexture=THREE.TextureLoader().load(dataUrl);
-								textureSwitcher.put("default", defaultTexture);
-								textureSwitcher.setSeletion("default");
-								
-								//painter.getTextureLayers().setVisible(0, false);
-								//canvasTexturePainter.getTextureLayers().setVisible(1, true);
-								//canvasTexturePainter.update();
-								
-								
-								
-								preferenceTab.setCanvasTexturePainter(canvasTexturePainter);
-							}
-							
-							@Override
-							public void onError(List<String> messages) {
-								for(String message:messages){
-									LogUtils.log(message);
-								}
-							}
-						});
+				
 						
 						
 						
@@ -352,6 +327,52 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	});
 	}
 	
+				protected void loadTextures(final MeshPhongMaterial material) {
+					THREE.XHRLoader().load("textures.txt", new XHRLoadHandler() {
+						@Override
+						public void onLoad(String text) {
+							List<String> urls=Lists.newArrayList(CSVUtils.splitLines(text));
+							new MultiTextureLoader().load(urls, new MultiTextureLoaderListener() {
+								
+
+								@Override
+								public void onLoad(List<Texture> textures) {
+									textureSwitcher=TextureSwitcher.create();
+									textureSwitcher.setMaterial(material);
+									
+									canvasTexturePainter = new CanvasTexturePainter(textures,null);
+									canvasTexturePainter.getTextureLayers().setVisible(0, true);
+									canvasTexturePainter.getTextureLayers().setVisible(1, true);
+									canvasTexturePainter.update();
+									
+									String dataUrl=canvasTexturePainter.getCanvas().toDataUrl();
+									Texture defaultTexture=THREE.TextureLoader().load(dataUrl);
+									textureSwitcher.put("default", defaultTexture);
+									textureSwitcher.setSeletion("default");
+									
+									//painter.getTextureLayers().setVisible(0, false);
+									//canvasTexturePainter.getTextureLayers().setVisible(1, true);
+									//canvasTexturePainter.update();
+									
+									
+									
+									preferenceTab.setCanvasTexturePainter(canvasTexturePainter);
+								}
+								
+								@Override
+								public void onError(List<String> messages) {
+									for(String message:messages){
+										LogUtils.log(message);
+									}
+								}
+							});
+							
+							
+							
+						}
+					});
+				}
+
 				private Panel createBasicPanel(){
 					basicPanel = new BasicExpressionPanel(mesh,this);
 					
