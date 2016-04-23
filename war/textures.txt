@@ -1,8 +1,4 @@
-models/mbl3d/body.png
-models/mbl3d/green_eye.png
-models/mbl3d/eye_large.png
-models/mbl3d/eye_small.png
-models/mbl3d/test.png
+models/mbl3d/tear.png
 models/mbl3d/redface1.png
 models/mbl3d/redface2.png
 models/mbl3d/redface3.png

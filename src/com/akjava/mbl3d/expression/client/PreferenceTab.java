@@ -79,6 +79,6 @@ public class PreferenceTab extends VerticalPanel{
 		for(CheckBox box:boxes){
 			Mbl3dExpressionEntryPoint.INSTANCE.getAnimationBoolean().add(box.getValue());
 		}
-		
+		Mbl3dExpressionEntryPoint.INSTANCE.onAnimationBooleanUpdated();
 	}
 }

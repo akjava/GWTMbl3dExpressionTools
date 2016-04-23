@@ -160,6 +160,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 		JsArrayString keys=param.getKeys();
 		for(int i=0;i<keys.length();i++){
 			String key=keys.get(i);
+			if(!key.startsWith("Expressions_")){
+				LogUtils.log("only support start 'Expressions_ and valid format key name:"+key);
+				continue;
+			}
 			final int index=param.getInt(key);
 			String originKey=key;
 			key=key.substring("Expressions_".length());

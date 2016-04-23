@@ -90,13 +90,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
-		return GWTParamUtils.WebGLRenderer().preserveDrawingBuffer(true);
+		return GWTParamUtils.WebGLRenderer().preserveDrawingBuffer(true).antialias(true);
 	}
 	
 	public String toImageDataUrl(){
 		return renderer.gwtPngDataUrl();
 	}
-	
+	private MeshPhongMaterial material;
 
 	@Override
 	public void onInitializedThree() {
@@ -108,6 +108,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		 windowHalfX= (int)(SCREEN_WIDTH/2);
 		 windowHalfY= (int)(SCREEN_HEIGHT/2);
 		 
+		 
+		 
+		 //renderer.setGammaOutput(true);//for blender color,however maybe make color problem  with gimp-created texture
 		
 		rendererContainer.addMouseMoveHandler(new MouseMoveHandler() {
 			@Override
@@ -119,6 +122,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			
 			@Override
 			public void onMouseWheel(MouseWheelEvent event) {
+				event.preventDefault();
 				camera.getPosition().gwtIncrementZ(event.getDeltaY()*3);//for chrome only
 			}
 		});
@@ -134,8 +138,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/white.json#"+System.currentTimeMillis();//var url= "morph.json";
+				String url= "models/mbl3d/model8j.json";//var url= "morph.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
+					
+
 					
 
 					
@@ -194,11 +200,19 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								);
 						*/
 						
-						//base body
-						final MeshPhongMaterial material=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
+						final MeshPhongMaterial eyeMaterial=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
+								.transparent(true)
+								.specular(1).shininess(1)
+								.map(THREE.TextureLoader().load("models/mbl3d/green_eye.png"))
+								);
+						
+						material = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
+								.morphTargets(true)
+								.transparent(true)
 								.specular(0x555555).shininess(5)
 								);
+						material.setVisible(false);
 						
 						loadTextures(material);
 						
@@ -225,26 +239,39 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						for(int i=0;i<materials.length();i++){
 							MeshPhongMaterial m=materials.get(i).cast();//need cast GWT problem
 							m.setMorphTargets(true);
-							m.setSpecular(THREE.Color(0x555555));//less shine
-							m.setShininess(5);
+							
+							//update material
+							if(m.getName().equals("White")){
+								m.setColor(THREE.Color(0xf8f8f8));
+								m.setSpecular(THREE.Color(0xffffff));//less shine
+								m.setShininess(100);
+							}else{
+								m.setSpecular(THREE.Color(0x111111));//less shine
+								m.setShininess(5);
+							}
+							
+							
 							
 						}
 						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
 						//filterd.push(material);
 						
 						for(int i=0;i<materials.length();i++){
-							if(materials.get(i).getName().equals("White")){//eye & tooth
+							
+							//if exists
+							if(materials.get(i).getName().equals("eye")){//eye & tooth
 								//LogUtils.log(i+" white");
 								//materials.set(i, material);
 								
 								
-								
-								filterd.push(material);
+								//filterd.push(materials.get(i));
+								filterd.push(eyeMaterial);
 								continue;
 							}
 							
+							//if exists
 							//body
-							if(materials.get(i).getName().equals("Pink02")){
+							if(materials.get(i).getName().equals("head")){
 								//LogUtils.log(i+" pink02");
 								//this make problem ,i know when transparent?
 								//materials.get(i).setVisible(false);//allow modify
@@ -345,10 +372,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 									canvasTexturePainter.getTextureLayers().setVisible(1, true);
 									canvasTexturePainter.update();
 									
+									
 									String dataUrl=canvasTexturePainter.getCanvas().toDataUrl();
 									Texture defaultTexture=THREE.TextureLoader().load(dataUrl);
 									textureSwitcher.put("default", defaultTexture);
 									textureSwitcher.setSeletion("default");
+									
+									textureSwitcher.setSeletion("canvas");
 									
 									//painter.getTextureLayers().setVisible(0, false);
 									//canvasTexturePainter.getTextureLayers().setVisible(1, true);
@@ -561,6 +591,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		}
 		
 		
+		
+		
 		if(textureSwitcher!=null){
 			textureSwitcher.update();
 		}
@@ -664,9 +696,16 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		//texture animation
 		
 		
-		insertSwitchTextureAnimations(duration);
+		//insertSwitchTextureAnimations(duration);
 		//insertVisibleTextureAnimations(duration);
-		//insertAlphaTextureAnimations(duration);
+		
+		onAnimationBooleanUpdated();
+		
+		
+		material.setMap(canvasTexturePainter.getCanvasTexture());
+		material.setVisible(true);
+		
+		insertMaterialAlphaAnimations(material,duration);
 		
 		
 	}
@@ -680,17 +719,66 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		return animationBoolean;
 	}
 	
+	public void onAnimationBooleanUpdated(){
+		for(int i=0;i<animationBoolean.size();i++){
+			canvasTexturePainter.getTextureLayers().setAlpha(i, 100);
+			canvasTexturePainter.getTextureLayers().setVisible(i, animationBoolean.get(i));
+		}
+		canvasTexturePainter.update();
+	}
+	
 	public boolean isInitialTexture(int index){
 		return index==0 || index==1;
 	}
 	
+private void insertMaterialAlphaAnimations(Material material,double duration) {
+		
+		
+		JsArray<KeyframeTrack> tracks2=JavaScriptObject.createArray().cast();
+		
+		String trackName=".opacity";
+		JsArrayNumber times=JavaScriptObject.createArray().cast();
+		times.push(0);
+		times.push(duration);
+		times.push(duration*2);
+		
+		
+		JsArrayNumber values=JavaScriptObject.createArray().cast();
+		
+		values.push(0);
+		
+		values.push(1);
+		
+		values.push(0);
+		
+		//have multiple?
+		/*
+		values.push(false);
+		values.push(true);
+		values.push(false);
+		*/
+		
+		NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
+	
+		tracks2.push(track);
+		
+		AnimationClip clip2=THREE.AnimationClip("test2", -1, tracks2);
+		
+		getMixer().uncacheClip(clip2);//same name cache that.
+		
+		AnimationMixerAction action=getMixer().clipAction(clip2,material);
+		
+		action.play();
+	}
+
 	private void insertAlphaTextureAnimations(double duration) {
 		
 		//init initial datas
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
 			canvasTexturePainter.getTextureLayers().setVisible(i, true);
 			if(isInitialTexture(i)){
-				canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
+				//canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
+				canvasTexturePainter.getTextureLayers().setAlpha(i, 0);//only use effect now
 			}else{
 				canvasTexturePainter.getTextureLayers().setAlpha(i, 0);
 			}
@@ -709,7 +797,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
 			if(i==0 || i==1){
-				values.push(1);
+				//values.push(1);
+				values.push(0);
 			}else{
 				values.push(0);
 			}
@@ -728,7 +817,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
 			if(i==0 || i==1){
-				values.push(1);
+				values.push(0);
+				//values.push(1);
 			}else{
 				values.push(0);
 			}

@@ -20,7 +20,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.ImageElement;
 
 /**
- * not bad but slow.
+ * not bad but slow.not good at animation
  * @author aki
  *
  */
