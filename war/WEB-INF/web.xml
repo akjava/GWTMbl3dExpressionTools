@@ -6,6 +6,14 @@
          xmlns="http://java.sun.com/xml/ns/javaee">
 
   <!-- Servlets -->
+  <servlet>
+<servlet-name>FileSaveServlet</servlet-name>
+<servlet-class>com.akjava.mbl3d.expression.server.FileSaveServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>FileSaveServlet</servlet-name>
+<url-pattern>/write</url-pattern>
+</servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>

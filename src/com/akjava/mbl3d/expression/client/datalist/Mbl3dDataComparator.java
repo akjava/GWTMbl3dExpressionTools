@@ -13,8 +13,9 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 	private  int order;
 	private List<Emotion> emotions;
 	
-	public Mbl3dDataComparator() {
+	public Mbl3dDataComparator(List<Emotion> emotions) {
 		super();
+		this.emotions=emotions;
 	}
 	public void setEmotions(List<Emotion> emotions) {
 		this.emotions = emotions;
@@ -35,6 +36,12 @@ public class Mbl3dDataComparator implements Comparator<Mbl3dData>{
 	public static final int ORDER_MOUTH=7;
 	@Override
 	public int compare(Mbl3dData o1, Mbl3dData o2) {
+		/*
+		 * noisy
+		if(emotions==null){
+			LogUtils.log("Mbl3dDataComparator:need emotions");
+		}
+		*/
 		
 		if(order==ORDER_ID){
 			return o1.getId()-o2.getId();

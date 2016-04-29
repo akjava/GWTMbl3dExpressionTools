@@ -1,5 +1,7 @@
 package com.akjava.mbl3d.expression.client.datalist;
 
+import com.akjava.mbl3d.expression.client.EmotionPredicates;
+import com.akjava.mbl3d.expression.client.EmotionsData;
 import com.google.common.base.Predicate;
 
 public class Mbl3dDataPredicates {
@@ -38,5 +40,15 @@ public class Mbl3dDataPredicates {
 			return input.contains("brow");
 		}
 	}
-
+	
+	public static Predicate<Mbl3dData> emotionTypePredicate(final String type,final EmotionsData data){
+		return new Predicate<Mbl3dData>() {
+			Predicate<String> typePredicate=EmotionPredicates.filterEmotion(data, type);
+			@Override
+			public boolean apply(Mbl3dData input) {
+				return typePredicate.apply(input.getType());
+			}
+		};
+	}
+	
 }

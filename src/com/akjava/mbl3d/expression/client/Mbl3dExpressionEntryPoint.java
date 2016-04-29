@@ -2,7 +2,6 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
-import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
@@ -29,10 +28,8 @@ import com.akjava.gwt.three.client.js.lights.AmbientLight;
 import com.akjava.gwt.three.client.js.lights.DirectionalLight;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader.JSONLoadHandler;
-import com.akjava.gwt.three.client.js.loaders.XHRLoader;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.gwt.three.client.js.materials.Material;
-import com.akjava.gwt.three.client.js.materials.MeshBasicMaterial;
 import com.akjava.gwt.three.client.js.materials.MeshPhongMaterial;
 import com.akjava.gwt.three.client.js.materials.MultiMaterial;
 import com.akjava.gwt.three.client.js.math.THREEMath;
@@ -42,8 +39,9 @@ import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.three.client.js.textures.Texture;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
-import com.akjava.lib.common.utils.HTMLUtils;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
+import com.akjava.mbl3d.expression.client.recorder.RecorderPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.akjava.mbl3d.expression.client.texture.TextureSwitcher;
 import com.google.common.collect.Lists;
@@ -100,6 +98,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	@Override
 	public void onInitializedThree() {
+		clock=THREE.Clock();
 		
 		INSTANCE=this;
 		//LogUtils.log("onInitializedThree");
@@ -138,7 +137,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/model8j.json";//var url= "morph.json";
+				String url= "models/mbl3d/model8m.json";//var url= "morph.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 
@@ -199,7 +198,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 															 "models/mbl3d/uv.png"
 								);
 						*/
-						
+						//not used right now
 						final MeshPhongMaterial eyeMaterial=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
 								.transparent(true)
@@ -211,6 +210,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								.morphTargets(true)
 								.transparent(true)
 								.specular(0x555555).shininess(5)
+								.opacity(1)
 								);
 						material.setVisible(false);
 						
@@ -245,7 +245,23 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								m.setColor(THREE.Color(0xf8f8f8));
 								m.setSpecular(THREE.Color(0xffffff));//less shine
 								m.setShininess(100);
-							}else{
+							}else if(m.getName().equals("Blue")){//edge of mouth
+								m.setColor(THREE.Color(0x007ebb));
+								m.setSpecular(THREE.Color(0xffffff));
+								m.setShininess(100);
+							}else if(m.getName().equals("Pink01")){//mouth and inside
+								m.setColor(THREE.Color(0xffa3ac));
+								m.setSpecular(THREE.Color(0x888888));
+								m.setShininess(50);
+							}else if(m.getName().equals("Pink02")){//mouth and inside
+								m.setColor(THREE.Color(0xFFE4C6));
+								m.setSpecular(THREE.Color(0x111111));
+								m.setShininess(5);
+							}else if(m.getName().equals("gum")){//edge of mouth
+								m.setColor(THREE.Color(0x7c4f53));
+								m.setSpecular(THREE.Color(0x111111));
+								m.setShininess(5);
+							}else{//
 								m.setSpecular(THREE.Color(0x111111));//less shine
 								m.setShininess(5);
 							}
@@ -321,7 +337,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						initUi();
 						
 						
-						jsonLoader.load("models/mbl3d/hair2.json", new JSONLoadHandler() {
+						jsonLoader.load("models/mbl3d/hair2.json", new JSONLoadHandler() {	//hair2
 							
 							/*
 							 * take care of materials.
@@ -336,6 +352,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								
 								Mesh hair = THREE.Mesh( geometry, THREE.MeshPhongMaterial(GWTParamUtils.
 										MeshPhongMaterial().color(0x553817).side(THREE.DoubleSide).specular(0xffffff).shininess(15)
+										//.map(THREE.TextureLoader().load("models/mbl3d/hair1.png"))
 										) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
 								
 								//Mesh hair = THREE.Mesh( geometry, THREE.MultiMaterial(materials) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
@@ -450,7 +467,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				}
 	
 				private void initUi() {
-					clock=THREE.Clock();
+					
 					
 					tab = new TabPanel();
 					controlerRootPanel.add(tab);
@@ -492,6 +509,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					tab.selectTab(1);
 					
 					
+					THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
+						@Override
+						public void onLoad(String text) {
+							List<Emotion> emotions=new EmotionCsvConverter().convert(text);
+
+							EmotionsData emotionData=new EmotionsData(emotions);
+							dataListPanel.setEmotions(emotions);
+							combinePatternPanel.setEmotion(emotions);
+							
+							recorderPanel.setEmotionData(emotionData);
+						}
+					});
 				}
 				
 				
@@ -513,6 +542,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					private Widget cratePreferenceTab() {
 					preferenceTab = new PreferenceTab(dataListPanel);
 					//if need set
+					
+					recorderPanel = new RecorderPanel();
+					preferenceTab.add(recorderPanel);
+					
 					return preferenceTab;
 				}
 
@@ -581,23 +614,42 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		 windowHalfY= (int)(SCREEN_HEIGHT/2);
 	}
 	
+
+	
+	double frameTime=1.0/30;
+
 	@Override
 	public void animate(double timestamp) {
 		//camera.getPosition().gwtIncrementX(( - mouseX - camera.getPosition().getX()) * .001);//camera.position.y += ( - mouseY - camera.position.y ) * .01;
 		camera.lookAt(scene.getPosition());//look at 0
 	
-		if(mixer!=null){
-			mixer.update(clock.getDelta());
-		}
-		
-		
-		
-		
-		if(textureSwitcher!=null){
+		if(recorderPanel!=null && recorderPanel.isRecording()){
+			if(recorderPanel.isWriting()){
+				return;
+			}
+			
+			mixer.update(frameTime);	
 			textureSwitcher.update();
+			
+			renderer.render(scene, camera);
+			
+			recorderPanel.record(toImageDataUrl());
+			
+		}else{
+			
+			
+			if(mixer!=null){
+				
+				mixer.update(clock.getDelta());
+				
+			}	
+			
+			if(textureSwitcher!=null){
+				textureSwitcher.update();
+			}
+			
+			renderer.render(scene, camera);
 		}
-		
-		renderer.render(scene, camera);
 	}
 
 	
@@ -622,16 +674,101 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 
 	
-
-	public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
-		//test(1);
-		stopAnimation();
+	/**
+	 * verty important tips,NEVER duplicate time.
+	 * 
+	 * if duplicate time that would removed in optimize(),and this usually break other timings.
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @param name
+	 * @param expressions
+	 * @param filterBrow
+	 * @param filterEyes
+	 * @param filterMouth
+	 * @return
+	 */
+	public AnimationClip converToAnimationClip(String name,List<Mbl3dExpression> expressions,boolean filterBrow,boolean filterEyes,boolean filterMouth){
+		JSParameter param=mesh.getMorphTargetDictionary().cast();
 		
-		if(mesh==null){
-			//not ready
-			return;
+		JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
+		
+		
+		
+		
+		for(int i=0;i<param.getKeys().length();i++){
+			String key=param.getKeys().get(i);
+			
+			JsArrayNumber times=JavaScriptObject.createArray().cast();
+			JsArrayNumber values=JavaScriptObject.createArray().cast();
+			
+			double time=0;
+			for(int j=0;j<expressions.size();j++){
+				Mbl3dExpression expression=expressions.get(j);
+			
+			
+			
+			boolean needSetValue=false;
+			
+			if(expression.containsKey(key)){
+				boolean passed=false;
+				if(!passed && filterBrow && Mbl3dDataPredicates.passBrowOnly().apply(key)){
+					passed=true;
+				}
+				if(!passed && filterEyes && Mbl3dDataPredicates.passEyesOnly().apply(key)){
+					passed=true;
+				}
+				if(!passed && filterMouth && Mbl3dDataPredicates.passMouthOnly().apply(key)){
+					passed=true;
+				}
+				if(passed){
+					needSetValue=true;
+				}
+			}
+			//add time
+			if(j==0){
+				times.push(time);
+			}
+			
+			times.push(time+duration);
+			times.push(time+duration*2);
+			
+			time=time+duration*2;
+			
+			//add value
+			if(j==0){
+				values.push(0);
+			}
+			
+			double value=0;
+			if(needSetValue){
+				value=expression.get(key);
+			}
+			values.push(value);
+			values.push(0);
+			
+			
+			
+			}
+		
+			String trackName=".morphTargetInfluences["+i+"]";
+			NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
+			tracks.push(track);
 		}
 		
+		
+		
+		//Mbl3dExpressionEntryPoint.INSTANCE.
+		//morph animation
+		AnimationClip clip=THREE.AnimationClip(name, -1, tracks);
+		return clip;
+	}
+
+	/*
+	 * convert Mbl3dExpression to AnimationClip
+	 */
+	public AnimationClip converToAnimationClip(String name,Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth){
 		JSParameter param=mesh.getMorphTargetDictionary().cast();
 		
 		
@@ -688,7 +825,21 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		//Mbl3dExpressionEntryPoint.INSTANCE.
 		//morph animation
-		AnimationClip clip=THREE.AnimationClip("test", -1, tracks);
+		AnimationClip clip=THREE.AnimationClip(name, -1, tracks);
+		return clip;
+	}
+
+	public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
+		//test(1);
+		stopAnimation();
+		
+		if(mesh==null){
+			//not ready
+			return;
+		}
+		
+		AnimationClip clip=converToAnimationClip("test", expression, filterBrow, filterEyes, filterMouth);
+		
 		getMixer().uncacheClip(clip);//same name cache that.
 		getMixer().clipAction(clip).play();
 		
@@ -702,8 +853,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		onAnimationBooleanUpdated();
 		
 		
-		material.setMap(canvasTexturePainter.getCanvasTexture());
-		material.setVisible(true);
+		
 		
 		insertMaterialAlphaAnimations(material,duration);
 		
@@ -725,10 +875,20 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			canvasTexturePainter.getTextureLayers().setVisible(i, animationBoolean.get(i));
 		}
 		canvasTexturePainter.update();
+		material.setMap(canvasTexturePainter.getCanvasTexture());
+		
+		if(canvasTexturePainter!=null){
+			material.setNeedsUpdate(true);
+			material.setVisible(true);
+		}
 	}
 	
 	public boolean isInitialTexture(int index){
 		return index==0 || index==1;
+	}
+	
+	public void insertMaterialAlphaAnimations() {
+		insertMaterialAlphaAnimations(material,duration);
 	}
 	
 private void insertMaterialAlphaAnimations(Material material,double duration) {
@@ -998,9 +1158,16 @@ private void insertSwitchTextureAnimations(double duration) {
 	private CombinePatternPanel combinePatternPanel;
 	private PreferenceTab preferenceTab;
 	private double duration=1;
+	private RecorderPanel recorderPanel;
 
 
+	public List<Mbl3dData> getMbl3dDatas(){
+		return dataListPanel.getDatas();
+	}
 
+	public void logMesh(){
+		LogUtils.log(mesh);
+	}
 
 
 	public double getDuration() {
@@ -1024,6 +1191,24 @@ private void insertSwitchTextureAnimations(double duration) {
 		
 		}
 		tab.selectTab(1);//data list
+	}
+
+	public void fixRenderSize() {
+		boolean needH=false;
+		boolean needW=false;
+		if(SCREEN_WIDTH%2!=0){
+			needW=true;
+		}
+		if(SCREEN_HEIGHT%2!=0){
+			needH=true;
+		}
+		if(!needH && !needW){
+			return;
+		}
+		double w=needW?SCREEN_WIDTH-1:SCREEN_WIDTH;
+		double h=needH?SCREEN_HEIGHT-1:SCREEN_HEIGHT;
+	
+		renderer.setSize(w, h);
 	}
 	
 }

@@ -58,7 +58,7 @@ public class CombinePatternPanel extends VerticalPanel{
 	public CombinePatternPanel(final StorageControler storageControler,final BasicExpressionPanel basicPanel){
 		this.storageControler=storageControler;
 		this.basicPanel=basicPanel;
-		final VerticalPanel emotionButtons=new VerticalPanel();
+		emotionButtons = new VerticalPanel();
 		
 		//null button
 		Button bt=new Button("None",new ClickHandler() {
@@ -71,40 +71,7 @@ public class CombinePatternPanel extends VerticalPanel{
 		emotionButtons.add(bt);
 		bt.setWidth("200px");
 		
-		THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
-			
-			
-
-			@Override
-			public void onLoad(String text) {
-				emotions=new EmotionCsvConverter().convert(text);
-				
-				//update selectio here
-				updateSelectionBox(indexBox.getValue());
-				//debug
-				
-				for(final Emotion e:emotions){
-					//LogUtils.log(e.toString());
-					Button bt=new Button(e.getPrimary()+" - "+e.getSecondary(),new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							selectEmotion(e);
-						}
-					});
-					emotionButtons.add(bt);
-					bt.setWidth("200px");
-				}
-				
-				emotionsData = new EmotionsData(emotions);
-				for(String name:emotionsData.getPrimaryNames()){
-					typeFilterBox.addItem(name);
-				}
-				for(String name:emotionsData.getSecondaryNames()){
-					typeFilterBox.addItem(name);
-				}
-			}
-		});
+		
 		
 		
 		combinedExpression = new CombinedExpression();
@@ -425,6 +392,35 @@ public class CombinePatternPanel extends VerticalPanel{
 		add(test);
 	}
 	
+	public void setEmotion(List<Emotion> emotions){
+		this.emotions=emotions;
+		
+		//update selectio here
+		updateSelectionBox(indexBox.getValue());
+		//debug
+		
+		for(final Emotion e:emotions){
+			//LogUtils.log(e.toString());
+			Button bt=new Button(e.getPrimary()+" - "+e.getSecondary(),new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					selectEmotion(e);
+				}
+			});
+			emotionButtons.add(bt);
+			bt.setWidth("200px");
+		}
+		
+		emotionsData = new EmotionsData(emotions);
+		for(String name:emotionsData.getPrimaryNames()){
+			typeFilterBox.addItem(name);
+		}
+		for(String name:emotionsData.getSecondaryNames()){
+			typeFilterBox.addItem(name);
+		}
+	}
+	
 	public boolean hasEmotion(int index){
 		String emotion=getEmotion(index);
 		return emotion!=null;
@@ -543,6 +539,9 @@ public class CombinePatternPanel extends VerticalPanel{
 
 
 	private Button copyToListBt;
+
+
+	private VerticalPanel emotionButtons;
 	
 	private void setIndex(int index){
 		indexBox.setValue(index,true);

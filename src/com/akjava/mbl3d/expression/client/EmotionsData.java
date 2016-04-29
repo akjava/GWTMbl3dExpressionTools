@@ -3,6 +3,9 @@ package com.akjava.mbl3d.expression.client;
 import java.util.List;
 import java.util.Set;
 
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -36,6 +39,10 @@ private List<Emotion> emotions;
 		secondaryNames=ImmutableList.copyOf(tmpSecondary);
 	}
 	
+	public List<Emotion> getEmotions() {
+		return emotions;
+	}
+
 	public  boolean containsInPrimary(String name){
 		return primaryNames.contains(name);
 	}
@@ -62,5 +69,9 @@ private List<Emotion> emotions;
 			}
 		}
 		return ImmutableList.copyOf(tmp);
+	}
+	
+	public  Predicate<Mbl3dData> makeNamePredicate(final String name){
+		return Mbl3dDataPredicates.emotionTypePredicate(name, this);
 	}
 }

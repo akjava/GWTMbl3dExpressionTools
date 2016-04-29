@@ -9,6 +9,8 @@ import com.akjava.mbl3d.expression.client.datalist.DumpRestoreClearPanel;
 import com.akjava.mbl3d.expression.client.player.PlayerPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -47,7 +49,7 @@ public class PreferenceTab extends VerticalPanel{
 		canvasTexturePainterPanel.clear();
 	
 		for(int i=0;i<canvasTexturePainter.getTextures().size();i++){
-			final int index=i;
+			
 			Texture texture=canvasTexturePainter.getTextures().get(i);
 			String name=texture.getSourceFile();
 			
@@ -65,13 +67,22 @@ public class PreferenceTab extends VerticalPanel{
 			boxes.add(check);
 		}
 		
+		
+		/*//for test
 		boxes.get(0).setValue(true);
-		boxes.get(1).setValue(true);
-		
 		canvasTexturePainter.getTextureLayers().setVisible(0, true);
-		canvasTexturePainter.getTextureLayers().setVisible(1, true);
+		*/
 		
-		updateAnimationBoolean();
+		//already too much repainted;
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+			@Override
+			public void execute() {
+				updateAnimationBoolean();
+			}
+		});
+		
+		
+		
 	}
 
 	protected void updateAnimationBoolean() {

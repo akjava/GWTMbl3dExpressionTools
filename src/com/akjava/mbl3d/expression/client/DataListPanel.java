@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.akjava.gwt.html5.client.download.HTML5Download;
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageDataList;
 import com.akjava.gwt.lib.client.datalist.SimpleTextData;
@@ -24,6 +25,8 @@ import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
+import com.akjava.mbl3d.expression.client.recorder.FileSaveServletSender;
+import com.akjava.mbl3d.expression.client.recorder.FileSaveServletSender.PostListener;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
@@ -65,58 +68,8 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		this.mbl3dExpressionSetter=mbl3dExpressionSetter;
 		
 		
-		final VerticalPanel editorPanel=new VerticalPanel();
-		THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
-			
-
-			@Override
-			public void onLoad(String text) {
-				List<Emotion> emotions=new EmotionCsvConverter().convert(text);
-				
-				editor = new Mbl3dDataEditor(emotions);    
-				driver.initialize(editor);
-				
-				
-				driver.edit(null);
-				editorPanel.add(editor);
-				
-			    	Button updateBt=new Button("Update",new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						doUpdate();
-					}
-
-					
-				});
-			    	updateBt.setWidth("100px");
-			    	
-			    	HorizontalPanel bts=new HorizontalPanel();
-			    	editorPanel.add(bts);
-			    	bts.add(updateBt);
-			    	
-			    	Button removeBt=new Button("Remove",new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							boolean result=Window.confirm("delete selection?");
-							if(!result){
-								return;
-							}
-							Mbl3dData data=driver.flush();
-							if(data!=null){
-								dataList.clearData(data.getId());
-								dataObjects.removeItem(data);
-								updateListData();
-							}
-						}
-					});
-			    	bts.add(removeBt);
-			    	
-			    	comparator.setEmotions(emotions);
-			    	
-			    	updateListData();
-				
-			}
-		});
+		editorPanel = new VerticalPanel();
+		
 
 		
 	    
@@ -225,7 +178,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		};
 		
 		
-		comparator=new Mbl3dDataComparator();
+		comparator=new Mbl3dDataComparator(null);
 		comparator.setOrder(Mbl3dDataComparator.ORDER_ID_DESC);
 		//load
 		initializeListData();
@@ -397,9 +350,89 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 			}
 		});
 		toolsPanel.add(jsonBt);
+		
+		Button testBt=new Button("Test",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				//still confusing how to handle non indexed data.
+				String fileBaseName="unknown";
+				Mbl3dData selection=dataObjects.getSelection();
+				if(selection==null){
+					Window.alert("export only selection");
+					return;
+				}
+				
+				if(selection!=null && selection.getName()!=null){
+					fileBaseName=selection.getName();
+				}
+				
+				String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();
+				new FileSaveServletSender("/write").post("test.png", url, new PostListener() {
+					@Override
+					public void onReceived(String response) {
+						LogUtils.log(response);
+					}
+					
+					@Override
+					public void onError(String message) {
+						LogUtils.log(message);
+					}
+				});
+			}
+		});
+		toolsPanel.add(testBt);
+		
 		toolsPanel.add(dlPanel);
 		
 	}
+	
+	public void setEmotions(List<Emotion> emotions){
+		
+		editor = new Mbl3dDataEditor(emotions);    
+		driver.initialize(editor);
+		
+		
+		driver.edit(null);
+		editorPanel.add(editor);
+		
+	    	Button updateBt=new Button("Update",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				doUpdate();
+			}
+
+			
+		});
+	    	updateBt.setWidth("100px");
+	    	
+	    	HorizontalPanel bts=new HorizontalPanel();
+	    	editorPanel.add(bts);
+	    	bts.add(updateBt);
+	    	
+	    	Button removeBt=new Button("Remove",new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					boolean result=Window.confirm("delete selection?");
+					if(!result){
+						return;
+					}
+					Mbl3dData data=driver.flush();
+					if(data!=null){
+						dataList.clearData(data.getId());
+						dataObjects.removeItem(data);
+						updateListData();
+					}
+				}
+			});
+	    	bts.add(removeBt);
+	    	
+	    	comparator.setEmotions(emotions);
+	    	
+	    	updateListData();
+		
+	
+	}
+	
 	protected void updateRangeAndAnimation() {
 		Mbl3dExpressionEntryPoint.INSTANCE.stopAnimation();
 		
@@ -524,12 +557,17 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		return expression;
 	}
 	
+	public List<Mbl3dData> getDatas(){
+		return dataObjects.getDatas();
+	}
 	
 	
 	
 	
 	 interface Driver extends SimpleBeanEditorDriver< Mbl3dData,  Mbl3dDataEditor> {}
 	 Driver driver = GWT.create(Driver.class);
+
+	private VerticalPanel editorPanel;
 
 	
 

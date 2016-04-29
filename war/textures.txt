@@ -1,6 +1,9 @@
-models/mbl3d/tear.png
-models/mbl3d/redface1.png
-models/mbl3d/redface2.png
-models/mbl3d/redface3.png
-models/mbl3d/blueface1.png
+models/mbl3d/redface1d4.png
+models/mbl3d/redface9e2.png
+models/mbl3d/redface9e3.png
+models/mbl3d/redface8.png
+models/mbl3d/blueface5a.png
+models/mbl3d/blueface5b.png
+models/mbl3d/blueface5c.png
 models/mbl3d/uv.png
+models/mbl3d/cat.png

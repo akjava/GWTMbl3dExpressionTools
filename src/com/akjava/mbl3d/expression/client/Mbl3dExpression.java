@@ -43,8 +43,9 @@ public double get(String key){
 	return map.get(key);
 }
 
-public void set(String key,double value){
+public Mbl3dExpression set(String key,double value){
 	map.put(key, value);
+	return this;
 }
 
 public Set<String> getKeys(){
