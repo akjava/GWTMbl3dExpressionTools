@@ -25,8 +25,14 @@ public class FileSaveServletSender {
 			Request response  =builder.sendRequest(sb.toString(), new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
-					if(listener!=null)
-					listener.onReceived(response.getText());
+					if(listener!=null){
+						if(response.getStatusCode()==200){
+						listener.onReceived(response.getText());
+						}else{
+						listener.onError(response.getStatusCode()+","+response.getStatusText());
+						}
+					}
+					
 				}
 				
 				@Override

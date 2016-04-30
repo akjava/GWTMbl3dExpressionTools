@@ -38,8 +38,19 @@ private ListBox addExpressionBox;
 		recordBt = new ExecuteButton("Record",false) {
 			@Override
 			public void executeOnClick() {
+				sender.callClearImages(new PostListener() {
+					@Override
+					public void onReceived(String response) {
+						LogUtils.log(response);
+						startRecord();
+					}
+					
+					@Override
+					public void onError(String message) {
+						LogUtils.log(message);
+					}
+				});
 				
-				startRecord();
 			}
 		};
 		
