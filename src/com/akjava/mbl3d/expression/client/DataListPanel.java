@@ -366,11 +366,24 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 					fileBaseName=selection.getName();
 				}
 				
-				String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();
-				new FileSaveServletSender("/write").post("test.png", url, new PostListener() {
+				final String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();
+				final FileSaveServletSender sender=new FileSaveServletSender("/write");
+				
+				//clear first
+				sender.callClearImages(new PostListener() {
 					@Override
 					public void onReceived(String response) {
-						LogUtils.log(response);
+						sender.post("test.png", url, new PostListener() {
+							@Override
+							public void onReceived(String response) {
+								LogUtils.log(response);
+							}
+							
+							@Override
+							public void onError(String message) {
+								LogUtils.log(message);
+							}
+						});
 					}
 					
 					@Override
@@ -378,6 +391,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 						LogUtils.log(message);
 					}
 				});
+				
 			}
 		});
 		toolsPanel.add(testBt);

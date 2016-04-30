@@ -7,3 +7,4 @@ models/mbl3d/blueface5b.png
 models/mbl3d/blueface5c.png
 models/mbl3d/uv.png
 models/mbl3d/cat.png
+models/mbl3d/red.png

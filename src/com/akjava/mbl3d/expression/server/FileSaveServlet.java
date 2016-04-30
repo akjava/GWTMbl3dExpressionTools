@@ -18,9 +18,40 @@ public class FileSaveServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private boolean clearImages(){
+		File file=new File(getBaseDirectory());
+		if(!file.exists()){
+			System.out.println("not exist:"+getBaseDirectory());
+			return false;
+		}
+
+		String[] names=file.list();
+		for(String name:names){
+			if(name.toLowerCase().endsWith(".png")){
+				new File(file,name).delete();
+			}
+		}
+		
+		
+		return true;
+	}
+	private String getBaseDirectory(){
+		String dir="s:\\download\\mbl3ddatas\\";
+		return dir;
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		//image clear command
+		String command = req.getParameter("command");
+		if (command != null && command.equals("clear")) {
+			boolean result = clearImages();
+			resp.getWriter().println("clearImages:" + result);
+			return;
+		}
+		
 		//just send filename & data & simply write it
 		String name=req.getParameter("name");
 		if(name==null){
@@ -47,7 +78,7 @@ public class FileSaveServlet extends HttpServlet {
 			bytes=data.getBytes();
 		}
 		//don't care encode. TODO modify directory
-		String dir="s:\\download\\mbl3ddatas\\";
+		String dir=getBaseDirectory();
 		File file=new File(dir+name);
 		
 		Files.write(bytes, file);
