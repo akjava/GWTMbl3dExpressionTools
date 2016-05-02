@@ -137,7 +137,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/model8m.json";//var url= "morph.json";
+				String url= "models/mbl3d/model8o.json";//var url= "morph.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 

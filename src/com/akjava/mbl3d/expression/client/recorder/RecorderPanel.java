@@ -92,10 +92,10 @@ private ListBox addExpressionBox;
 		
 		addExpressionBox.addItem("eyes04_min");
 		addExpressionBox.addItem("eyes04_max");
-		addExpressionBox.addItem("eyes07_min");
-		addExpressionBox.addItem("eyes07_max");
-		addExpressionBox.addItem("eyes08_min");
-		addExpressionBox.addItem("eyes08_max");
+		addExpressionBox.addItem("eyes80_min");
+		addExpressionBox.addItem("eyes80_max");
+		addExpressionBox.addItem("eyes81_min");
+		addExpressionBox.addItem("eyes81_max");
 	}
 	
 	public String getTypeName(){
