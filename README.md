@@ -11,11 +11,14 @@ need fix to read morph animation exported model.
 
 output dir is totally hard write.defualt "S:\download\mbl3ddatas"
 
+expressions_list_dump_20160502.csv is my ouput.
 ##Credits
 Models/Face-Shapes created by Manuel Bastioni Lab 
 http://www.manuelbastioni.com/
+
 Hair - Makehuman
 http://www.makehuman.org/
+
 Rendering - three.js
 http://threejs.org/
 
