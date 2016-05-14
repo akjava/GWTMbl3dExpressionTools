@@ -99,8 +99,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	@Override
 	public void onInitializedThree() {
 		clock=THREE.Clock();
-		
 		INSTANCE=this;
+		
 		//LogUtils.log("onInitializedThree");
 		renderer.setClearColor(0);//default is black?
 		
@@ -137,7 +137,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/model8o.json";//var url= "morph.json";
+				String url= "models/mbl3d/tmp5.json";
+				//String url= "models/mbl3d/model8o.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 
@@ -202,8 +203,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						final MeshPhongMaterial eyeMaterial=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
 								.transparent(true)
-								.specular(1).shininess(1)
-								.map(THREE.TextureLoader().load("models/mbl3d/green_eye.png"))
+								.specular(0x111111).shininess(5)
+								//.specular(1).shininess(1)
+								.map(THREE.TextureLoader().load("models/mbl3d/simpleface.png"))
 								);
 						
 						material = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
@@ -253,7 +255,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								m.setColor(THREE.Color(0xffa3ac));
 								m.setSpecular(THREE.Color(0x888888));
 								m.setShininess(50);
-							}else if(m.getName().equals("Pink02")){//mouth and inside
+							}else if(m.getName().equals("Pink02") || m.getName().equals("Lip")){//face & lip
 								m.setColor(THREE.Color(0xFFE4C6));
 								m.setSpecular(THREE.Color(0x111111));
 								m.setShininess(5);
@@ -275,7 +277,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						for(int i=0;i<materials.length();i++){
 							
 							//if exists
-							if(materials.get(i).getName().equals("eye")){//eye & tooth
+							if(materials.get(i).getName().equals("Eyes") || materials.get(i).getName().equals("Pink02")){//eye & tooth
 								//LogUtils.log(i+" white");
 								//materials.set(i, material);
 								
@@ -829,6 +831,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		return clip;
 	}
 
+	public String createAnimationJson(){
+		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression();
+		AnimationClip clip=converToAnimationClip("test", expression, true, true, true);
+		
+		
+		LogUtils.log(AnimationClip.toJSON(clip));
+		
+		JSONObject object=new JSONObject(AnimationClip.toJSON(clip));
+		
+		return object.toString();
+	}
+	
 	public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
 		//test(1);
 		stopAnimation();

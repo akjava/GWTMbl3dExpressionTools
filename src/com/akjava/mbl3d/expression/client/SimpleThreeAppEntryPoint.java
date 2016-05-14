@@ -50,7 +50,7 @@ public abstract class SimpleThreeAppEntryPoint extends AbstractThreeApp implemen
 	
 	//overwrite what ever you need;
 	public PerspectiveCamera createCamera(){
-		PerspectiveCamera camera=THREE.PerspectiveCamera(45, getWindowInnerWidth()/getWindowInnerHeight(), 0.5, 300000);
+		PerspectiveCamera camera=THREE.PerspectiveCamera(45, getWindowInnerWidth()/getWindowInnerHeight(), .1, 10000);
 		camera.getPosition().set(0, 0, 400);
 		return camera;
 	}

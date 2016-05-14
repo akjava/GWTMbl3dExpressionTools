@@ -351,6 +351,32 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		});
 		toolsPanel.add(jsonBt);
 		
+		Button clipBt=new Button("Clip",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String fileBaseName="unknown";
+				Mbl3dData selection=dataObjects.getSelection();
+				if(selection==null){
+					Window.alert("export only selection");
+					return;
+				}
+				
+				if(selection!=null && selection.getName()!=null){
+					fileBaseName=selection.getName();
+				}
+				
+				
+				String json=Mbl3dExpressionEntryPoint.INSTANCE.createAnimationJson();
+				
+				Anchor a=HTML5Download.get().generateTextDownloadLink(json,"clip-"+ fileBaseName+".json", "Download", true);
+				dlPanel.clear();
+				dlPanel.add(a);
+			}
+		});
+		toolsPanel.add(clipBt);
+		
+		
+		//trying store?
 		Button testBt=new Button("Test",new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -394,7 +420,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 				
 			}
 		});
-		toolsPanel.add(testBt);
+		//toolsPanel.add(testBt);
 		
 		toolsPanel.add(dlPanel);
 		
