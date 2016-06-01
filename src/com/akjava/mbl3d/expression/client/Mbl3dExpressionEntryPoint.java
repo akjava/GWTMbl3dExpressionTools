@@ -11,6 +11,7 @@ import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.core.BoundingBox;
 import com.akjava.gwt.three.client.gwt.loader.JSONLoaderObject;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
+import com.akjava.gwt.three.client.java.ui.experiments.ThreeAppEntryPointWithControler;
 import com.akjava.gwt.three.client.java.utils.MultiTextureLoader;
 import com.akjava.gwt.three.client.java.utils.MultiTextureLoader.MultiTextureLoaderListener;
 import com.akjava.gwt.three.client.js.THREE;
