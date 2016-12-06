@@ -6,6 +6,8 @@ import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.experimental.AsyncMultiCaller;
+import com.akjava.gwt.three.client.examples.js.THREEExp;
+import com.akjava.gwt.three.client.examples.js.controls.OrbitControls;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.core.BoundingBox;
@@ -59,7 +61,6 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -98,6 +99,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	}
 	private MeshPhongMaterial material;
 
+	
+	private int cameraY=1550;
+	private int cameraZ=500;
 	@Override
 	public void onInitializedThree() {
 		clock=THREE.Clock();
@@ -148,6 +152,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 					
 
+					private OrbitControls controls;
+
 					@Override
 					public void onLoad(String text) {
 						/*
@@ -182,7 +188,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						BoundingBox bb = geometry.getBoundingBox();
 						//double x=-20, y=-1270,z= -300,s= 800;
 
-						double x=-0, y=-460,z= -100,s= 290;
+						double characterScale=1000;
+						double x=-0, y=bb.getMin().getY()*characterScale,z=0;
 						
 						
 						
@@ -327,8 +334,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						//mesh = THREE.SkinnedMesh( geometry, material2 );
 						
 						mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
-						mesh.getPosition().set( x, y - bb.getMin().getY() * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
-						mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
+						mesh.getPosition().set( x, y, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
+						mesh.getScale().set( characterScale, characterScale, characterScale );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
+						mesh.updateMatrixWorld();
 						scene.add( mesh );
 						
 						
@@ -339,9 +347,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						//temp test
 						
 						final double fx=x;
-						final double fy=y - bb.getMin().getY() * s;
+						final double fy=y;
 						final double fz=z;
-						final double fs=s;
+						final double fs=characterScale;
 						
 						//TODO init ui;
 						initUi();
@@ -374,6 +382,12 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							}
 						});
 						
+						LogUtils.log("camera-y:"+cameraY);
+						controls = THREEExp.OrbitControls(camera,rendererContainer.getElement() );
+						controls.setTarget(THREE.Vector3( 0, cameraY, 0 ));
+						controls.getMouseButtons().set("ORBIT", THREE.MOUSE.MIDDLE);
+						controls.getMouseButtons().set("ZOOM", 3);//3 is not exist,for ignore left button
+						controls.update();
 						
 						
 					}
@@ -613,8 +627,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	@Override
 	public PerspectiveCamera createCamera() {
-		PerspectiveCamera camera = THREE.PerspectiveCamera(45, getWindowInnerWidth()/getWindowInnerHeight(), 1, 4000);
-		camera.getPosition().set(0, 0, 25);
+		PerspectiveCamera camera = THREE.PerspectiveCamera(45, getWindowInnerWidth()/getWindowInnerHeight(), 10, 20000);
+		camera.getPosition().set(0, cameraY, cameraZ);
 		return camera;
 	}
 	@Override
@@ -631,7 +645,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	@Override
 	public void animate(double timestamp) {
 		//camera.getPosition().gwtIncrementX(( - mouseX - camera.getPosition().getX()) * .001);//camera.position.y += ( - mouseY - camera.position.y ) * .01;
-		camera.lookAt(scene.getPosition());//look at 0
+		//camera.lookAt(scene.getPosition());//look at 0
 	
 		if(recorderPanel!=null && recorderPanel.isRecording()){
 			if(recorderPanel.isWriting()){
