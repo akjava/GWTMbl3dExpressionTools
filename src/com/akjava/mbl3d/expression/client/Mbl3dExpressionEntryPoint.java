@@ -2,6 +2,7 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
+import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
@@ -14,6 +15,7 @@ import com.akjava.gwt.three.client.gwt.core.BoundingBox;
 import com.akjava.gwt.three.client.gwt.loader.JSONLoaderObject;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
 import com.akjava.gwt.three.client.java.ui.experiments.ThreeAppEntryPointWithControler;
+import com.akjava.gwt.three.client.java.utils.Mbl3dLoader;
 import com.akjava.gwt.three.client.java.utils.MultiTextureLoader;
 import com.akjava.gwt.three.client.java.utils.MultiTextureLoader.MultiTextureLoaderListener;
 import com.akjava.gwt.three.client.js.THREE;
@@ -142,47 +144,25 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		directionalLight.getPosition().set( -1, 1, 1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
 		scene.add( directionalLight );
 		
+		final String modelUrl=GWTHTMLUtils.parameterFile("model");
+		final String textureUrl=GWTHTMLUtils.parameterFile("texture");
+		LogUtils.log("model & texture:"+modelUrl+","+textureUrl);
+		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
 				//String url= "models/mbl3d/tmp5.json";
 				String url= "models/mbl3d/model8o.json";
-				THREE.XHRLoader().load(url,new XHRLoadHandler() {
-					
-
-					
-
-					
-
+				//"models/mbl3d/simpleface.png"
+				
+				Mbl3dLoader loader=new Mbl3dLoader();
+				loader.forceApplyAxisAngle(GWTHTMLUtils.parameterBoolean("forceFixMorphtargets",false));
+				loader.load(modelUrl,new JSONLoadHandler() {
 					private OrbitControls controls;
-
-					@Override
-					public void onLoad(String text) {
-						/*
-						 * fix morphtargets vertices
-						 * wrong [[x,y,z]] [x,y,z] & x-up
-						 */
+					private MultiMaterial multiMaterials;
 					
-						final JSONValue json=JSONParser.parseStrict(text);
-						JSONObject jsonObj=json.isObject();
-						JSONValue jsonMorph=jsonObj.get("morphTargets");
-						JSONArray morphArray=jsonMorph.isArray();
-						for(int i=0;i<morphArray.size();i++){
-							JSONValue jsonMorphTarget=morphArray.get(i);
-							JSONObject morphTarget=jsonMorphTarget.isObject();
-							
-							JSONValue jsonVertices=morphTarget.get("vertices");
-							JSONArray vertices=jsonVertices.isArray();
-							
-							JsArrayNumber fixed=convertMorphVertices(vertices);
-							
-							JSONArray fixedArray=new JSONArray(fixed);
-							
-							morphTarget.put("vertices", fixedArray);
-						}
+					@Override
+					public void loaded(Geometry geometry,JsArray<Material> materials) {
 						
-						JSONLoader jsonLoader=THREE.JSONLoader();
-						JSONLoaderObject loadedObject=jsonLoader.parse(jsonObj.getJavaScriptObject());
-						
-						Geometry geometry=loadedObject.getGeometry();
+						//Geometry geometry=loadedObject.getGeometry();
 						
 						geometry.computeBoundingBox();
 						BoundingBox bb = geometry.getBoundingBox();
@@ -214,7 +194,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								.transparent(true)
 								.specular(0x111111).shininess(5)
 								//.specular(1).shininess(1)
-								.map(THREE.TextureLoader().load("models/mbl3d/simpleface.png"))
+								.map(THREE.TextureLoader().load(textureUrl))
 								);
 						
 						material = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
@@ -235,19 +215,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						
 						
-						/*
-						 * for test
+						
 						Material material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(
-								THREE.TextureLoader().load("models/mbl3d/2048.png"))
+								THREE.TextureLoader().load(textureUrl))
 								.morphTargets(true)
 								.transparent(true)
 								
 								);
-						*/
 						
 						
 						
-						JsArray<Material> materials=loadedObject.getMaterials();
+						
+						if(materials!=null){
 						for(int i=0;i<materials.length();i++){
 							MeshPhongMaterial m=materials.get(i).cast();//need cast GWT problem
 							m.setMorphTargets(true);
@@ -276,16 +255,15 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							}else{//
 								m.setSpecular(THREE.Color(0x111111));//less shine
 								m.setShininess(5);
-							}
-							
-							
-							
+							}	
+						}
 						}
 						
 						boolean hasHead=false;
 						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
 						//filterd.push(material);
 						
+						if(materials!=null){
 						for(int i=0;i<materials.length();i++){
 							
 							//if exists
@@ -315,6 +293,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							}
 							filterd.push(materials.get(i));
 						}
+						}
 						if(!hasHead){
 							LogUtils.log("this model not contain head-material,not work canvas-painter");
 						}
@@ -324,14 +303,18 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						//MultiMaterial mat=THREE.MultiMaterial(materials );
 						
 						MultiMaterial mat=THREE.MultiMaterial(filterd);
+						if(filterd.length()==0){
+							mesh = THREE.SkinnedMesh( geometry, material2 );
+						}else{
+							//multi material:not so good,because of speed
+							mesh = THREE.SkinnedMesh( geometry, mat );
+						}
 						
 						
 						//materials.push(material);
 						//material=mat.cast();
 						
 						
-						mesh = THREE.SkinnedMesh( geometry, mat );
-						//mesh = THREE.SkinnedMesh( geometry, material2 );
 						
 						mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
 						mesh.getPosition().set( x, y, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
@@ -355,7 +338,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						initUi();
 						
 						
-						jsonLoader.load("models/mbl3d/hair2.json", new JSONLoadHandler() {	//hair2
+						THREE.JSONLoader().load("models/mbl3d/hair2.json", new JSONLoadHandler() {	//hair2
 							
 							/*
 							 * take care of materials.

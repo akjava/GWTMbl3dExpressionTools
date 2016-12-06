@@ -24,6 +24,7 @@
     <!-- be added before this line.                -->
     <!--                                           -->
     <script type="text/javascript" language="javascript" src="three.min.js"></script>
+     <script type="text/javascript" language="javascript" src="js/controls/OrbitControls.js"></script>
     <script type="text/javascript" language="javascript" src="mbl3dexpression/mbl3dexpression.nocache.js"></script>
   </head>
 
@@ -33,6 +34,12 @@
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
   <body>
+<!-- Initialize Parameter -->
+<input type="hidden" id="model" value="models/mbl3d14/round-head.json"/>
+<input type="hidden" id="texture" value="models/mbl3d14/anime_dermal.png"/>
+
+<!-- has morph targets -->
+<input type="hidden" id="forceFixMorphtargets" value="true"/>
 
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
