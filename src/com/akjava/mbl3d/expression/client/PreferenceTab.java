@@ -85,6 +85,9 @@ public class PreferenceTab extends VerticalPanel{
 		
 	}
 
+	/**
+	 * fire if checkbox touched,call onAnimationBooleanUpdated
+	 */
 	protected void updateAnimationBoolean() {
 		Mbl3dExpressionEntryPoint.INSTANCE.getAnimationBoolean().clear();
 		for(CheckBox box:boxes){

@@ -59,6 +59,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -138,8 +139,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		scene.add( directionalLight );
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
-				String url= "models/mbl3d/tmp5.json";
-				//String url= "models/mbl3d/model8o.json";
+				//String url= "models/mbl3d/tmp5.json";
+				String url= "models/mbl3d/model8o.json";
 				THREE.XHRLoader().load(url,new XHRLoadHandler() {
 					
 
@@ -215,6 +216,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								.specular(0x555555).shininess(5)
 								.opacity(1)
 								);
+						
 						material.setVisible(false);
 						
 						loadTextures(material);
@@ -272,6 +274,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							
 							
 						}
+						
+						boolean hasHead=false;
 						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
 						//filterd.push(material);
 						
@@ -291,7 +295,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							//if exists
 							//body
 							if(materials.get(i).getName().equals("head")){
-								//LogUtils.log(i+" pink02");
+								hasHead=true;
+								//LogUtils.log("head:"+i+" pink02");
 								//this make problem ,i know when transparent?
 								//materials.get(i).setVisible(false);//allow modify
 								//materials.set(i, material);
@@ -303,7 +308,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							}
 							filterd.push(materials.get(i));
 						}
-						
+						if(!hasHead){
+							LogUtils.log("this model not contain head-material,not work canvas-painter");
+						}
 						//var mat=THREE.MultiMaterial( materials);//MultiMaterial mat=THREE.MultiMaterial( materials);//var mat=new THREE.MultiMaterial( materials);
 						
 					
@@ -892,7 +899,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		canvasTexturePainter.update();
 		material.setMap(canvasTexturePainter.getCanvasTexture());
 		
-		if(canvasTexturePainter!=null){
+		//debug canvas
+		//String url=canvasTexturePainter.getCanvas().toDataUrl();
+		//Window.open(url, "_debug", null);//
+		
+		if(material!=null){//?why check canvasTexturePainter
 			material.setNeedsUpdate(true);
 			material.setVisible(true);
 		}
