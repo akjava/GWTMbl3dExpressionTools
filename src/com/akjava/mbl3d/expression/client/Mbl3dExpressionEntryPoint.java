@@ -2,6 +2,7 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
+import com.akjava.gwt.lib.client.CanvasUtils;
 import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
@@ -12,7 +13,6 @@ import com.akjava.gwt.three.client.examples.js.controls.OrbitControls;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.core.BoundingBox;
-import com.akjava.gwt.three.client.gwt.loader.JSONLoaderObject;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
 import com.akjava.gwt.three.client.java.ui.experiments.ThreeAppEntryPointWithControler;
 import com.akjava.gwt.three.client.java.utils.Mbl3dLoader;
@@ -31,7 +31,6 @@ import com.akjava.gwt.three.client.js.core.Clock;
 import com.akjava.gwt.three.client.js.core.Geometry;
 import com.akjava.gwt.three.client.js.lights.AmbientLight;
 import com.akjava.gwt.three.client.js.lights.DirectionalLight;
-import com.akjava.gwt.three.client.js.loaders.JSONLoader;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader.JSONLoadHandler;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.gwt.three.client.js.materials.Material;
@@ -50,6 +49,7 @@ import com.akjava.mbl3d.expression.client.recorder.RecorderPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.akjava.mbl3d.expression.client.texture.TextureSwitcher;
 import com.google.common.collect.Lists;
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayBoolean;
@@ -61,7 +61,6 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -89,7 +88,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	
 	private CanvasTexturePainter canvasTexturePainter;
 	
-	private TextureSwitcher textureSwitcher;
+	private TextureSwitcher textureSwitcher; //i'm not sure,what is this?maybe for graduate texture change
 	
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
@@ -150,7 +149,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		//String url= "models/mbl3d/morph.json";//var url= "morph.json";
 				//String url= "models/mbl3d/tmp5.json";
-				String url= "models/mbl3d/model8o.json";
+				//String url= "models/mbl3d/model8o.json";
 				//"models/mbl3d/simpleface.png"
 				
 				Mbl3dLoader loader=new Mbl3dLoader();
@@ -206,7 +205,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						material.setVisible(false);
 						
-						loadTextures(material);
+						//loadTextures(material);
 						
 						
 				
@@ -216,14 +215,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						
 						
-						Material material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(
-								THREE.TextureLoader().load(textureUrl))
+						MeshPhongMaterial material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
 								.transparent(true)
 								
 								);
 						
-						
+						loadTextureMontage(material2);
 						
 						
 						if(materials!=null){
@@ -304,8 +302,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						MultiMaterial mat=THREE.MultiMaterial(filterd);
 						if(filterd.length()==0){
-							mesh = THREE.SkinnedMesh( geometry, material2 );
+							mesh = THREE.SkinnedMesh( geometry, material2 );//using texture switch
 						}else{
+							LogUtils.log("use json-models multi-material");
 							//multi material:not so good,because of speed
 							mesh = THREE.SkinnedMesh( geometry, mat );
 						}
@@ -378,6 +377,37 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	});
 	}
 	
+	private TextureMontage textureMontage;
+	protected void loadTextureMontage(final MeshPhongMaterial material){
+		THREE.XHRLoader().load("montage.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
+			
+
+			@Override
+			public void onLoad(String text) {
+				List<TextureMontageData> datas= new TextureMontageDataConverter().convert(text);
+				
+				Canvas canvas=CanvasUtils.createCanvas(2048, 2048);
+				textureMontage = new TextureMontage("models/mbl3d14/", canvas,material);
+				textureMontage.setTextureMontageDatas(datas);
+				
+				
+				material.setMap(textureMontage.getCanvasTexture());
+				textureMontage.update();//need material?
+				
+				TextureMontageWidget widget=new TextureMontageWidget(datas);
+				preferenceTab.getTextureMontagePanel().add(widget);
+				
+				
+				
+				//create widget TODO
+			}
+		});
+	}
+	
+	/**
+	 * @deprecated
+	 * @param material
+	 */
 				protected void loadTextures(final MeshPhongMaterial material) {
 					THREE.XHRLoader().load("textures.txt", new XHRLoadHandler() {
 						@Override
@@ -656,6 +686,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			}
 			
 			renderer.render(scene, camera);
+		}
+		
+		if(textureMontage!=null){
+			textureMontage.update();
 		}
 	}
 

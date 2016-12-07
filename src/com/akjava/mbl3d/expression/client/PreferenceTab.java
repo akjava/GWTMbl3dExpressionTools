@@ -34,11 +34,25 @@ public class PreferenceTab extends VerticalPanel{
 		this.add(new Label("CanvasTexturePainter"));
 		canvasTexturePainterPanel = new VerticalPanel();
 		this.add(canvasTexturePainterPanel);
+		
+		this.add(new Label("TextureMontage"));
+		TextureMontagePanel = new VerticalPanel();
+		this.add(TextureMontagePanel);
 	}
 	
+	private VerticalPanel TextureMontagePanel;
+	
+	public VerticalPanel getTextureMontagePanel() {
+		return TextureMontagePanel;
+	}
+
 	private CanvasTexturePainter canvasTexturePainter;
 	private VerticalPanel canvasTexturePainterPanel;
 
+	/**
+	 * @deprecated
+	 * @param canvasTexturePainter
+	 */
 	public void setCanvasTexturePainter(CanvasTexturePainter canvasTexturePainter) {
 		this.canvasTexturePainter = canvasTexturePainter;
 		generateCanvasTexturePainterPanel();
