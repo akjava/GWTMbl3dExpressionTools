@@ -25,16 +25,19 @@ public class TextureMontageDataConverter extends Converter<String, List<TextureM
 				String[] values=csv.substring(1).split(",");
 				data.setKeyName(values[0]);
 				
+				
 				if(values.length>1){
-					if(!values[1].isEmpty()){
-					data.setValue(values[1]);
-					}
+					boolean enabled=ValuesUtils.toBoolean(values[1], false);
+					data.setEnabled(enabled);
 				}
 				
 				if(values.length>2){
-					boolean enabled=ValuesUtils.toBoolean(values[2], false);
-					data.setEnabled(enabled);
+					if(!values[2].isEmpty()){
+					data.setValue(values[2]);
+					}
 				}
+				
+				
 				
 				if(values.length>3){
 					if(values[3].equals("color")){
@@ -69,14 +72,22 @@ public class TextureMontageDataConverter extends Converter<String, List<TextureM
 	protected String doBackward(List<TextureMontageData> datas) {
 		List<String> lines=Lists.newArrayList();
 		for(TextureMontageData data:datas){
-			String header="#"+data.getKeyName()+","+data.getValue();
+			String header="#"+data.getKeyName();
+			
+			//enable
+			header+=",";
 			if(data.isEnabled()){
-				header+=","+"true";
-			}else{
-				if(data.getType()!=TextureMontageData.TYPE_LIST){
-					header+=",";
+				header+="true";
+			}
+			
+			//value
+			header+=",";
+			if(data.getValues()!=null &&data.getValues().size()>0){
+				if(data.getValue()!=data.getValues().get(0)){
+					header+=data.getValue();
 				}
 			}
+		
 			
 			if(data.getType()!=TextureMontageData.TYPE_LIST){
 				header+=",color";

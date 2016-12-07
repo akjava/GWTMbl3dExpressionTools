@@ -218,7 +218,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						MeshPhongMaterial material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
 								.morphTargets(true)
 								.transparent(true)
-								
+								.alphaTest(0.5)
+								.opacity(1)
 								);
 						
 						loadTextureMontage(material2);
@@ -394,7 +395,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				material.setMap(textureMontage.getCanvasTexture());
 				textureMontage.update();//need material?
 				
-				TextureMontageWidget widget=new TextureMontageWidget(datas);
+				TextureMontageWidget widget=new TextureMontageWidget(textureMontage);
 				preferenceTab.getTextureMontagePanel().add(widget);
 				
 				

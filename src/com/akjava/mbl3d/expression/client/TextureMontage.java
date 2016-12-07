@@ -41,6 +41,10 @@ public class TextureMontage {
 
 	private List<TextureMontageData> textureMontageDatas;
 	
+	public List<TextureMontageData> getTextureMontageDatas() {
+		return textureMontageDatas;
+	}
+
 	public void setTextureMontageDatas(List<TextureMontageData> textureMontageDatas) {
 		this.textureMontageDatas = textureMontageDatas;
 	}
