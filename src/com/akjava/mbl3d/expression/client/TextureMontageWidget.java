@@ -105,6 +105,7 @@ public class TextureMontageWidget extends VerticalPanel{
 			
 			@Override
 			public void onClick(ClickEvent event) {
+				linkPanel.clear();
 				String text=new TextureMontageDataConverter().reverse().convert(TextureMontageWidget.this.textureMontageDatas);
 				Anchor alink=HTML5Download.get().generateTextDownloadLink(text, "montage.txt", "download",true);
 				linkPanel.add(alink);
@@ -119,6 +120,7 @@ public class TextureMontageWidget extends VerticalPanel{
 			
 			@Override
 			public void onClick(ClickEvent event) {
+				linkPanel.clear();
 				String text=TextureMontageWidget.this.textureMontage.getCanvas().toDataUrl();
 				Anchor alink=HTML5Download.get().generateBase64DownloadLink(text,"image/png", "montage_texture.png", "download",true);
 				linkPanel.add(alink);

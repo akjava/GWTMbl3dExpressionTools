@@ -109,7 +109,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		INSTANCE=this;
 		
 		//LogUtils.log("onInitializedThree");
-		renderer.setClearColor(0);//default is black?
+		renderer.setClearColor(0x333333);//default is black?
 		
 		 windowHalfX= (int)(SCREEN_WIDTH/2);
 		 windowHalfY= (int)(SCREEN_HEIGHT/2);
@@ -220,6 +220,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 								.transparent(true)
 								.alphaTest(0.5)
 								.opacity(1)
+								//.specular(0xffffff).shininess(100) //need map?
+								//.specular(0x111111).shininess(200)
 								);
 						
 						loadTextureMontage(material2);
@@ -544,7 +546,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					tab.add(cratePreferenceTab(),"Misc");
 					
-					tab.selectTab(1);
+					tab.selectTab(3);
 					
 					
 					THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
@@ -658,6 +660,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	@Override
 	public void animate(double timestamp) {
+		
 		//camera.getPosition().gwtIncrementX(( - mouseX - camera.getPosition().getX()) * .001);//camera.position.y += ( - mouseY - camera.position.y ) * .01;
 		//camera.lookAt(scene.getPosition());//look at 0
 	
