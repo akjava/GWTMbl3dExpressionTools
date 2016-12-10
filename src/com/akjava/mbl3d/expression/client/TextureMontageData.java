@@ -5,7 +5,15 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 public class TextureMontageData {
-	
+private int opacity=100;	
+public int getOpacity() {
+	return opacity;
+}
+
+public void setOpacity(int opacity) {
+	this.opacity = opacity;
+}
+
 public static final int TYPE_LIST=0;
 public static final int TYPE_COLOR=1;
 private String keyName;
@@ -58,6 +66,6 @@ public String generateKey(){
 	if(!enabled){
 		return "";
 	}
-	return keyName+":"+value;
+	return keyName+":"+value+":"+opacity;
 }
 }

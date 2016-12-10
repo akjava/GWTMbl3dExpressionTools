@@ -8,6 +8,7 @@ import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
 import com.akjava.gwt.html5.client.file.FileUtils;
 import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -35,11 +37,25 @@ public class TextureMontageWidget extends VerticalPanel{
 			HorizontalPanel panel=new HorizontalPanel();
 			container.add(panel);
 			HorizontalPanel h1=new HorizontalPanel();
-			h1.setWidth("80px");
+			h1.setWidth("100px");
 			panel.add(h1);
 			CheckBox check=new CheckBox(data.getKeyName());
-			check.setWidth("80px");
+			check.setWidth("100px");
 			h1.add(check);
+			
+			IntegerBox opacityBox=new IntegerBox();
+			opacityBox.setWidth("30px");
+			opacityBox.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+
+				@Override
+				public void onValueChange(ValueChangeEvent<Integer> event) {
+					LogUtils.log(data.getKeyName()+",opacity="+event.getValue());
+					data.setOpacity(event.getValue());
+				}
+			});
+			panel.add(opacityBox);
+			opacityBox.setValue(data.getOpacity());
+			
 			if(data.getType()==TextureMontageData.TYPE_LIST){
 				final ValueListBox<String> box=new ValueListBox<String>(new Renderer<String>() {
 					@Override

@@ -37,13 +37,21 @@ public class TextureMontageDataConverter extends Converter<String, List<TextureM
 					}
 				}
 				
-				
-				
 				if(values.length>3){
-					if(values[3].equals("color")){
+					int opacity=ValuesUtils.toInt(values[3], 100);
+					data.setOpacity(opacity);
+				}
+				
+				
+				
+				if(values.length>4){
+					if(values[4].equals("color")){
 						data.setType(TextureMontageData.TYPE_COLOR);
 					}
 				}
+				
+				
+				
 			}else{
 				if(csv.isEmpty()){
 					continue;
@@ -88,10 +96,20 @@ public class TextureMontageDataConverter extends Converter<String, List<TextureM
 				}
 			}
 		
+			//opacity
+			header+=",";
+			if(data.getOpacity()!=100){
+				header+=data.getOpacity();
+			}
 			
+			//special type
 			if(data.getType()!=TextureMontageData.TYPE_LIST){
 				header+=",color";
 			}
+			
+			
+			
+			
 			lines.add(header);
 			
 			if(data.getValues()!=null){
