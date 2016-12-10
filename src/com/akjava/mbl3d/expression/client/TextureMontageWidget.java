@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -149,7 +150,12 @@ public class TextureMontageWidget extends VerticalPanel{
 		savePanel.add(linkPanel);
 		
 		HorizontalPanel loadPanel=new HorizontalPanel();
-		loadPanel.add(new Label("Load"));
+		final ListBox typeBox=new ListBox();
+		typeBox.addItem("Load");
+		typeBox.addItem("Replace");
+		typeBox.setSelectedIndex(0);
+		loadPanel.add(typeBox);
+		
 		add(loadPanel);
 		FileUploadForm upload=FileUtils.createSingleTextFileUploadForm(new DataURLListener() {
 			
@@ -158,10 +164,32 @@ public class TextureMontageWidget extends VerticalPanel{
 				//TODO validate
 				List<TextureMontageData> montageData=new TextureMontageDataConverter().convert(text);
 				
+				
+				//replace
+				if(typeBox.getSelectedIndex()==1){
 				//copy?
 				TextureMontageWidget.this.textureMontageDatas.clear();
 				for(TextureMontageData data:montageData){
 					TextureMontageWidget.this.textureMontageDatas.add(data);
+				}
+				}else{
+					//Load
+					for(TextureMontageData newdata:montageData){
+						//find key
+						boolean finded=false;
+						for(TextureMontageData data:textureMontageDatas){
+							if(data.getKeyName().equals(newdata.getKeyName())){
+								data.setOpacity(newdata.getOpacity());
+								data.setValue(newdata.getValue());
+								finded=true;
+								break;
+							}
+						}
+						if(!finded){
+							LogUtils.log("load-faild:key not found "+newdata.getKeyName());
+						}
+						
+					}
 				}
 				
 				//re-widget
