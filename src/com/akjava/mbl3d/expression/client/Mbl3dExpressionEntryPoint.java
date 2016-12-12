@@ -136,11 +136,12 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		//test(1.0);
 		//light
 		
-		AmbientLight ambient = THREE.AmbientLight( 0xaaaaaa );//var ambient = new THREE.AmbientLight( 0xffffff );
+		//0xaaaaaa
+		AmbientLight ambient = THREE.AmbientLight( 0x666666 );//var ambient = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambient );
 
-		DirectionalLight directionalLight = THREE.DirectionalLight( 0x666666 );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
-		directionalLight.getPosition().set( -1, 1, 1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
+		DirectionalLight directionalLight = THREE.DirectionalLight( 0xaaaaaa );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
+		directionalLight.getPosition().set( -0.5, 1, -1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
 		scene.add( directionalLight );
 		
 		final String modelUrl=GWTHTMLUtils.parameterFile("model");
@@ -359,6 +360,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	private double characterX,characterY,characterZ;
 	private Mesh hairMesh;
 	private MeshPhongMaterial hairMaterial;
+	public Mesh getHairMesh(){
+		return hairMesh;
+	}
 	public MeshPhongMaterial getHairMaterial(){
 	if(hairMaterial==null){
 		hairMaterial=THREE.MeshPhongMaterial(GWTParamUtils.
@@ -400,7 +404,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	
 	private TextureMontage textureMontage;
 	protected void loadTextureMontage(final MeshPhongMaterial material){
-		THREE.XHRLoader().load("montage.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
+		THREE.XHRLoader().load("models/mbl3d14/montage_presets/montage_default.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
 			
 
 			@Override
@@ -409,6 +413,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				
 				Canvas canvas=CanvasUtils.createCanvas(2048, 2048);
 				textureMontage = new TextureMontage("models/mbl3d14/", canvas,material);
+				
 				textureMontage.setTextureMontageDatas(datas);
 				
 				
@@ -416,7 +421,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				textureMontage.update();//need material?
 				
 				TextureMontageWidget widget=new TextureMontageWidget(textureMontage);
-				preferenceTab.getTextureMontagePanel().add(widget);
+				textureTab.getTextureMontagePanel().add(widget);
 				
 				
 				
@@ -564,6 +569,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					tab.add(cratePreferenceTab(),"Misc");
 					
+					textureTab=new TextureTab(this);
+					tab.add(textureTab,"Texture");
+					
 					tab.selectTab(3);
 					
 					
@@ -598,7 +606,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				*/
 				
 					private Widget cratePreferenceTab() {
-					preferenceTab = new PreferenceTab(dataListPanel);
+					preferenceTab = new PreferenceTab(this,dataListPanel);
 					//if need set
 					
 					recorderPanel = new RecorderPanel();
@@ -1241,6 +1249,7 @@ private void insertSwitchTextureAnimations(double duration) {
 	private TabPanel tab;
 	private CombinePatternPanel combinePatternPanel;
 	private PreferenceTab preferenceTab;
+	private TextureTab textureTab;
 	private double duration=1;
 	private RecorderPanel recorderPanel;
 

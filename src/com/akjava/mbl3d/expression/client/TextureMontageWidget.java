@@ -8,7 +8,11 @@ import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
 import com.akjava.gwt.html5.client.file.FileUtils;
 import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
+import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
+import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,6 +35,8 @@ public class TextureMontageWidget extends VerticalPanel{
 	//not fire yet
 	private List<TextureMontageData> textureMontageDatas;
 	private TextureMontage textureMontage;
+	private ListBox typeBox;
+	private VerticalPanel container;
 
 	private void initWidget(VerticalPanel container){
 		container.clear();
@@ -108,7 +114,7 @@ public class TextureMontageWidget extends VerticalPanel{
 		this.textureMontage=textureMontage;
 		this.textureMontageDatas = textureMontage.getTextureMontageDatas();
 		
-		final VerticalPanel container=new VerticalPanel();
+		container = new VerticalPanel();
 		add(container);
 		initWidget(container);
 		
@@ -150,7 +156,7 @@ public class TextureMontageWidget extends VerticalPanel{
 		savePanel.add(linkPanel);
 		
 		HorizontalPanel loadPanel=new HorizontalPanel();
-		final ListBox typeBox=new ListBox();
+		typeBox = new ListBox();
 		typeBox.addItem("Load");
 		typeBox.addItem("Replace");
 		typeBox.setSelectedIndex(0);
@@ -161,43 +167,100 @@ public class TextureMontageWidget extends VerticalPanel{
 			
 			@Override
 			public void uploaded(File file, String text) {
-				//TODO validate
-				List<TextureMontageData> montageData=new TextureMontageDataConverter().convert(text);
-				
-				
-				//replace
-				if(typeBox.getSelectedIndex()==1){
-				//copy?
-				TextureMontageWidget.this.textureMontageDatas.clear();
-				for(TextureMontageData data:montageData){
-					TextureMontageWidget.this.textureMontageDatas.add(data);
-				}
-				}else{
-					//Load
-					for(TextureMontageData newdata:montageData){
-						//find key
-						boolean finded=false;
-						for(TextureMontageData data:textureMontageDatas){
-							if(data.getKeyName().equals(newdata.getKeyName())){
-								data.setOpacity(newdata.getOpacity());
-								data.setValue(newdata.getValue());
-								finded=true;
-								break;
-							}
-						}
-						if(!finded){
-							LogUtils.log("load-faild:key not found "+newdata.getKeyName());
-						}
-						
-					}
-				}
-				
-				//re-widget
-				initWidget(container);
+				loadData(text);
 			}
 		}, true);
 		upload.setAccept(FileUploadForm.ACCEPT_TXT);
 		loadPanel.add(upload);
+		
+		//presets
+		final HorizontalPanel presetPanel=new HorizontalPanel();
+		add(presetPanel);
+		Label presetLabel=new Label("Preset:");
+		presetPanel.add(presetLabel);
+		
+THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
+			
+
+			@Override
+			public void onLoad(String text) {
+				List<String> lines=CSVUtils.splitLinesWithGuava(text,true);//empty no need
+				
+				ValueListBox<String> presetListBox=new ValueListBox<String>(new Renderer<String>() {
+
+					@Override
+					public String render(String object) {
+						if(object!=null){
+							String file=FileNames.getFileNameAsSlashFileSeparator(object);
+							String name=FileNames.getRemovedExtensionName(file);
+							
+							return name;
+						}
+						return null;
+					}
+
+					@Override
+					public void render(String object, Appendable appendable) throws IOException {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				presetListBox.setValue(lines.get(0));
+				presetListBox.setAcceptableValues(lines);
+				presetPanel.add(presetListBox);
+				
+				presetListBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+					@Override
+					public void onValueChange(ValueChangeEvent<String> event) {
+						THREE.XHRLoader().load("models/mbl3d14/montage_presets/"+event.getValue()+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
+							@Override
+							public void onLoad(String text) {
+								loadData(text);
+							}
+						});
+						
+					}
+				});
+			}
+});
+		
+		
+	}
+	public void loadData(String text){
+		//TODO validate
+		List<TextureMontageData> montageData=new TextureMontageDataConverter().convert(text);
+		
+		
+		//replace
+		if(typeBox.getSelectedIndex()==1){
+		//copy?
+		TextureMontageWidget.this.textureMontageDatas.clear();
+		for(TextureMontageData data:montageData){
+			TextureMontageWidget.this.textureMontageDatas.add(data);
+		}
+		}else{
+			//Load
+			for(TextureMontageData newdata:montageData){
+				//find key
+				boolean finded=false;
+				for(TextureMontageData data:textureMontageDatas){
+					if(data.getKeyName().equals(newdata.getKeyName())){
+						data.setOpacity(newdata.getOpacity());
+						data.setValue(newdata.getValue());
+						finded=true;
+						break;
+					}
+				}
+				if(!finded){
+					LogUtils.log("load-faild:key not found "+newdata.getKeyName());
+				}
+				
+			}
+		}
+		
+		//re-widget
+		initWidget(container);
 	}
 	
 }

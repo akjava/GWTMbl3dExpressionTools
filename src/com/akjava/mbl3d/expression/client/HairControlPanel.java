@@ -8,6 +8,7 @@ import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
+import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.ColorUtils;
 import com.akjava.lib.common.utils.FileNames;
@@ -20,8 +21,11 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -133,6 +137,70 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 		
 		loadHairColorList("haircolors.txt");
 		
+		//scale,TODO change range
+		HorizontalPanel scalePanel=new HorizontalPanel();
+		scalePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+		add(scalePanel);
+		
+		Label scaleLabel=new Label("Scale:");
+		scaleLabel.setWidth(labelWidth);
+		scalePanel.add(scaleLabel);
+		
+		
+		IntegerBox scaleBox=new IntegerBox();
+		scaleBox.setValue(1000);
+		scaleBox.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Integer> event) {
+				Mesh mesh=HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMesh();
+				mesh.getScale().setScalar(event.getValue());
+			}
+		});
+		scalePanel.add(scaleBox);
+		
+		//material
+		HorizontalPanel specularPanel=new HorizontalPanel();
+		specularPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+		add(specularPanel);
+		
+		Label specularLabel=new Label("Specular:#");
+		specularLabel.setWidth(labelWidth);
+		specularPanel.add(specularLabel);
+		
+		
+		TextBox specularBox=new TextBox();
+		specularBox.setValue("ffffff");
+		specularBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				int hex=ColorUtils.toColor("#"+event.getValue());
+				HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMaterial().getSpecular().setHex(hex);
+			}
+		});
+		specularPanel.add(specularBox);
+		
+		
+		HorizontalPanel shinessPanel=new HorizontalPanel();
+		shinessPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+		add(shinessPanel);
+		
+		Label shinessLabel=new Label("Shiness:");
+		shinessLabel.setWidth(labelWidth);
+		shinessPanel.add(shinessLabel);
+		
+		
+		DoubleBox shinessBox=new DoubleBox();
+		shinessBox.setValue(15.0);
+		shinessBox.addValueChangeHandler(new ValueChangeHandler<Double>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Double> event) {
+				HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMaterial().setShininess(event.getValue());
+			}
+		});
+		shinessPanel.add(shinessBox);
 	}
 	String hairBase;
 	
@@ -162,7 +230,9 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 			@Override
 			public void onLoad(String text) {
 				colorLabelDatas=new ColorLabelDataConverter().reverse().convert(text);
+				hairColorListBox.setValue(colorLabelDatas.get(0));
 				hairColorListBox.setAcceptableValues(colorLabelDatas);
+				
 				//not update,because hard to sync loading hair-model
 			}
 		});
