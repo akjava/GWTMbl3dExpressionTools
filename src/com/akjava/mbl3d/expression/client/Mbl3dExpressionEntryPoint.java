@@ -167,7 +167,6 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						BoundingBox bb = geometry.getBoundingBox();
 						//double x=-20, y=-1270,z= -300,s= 800;
 
-						double characterScale=1000;
 						double x=-0, y=bb.getMin().getY()*characterScale,z=0;
 						
 						
@@ -331,41 +330,17 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						
 						//temp test
 						
-						final double fx=x;
-						final double fy=y;
-						final double fz=z;
-						final double fs=characterScale;
+						characterX=x;
+						characterY=y;
+						characterZ=z;
 						
 						//TODO init ui;
 						initUi();
 						
 						
-						THREE.JSONLoader().load("models/mbl3d/hair2.json", new JSONLoadHandler() {	//hair2
-							
-							/*
-							 * take care of materials.
-							 * must export with face-colors.
-							 * 
-							 */
-							@Override
-							public void loaded(Geometry geometry, JsArray<Material> materials) {
-								geometry.computeBoundingBox();
-								BoundingBox bb = geometry.getBoundingBox();
-								//LogUtils.log(bb);
-								
-								Mesh hair = THREE.Mesh( geometry, THREE.MeshPhongMaterial(GWTParamUtils.
-										MeshPhongMaterial().color(0x553817).side(THREE.DoubleSide).specular(0xffffff).shininess(15)
-										//.map(THREE.TextureLoader().load("models/mbl3d/hair1.png"))
-										) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
-								
-								//Mesh hair = THREE.Mesh( geometry, THREE.MultiMaterial(materials) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
-								//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
-								hair.getPosition().set( fx, fy,fz );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
-								hair.getScale().set( fs, fs, fs );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
-								scene.add( hair );
-								
-							}
-						});
+						String hairPath="models/mbl3d14/hairs/geometry-twelve-long.json";//"models/mbl3d/hair2.json"
+						
+						//loadHair(hairPath);
 						
 						LogUtils.log("camera-y:"+cameraY);
 						controls = THREEExp.OrbitControls(camera,rendererContainer.getElement() );
@@ -379,6 +354,49 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 	});
 	}
+	
+	private double characterScale=1000;
+	private double characterX,characterY,characterZ;
+	private Mesh hairMesh;
+	private MeshPhongMaterial hairMaterial;
+	public MeshPhongMaterial getHairMaterial(){
+	if(hairMaterial==null){
+		hairMaterial=THREE.MeshPhongMaterial(GWTParamUtils.
+				MeshPhongMaterial().color(0x553817).side(THREE.DoubleSide).specular(0xffffff).shininess(15));
+	}
+	return hairMaterial;	
+	}
+	public void loadHair(String hairPath){
+		//Mbl3dLoader support both ver3 & ver4 format
+		new Mbl3dLoader().load(hairPath, new JSONLoadHandler() {	//hair2
+			
+			
+
+			/*
+			 * take care of materials.
+			 * must export with face-colors.
+			 * 
+			 */
+			@Override
+			public void loaded(Geometry geometry, JsArray<Material> materials) {
+				if(hairMesh!=null){
+					scene.remove(hairMesh);
+				}
+				//LogUtils.log(bb);
+				
+				hairMesh = THREE.Mesh( geometry, getHairMaterial()
+						//.map(THREE.TextureLoader().load("models/mbl3d/hair1.png"))
+						 );
+				
+				//Mesh hair = THREE.Mesh( geometry, THREE.MultiMaterial(materials) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
+				//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
+				hairMesh.getPosition().set( characterX, characterY,characterZ );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
+				hairMesh.getScale().setScalar(characterScale);//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
+				scene.add( hairMesh );	
+			}
+		});
+	}
+	
 	
 	private TextureMontage textureMontage;
 	protected void loadTextureMontage(final MeshPhongMaterial material){
@@ -585,6 +603,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					recorderPanel = new RecorderPanel();
 					preferenceTab.add(recorderPanel);
+					
+					
+					//
+					HairControlPanel hairControlPanel=new HairControlPanel(this);
+					preferenceTab.add(hairControlPanel);
 					
 					return preferenceTab;
 				}

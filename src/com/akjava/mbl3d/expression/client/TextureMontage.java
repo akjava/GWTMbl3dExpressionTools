@@ -108,7 +108,7 @@ public class TextureMontage {
 				
 				for(int i=0;i<successPaths.size();i++){
 					double alpha=alphas.get(successPaths.get(i));
-					LogUtils.log(successPaths.get(i)+","+alpha);
+					
 					canvas.getContext2d().setGlobalAlpha(alpha);
 					ImageElement image=imageElements.get(i);
 					CanvasUtils.drawImage(canvas, image, 0, 0,w,h);

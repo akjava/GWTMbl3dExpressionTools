@@ -1,7 +1,9 @@
 #body
 anime_dermal.png
-#skin,true,,50
+#skin,true,
 skin1.png
+skin2.png
+skin_pink.png
 #uv
 uv2048-mbl3d14.png
 #eyeborder,true
@@ -29,6 +31,7 @@ eyelash/lower_eyelash3.png
 mouse/mouse1.png
 #eye,true
 eye/eye1.png
+eye/eye1a.png
 eye/eye2.png
 #eyelight,true
 eyelight/eyelight1.png
@@ -63,6 +66,10 @@ underhair/underhair-diamond.png
 underhair/underhair-dot.png
 underhair/underhair-v.png
 underhair/underhair-arrow.png
+#nail,true
+nail/nail_white.png
+nail/nail_pink.png
+nail/nail_red.png
 #pantu
 pantu/sox.png
 pantu/kneesox.png
@@ -98,6 +105,7 @@ cheek/cheek14.png
 cheek/cheek15.png
 cheek/cheek15a.png
 cheek/cheek15b.png
+cheek/cheek16.png
 cheek/cheek16a.png
 cheek/cheek17.png
 cheek/cheek17a.png
