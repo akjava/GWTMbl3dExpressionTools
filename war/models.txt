@@ -8,3 +8,8 @@ models/mbl3d14/models/big-mouse2.json
 models/mbl3d14/models/geometry-weight-modified6.json
 models/mbl3d14/models/geometry-weight-modified7.json
 models/mbl3d14/models/geometry-weight-modified8.json
+models/mbl3d14/models/small-parts.json
+models/mbl3d14/models/lower-parts.json
+models/mbl3d14/models/smooth-breast.json
+models/mbl3d14/models/smooth-breast2.json
+models/mbl3d14/models/has-tongue.json

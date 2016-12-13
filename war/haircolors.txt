@@ -3,3 +3,5 @@ brond1,#fafdc4
 black,#000000
 green,#64b992
 dark,#383838
+purple,#e8e2f0
+pink,#ffc7d2

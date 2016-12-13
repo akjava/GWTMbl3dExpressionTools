@@ -4,7 +4,9 @@ anime_dermal.png
 skin1.png
 skin2.png
 skin3.png
+skin4.png
 skin_pink.png
+skin_red.png
 #uv
 uv2048-mbl3d14.png
 #eyeborder,true
@@ -76,11 +78,11 @@ pantu/sox.png
 pantu/kneesox.png
 pantu/stocking.png
 pantu/pantustocking.png
+pantu/pantustocking_white.png
 pantu/pantustocking_brown.png
 pantu/pantu.png
+pantu/pantu_white.png
 pantu/crotch.png
-pantu/crotch-a50.png
-pantu/pantu-a50.png
 #top
 top/bra.png
 top/bra_white.png

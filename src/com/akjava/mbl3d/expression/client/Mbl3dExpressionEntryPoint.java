@@ -8,6 +8,7 @@ import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.experimental.AsyncMultiCaller;
+import com.akjava.gwt.three.client.examples.ColladaLoader.ColladaLoadHandler;
 import com.akjava.gwt.three.client.examples.js.THREEExp;
 import com.akjava.gwt.three.client.examples.js.controls.OrbitControls;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
@@ -166,6 +167,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				.transparent(true)
 				.alphaTest(0.5)
 				.opacity(1)
+				.side(THREE.DoubleSide)//tongue need this?
 				//.specular(0xffffff).shininess(100) //need map?
 				//.specular(0x111111).shininess(200)
 				);
@@ -486,6 +488,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					}
 					
 					
+					
+					
 	public void loadModel(String modelUrl){
 		if(mesh!=null){
 			scene.remove( mesh );
@@ -637,6 +641,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				//materials.push(material);
 				//material=mat.cast();
 				
+				//subdivision(1,geometry);//not support morph-target
 				
 				
 				mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
@@ -664,6 +669,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 });
 	}
+	
+	
+	public final native void subdivision(int division,Geometry geometry)/*-{
+	var modifier = new $wnd.THREE.SubdivisionModifier( division );
+    modifier.modify( geometry );
+	}-*/;
+	
 	@Override
 	public void onBeforeStartApp() {
 		
