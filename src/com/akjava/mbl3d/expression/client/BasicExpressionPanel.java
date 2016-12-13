@@ -10,6 +10,7 @@ import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.objects.Mesh;
+import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
 import com.google.common.base.Converter;
 import com.google.common.collect.Lists;
@@ -36,8 +37,9 @@ public class BasicExpressionPanel extends VerticalPanel {
 	private ValueListBox<Mbl3dExpression> expressionsListBox;
 	Mbl3dExpressionReceiver receiver;
 	private Button overwriteButton;
+	private VerticalPanel morphTargetPanel;
 	
-	public BasicExpressionPanel(final Mesh morphMesh,final Mbl3dExpressionReceiver receiver){
+	public BasicExpressionPanel(final Mbl3dExpressionReceiver receiver){
 		this.receiver=receiver;
 		ranges=Maps.newHashMap();
 		Label expression=new Label("Expression");
@@ -152,8 +154,13 @@ public class BasicExpressionPanel extends VerticalPanel {
 		Label morph=new Label("Morph");
 		this.add(morph);
 		
+		morphTargetPanel = new VerticalPanel();
+		this.add(morphTargetPanel);
 		
-		
+	}
+	
+	public void setMesh(final Mesh morphMesh){
+		morphTargetPanel.clear();
 		String debug="";//for get key all
 		JSParameter param=morphMesh.getMorphTargetDictionary().cast();
 		
@@ -209,7 +216,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			inputPanel.add(inputRange);
 			
-			this.add(inputPanel);
+			morphTargetPanel.add(inputPanel);
 			inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Number> event) {
@@ -218,6 +225,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			});
 		}
 	}
+	
 	
 	public void setOverwriteEnable(boolean enabled){
 		overwriteButton.setEnabled(enabled);

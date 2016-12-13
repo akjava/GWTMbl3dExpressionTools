@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
@@ -117,8 +118,12 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 		colorControlPanel.add(hairColorBox);
 		hairColorBox.addValueChangeHandler(new ValueChangeHandler<String>() {
 
+			//possible bug,right now both color is same,that's why no problem.however if modifing it would make problem
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
+				if(HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMaterial()==null){
+					return;
+				}
 				LogUtils.log("color-changed:"+event.getValue());
 				int hex=ColorUtils.toColor(event.getValue());
 				HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMaterial().getColor().setHex(hex);
@@ -147,17 +152,58 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 		scalePanel.add(scaleLabel);
 		
 		
-		IntegerBox scaleBox=new IntegerBox();
-		scaleBox.setValue(1000);
+		final IntegerBox scaleBox=new IntegerBox();
+		scaleBox.setWidth("80px");
+		scaleBox.setValue(1000);//TODO link
 		scaleBox.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 
 			@Override
 			public void onValueChange(ValueChangeEvent<Integer> event) {
+				int scale=event.getValue();
+				HairControlPanel.this.mbl3dExpressionEntryPoint.setHairScale(scale);
 				Mesh mesh=HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMesh();
-				mesh.getScale().setScalar(event.getValue());
+				mesh.getScale().setScalar(scale);
 			}
 		});
 		scalePanel.add(scaleBox);
+		
+		Button minus5=new Button("-5",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				scaleBox.setValue(Math.max(1,scaleBox.getValue())-5,true);
+			}
+		});
+		scalePanel.add(minus5);
+		Button minus1=new Button("-1",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				scaleBox.setValue(Math.max(1,scaleBox.getValue())-1,true);
+			}
+		});
+		scalePanel.add(minus1);
+		
+		Button plus5=new Button("+5",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				scaleBox.setValue(Math.max(1,scaleBox.getValue())+5,true);
+			}
+		});
+		scalePanel.add(plus5);
+		Button plus1=new Button("+1",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				scaleBox.setValue(Math.max(1,scaleBox.getValue())+1,true);
+			}
+		});
+		scalePanel.add(plus1);
+		Button reset=new Button("reset",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				scaleBox.setValue(1000,true);
+			}
+		});
+		scalePanel.add(reset);
+		
 		
 		//material
 		HorizontalPanel specularPanel=new HorizontalPanel();
@@ -201,6 +247,24 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 			}
 		});
 		shinessPanel.add(shinessBox);
+		
+		//wire-frame
+		HorizontalPanel wireframePanel=new HorizontalPanel();
+		wireframePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+		add(wireframePanel);
+		
+		
+		
+		CheckBox wireframeCheck=new CheckBox("wireframe");
+	
+		wireframeCheck.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				HairControlPanel.this.mbl3dExpressionEntryPoint.getHairMaterial().setWireframe(event.getValue());
+			}
+		});
+		wireframePanel.add(wireframeCheck);
 	}
 	String hairBase;
 	
@@ -213,7 +277,7 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 			@Override
 			public void onLoad(String text) {
 				hairListData = CSVUtils.splitLinesWithGuava(text);
-				hairListBox.setValue(hairListData.get(0));
+				hairListBox.setValue(hairListData.get(0),true);
 				hairListBox.setAcceptableValues(hairListData);
 				
 				loadHair();
@@ -230,7 +294,7 @@ private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
 			@Override
 			public void onLoad(String text) {
 				colorLabelDatas=new ColorLabelDataConverter().reverse().convert(text);
-				hairColorListBox.setValue(colorLabelDatas.get(0));
+				hairColorListBox.setValue(colorLabelDatas.get(0),true);
 				hairColorListBox.setAcceptableValues(colorLabelDatas);
 				
 				//not update,because hard to sync loading hair-model

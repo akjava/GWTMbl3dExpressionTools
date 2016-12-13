@@ -98,9 +98,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	public String toImageDataUrl(){
 		return renderer.gwtPngDataUrl();
 	}
+	/**
+	 * @deprecated
+	 */
 	private MeshPhongMaterial material;
 
 	
+	private OrbitControls controls;
 	private int cameraY=1550;
 	private int cameraZ=500;
 	@Override
@@ -152,211 +156,38 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				//String url= "models/mbl3d/tmp5.json";
 				//String url= "models/mbl3d/model8o.json";
 				//"models/mbl3d/simpleface.png"
-				
-				Mbl3dLoader loader=new Mbl3dLoader();
-				loader.forceApplyAxisAngle(GWTHTMLUtils.parameterBoolean("forceFixMorphtargets",false));
-				loader.load(modelUrl,new JSONLoadHandler() {
-					private OrbitControls controls;
-					private MultiMaterial multiMaterials;
-					
-					@Override
-					public void loaded(Geometry geometry,JsArray<Material> materials) {
-						
-						//Geometry geometry=loadedObject.getGeometry();
-						
-						geometry.computeBoundingBox();
-						BoundingBox bb = geometry.getBoundingBox();
-						//double x=-20, y=-1270,z= -300,s= 800;
-
-						double x=-0, y=bb.getMin().getY()*characterScale,z=0;
-						
-						
-						
-						
-						/*
-						List<String> urls=Lists.newArrayList("models/mbl3d/body.png", //"models/mbl3d/body.png",
-								"models/mbl3d/green_eye.png",
-								"models/mbl3d/eye_large.png",
-								"models/mbl3d/eye_small.png",
-															 "models/mbl3d/test.png",
-															 "models/mbl3d/redface1.png",
-															 "models/mbl3d/redface2.png",
-															 "models/mbl3d/redface3.png",
-															 "models/mbl3d/blueface1.png",
-															 
-															 "models/mbl3d/uv.png"
-								);
-						*/
-						//not used right now
-						final MeshPhongMaterial eyeMaterial=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
-								.morphTargets(true)
-								.transparent(true)
-								.specular(0x111111).shininess(5)
-								//.specular(1).shininess(1)
-								.map(THREE.TextureLoader().load(textureUrl))
-								);
-						
-						material = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
-								.morphTargets(true)
-								.transparent(true)
-								.specular(0x555555).shininess(5)
-								.opacity(1)
-								);
-						
-						material.setVisible(false);
-						
-						//loadTextures(material);
-						
-						
-				
-						
-						
-						
-						
-						
-						
-						MeshPhongMaterial material2=THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
-								.morphTargets(true)
-								.transparent(true)
-								.alphaTest(0.5)
-								.opacity(1)
-								//.specular(0xffffff).shininess(100) //need map?
-								//.specular(0x111111).shininess(200)
-								);
-						
-						loadTextureMontage(material2);
-						
-						
-						if(materials!=null){
-						for(int i=0;i<materials.length();i++){
-							MeshPhongMaterial m=materials.get(i).cast();//need cast GWT problem
-							m.setMorphTargets(true);
-							
-							//update material
-							if(m.getName().equals("White")){
-								m.setColor(THREE.Color(0xf8f8f8));
-								m.setSpecular(THREE.Color(0xffffff));//less shine
-								m.setShininess(100);
-							}else if(m.getName().equals("Blue")){//edge of mouth
-								m.setColor(THREE.Color(0x007ebb));
-								m.setSpecular(THREE.Color(0xffffff));
-								m.setShininess(100);
-							}else if(m.getName().equals("Pink01")){//mouth and inside
-								m.setColor(THREE.Color(0xffa3ac));
-								m.setSpecular(THREE.Color(0x888888));
-								m.setShininess(50);
-							}else if(m.getName().equals("Pink02") || m.getName().equals("Lip")){//face & lip
-								m.setColor(THREE.Color(0xFFE4C6));
-								m.setSpecular(THREE.Color(0x111111));
-								m.setShininess(5);
-							}else if(m.getName().equals("gum")){//edge of mouth
-								m.setColor(THREE.Color(0x7c4f53));
-								m.setSpecular(THREE.Color(0x111111));
-								m.setShininess(5);
-							}else{//
-								m.setSpecular(THREE.Color(0x111111));//less shine
-								m.setShininess(5);
-							}	
-						}
-						}
-						
-						boolean hasHead=false;
-						JsArray<Material> filterd=JavaScriptUtils.createJSArray();
-						//filterd.push(material);
-						
-						if(materials!=null){
-						for(int i=0;i<materials.length();i++){
-							
-							//if exists
-							if(materials.get(i).getName().equals("Eyes") || materials.get(i).getName().equals("Pink02")){//eye & tooth
-								//LogUtils.log(i+" white");
-								//materials.set(i, material);
-								
-								
-								//filterd.push(materials.get(i));
-								filterd.push(eyeMaterial);
-								continue;
-							}
-							
-							//if exists
-							//body
-							if(materials.get(i).getName().equals("head")){
-								hasHead=true;
-								//LogUtils.log("head:"+i+" pink02");
-								//this make problem ,i know when transparent?
-								//materials.get(i).setVisible(false);//allow modify
-								//materials.set(i, material);
-								filterd.push(material);
-								//filterd.push(THREE.MeshBasicMaterial());
-								
-								//filterd.push(materials.get(i));
-								continue;
-							}
-							filterd.push(materials.get(i));
-						}
-						}
-						if(!hasHead){
-							LogUtils.log("this model not contain head-material,not work canvas-painter");
-						}
-						//var mat=THREE.MultiMaterial( materials);//MultiMaterial mat=THREE.MultiMaterial( materials);//var mat=new THREE.MultiMaterial( materials);
-						
-					
-						//MultiMaterial mat=THREE.MultiMaterial(materials );
-						
-						MultiMaterial mat=THREE.MultiMaterial(filterd);
-						if(filterd.length()==0){
-							mesh = THREE.SkinnedMesh( geometry, material2 );//using texture switch
-						}else{
-							LogUtils.log("use json-models multi-material");
-							//multi material:not so good,because of speed
-							mesh = THREE.SkinnedMesh( geometry, mat );
-						}
-						
-						
-						//materials.push(material);
-						//material=mat.cast();
-						
-						
-						
-						mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
-						mesh.getPosition().set( x, y, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
-						mesh.getScale().set( characterScale, characterScale, characterScale );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
-						mesh.updateMatrixWorld();
-						scene.add( mesh );
-						
-						
-						mixer = THREE.AnimationMixer(mesh);
-						
-						//mesh.setVisible(false);
-						
-						//temp test
-						
-						characterX=x;
-						characterY=y;
-						characterZ=z;
-						
-						//TODO init ui;
-						initUi();
-						
-						
-						String hairPath="models/mbl3d14/hairs/geometry-twelve-long.json";//"models/mbl3d/hair2.json"
-						
-						//loadHair(hairPath);
-						
-						LogUtils.log("camera-y:"+cameraY);
-						controls = THREEExp.OrbitControls(camera,rendererContainer.getElement() );
-						controls.setTarget(THREE.Vector3( 0, cameraY, 0 ));
-						controls.getMouseButtons().set("ORBIT", THREE.MOUSE.MIDDLE);
-						controls.getMouseButtons().set("ZOOM", 3);//3 is not exist,for ignore left button
-						controls.update();
-						
-						
-					}
 		
-	});
+		
+		
+		
+		
+		material2 = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
+				.morphTargets(true)
+				.transparent(true)
+				.alphaTest(0.5)
+				.opacity(1)
+				//.specular(0xffffff).shininess(100) //need map?
+				//.specular(0x111111).shininess(200)
+				);
+		
+		
+		LogUtils.log("camera-y:"+cameraY);
+		controls = THREEExp.OrbitControls(camera,rendererContainer.getElement() );
+		controls.setTarget(THREE.Vector3( 0, cameraY, 0 ));
+		controls.getMouseButtons().set("ORBIT", THREE.MOUSE.MIDDLE);
+		controls.getMouseButtons().set("ZOOM", 3);//3 is not exist,for ignore left button
+		controls.update();
+		
+		
+		//TODO init ui;
+		initUi();//need model
+		loadTextureMontage(material2);//need tab
+		
+				
 	}
 	
 	private double characterScale=1000;
+	private double hairScale=characterScale;
 	private double characterX,characterY,characterZ;
 	private Mesh hairMesh;
 	private MeshPhongMaterial hairMaterial;
@@ -395,7 +226,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				//Mesh hair = THREE.Mesh( geometry, THREE.MultiMaterial(materials) );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = THREE.SkinnedMesh( geometry, mat );//mesh = new THREE.SkinnedMesh( geometry, mat );
 				//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
 				hairMesh.getPosition().set( characterX, characterY,characterZ );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
-				hairMesh.getScale().setScalar(characterScale);//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
+				hairMesh.getScale().setScalar(hairScale);//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
 				scene.add( hairMesh );	
 			}
 		});
@@ -484,7 +315,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				}
 
 				private Panel createBasicPanel(){
-					basicPanel = new BasicExpressionPanel(mesh,this);
+					basicPanel = new BasicExpressionPanel(this);
 					
 					THREE.XHRLoader().load("models/mbl3d/expressions.txt",new XHRLoadHandler() {
 
@@ -529,8 +360,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					return basicPanel;
 				}
 	
+				//must call after model loaded
 				private void initUi() {
-					
+					//can replace?
 					
 					tab = new TabPanel();
 					controlerRootPanel.add(tab);
@@ -617,6 +449,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					HairControlPanel hairControlPanel=new HairControlPanel(this);
 					preferenceTab.add(hairControlPanel);
 					
+					ModelControlPanel modelControlPanel=new ModelControlPanel(this);
+					preferenceTab.add(modelControlPanel);
+					
 					return preferenceTab;
 				}
 
@@ -649,6 +484,186 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 						}
 						return arrays;
 					}
+					
+					
+	public void loadModel(String modelUrl){
+		if(mesh!=null){
+			scene.remove( mesh );
+		}
+		Mbl3dLoader loader=new Mbl3dLoader();
+		loader.forceApplyAxisAngle(GWTHTMLUtils.parameterBoolean("forceFixMorphtargets",false));
+		loader.load(modelUrl,new JSONLoadHandler() {
+			
+			private MultiMaterial multiMaterials;
+			
+			@Override
+			public void loaded(Geometry geometry,JsArray<Material> materials) {
+				
+				//Geometry geometry=loadedObject.getGeometry();
+				
+				geometry.computeBoundingBox();
+				BoundingBox bb = geometry.getBoundingBox();
+				//double x=-20, y=-1270,z= -300,s= 800;
+
+				double x=-0, y=bb.getMin().getY()*characterScale,z=0;
+				
+				
+				
+				
+				/*
+				List<String> urls=Lists.newArrayList("models/mbl3d/body.png", //"models/mbl3d/body.png",
+						"models/mbl3d/green_eye.png",
+						"models/mbl3d/eye_large.png",
+						"models/mbl3d/eye_small.png",
+													 "models/mbl3d/test.png",
+													 "models/mbl3d/redface1.png",
+													 "models/mbl3d/redface2.png",
+													 "models/mbl3d/redface3.png",
+													 "models/mbl3d/blueface1.png",
+													 
+													 "models/mbl3d/uv.png"
+						);
+				*/
+				
+				
+				material = THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial()
+						.morphTargets(true)
+						.transparent(true)
+						.specular(0x555555).shininess(5)
+						.opacity(1)
+						);
+				
+				material.setVisible(false);
+				
+				//loadTextures(material);
+				
+				
+		
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				if(materials!=null){
+				for(int i=0;i<materials.length();i++){
+					MeshPhongMaterial m=materials.get(i).cast();//need cast GWT problem
+					m.setMorphTargets(true);
+					
+					//update material
+					if(m.getName().equals("White")){
+						m.setColor(THREE.Color(0xf8f8f8));
+						m.setSpecular(THREE.Color(0xffffff));//less shine
+						m.setShininess(100);
+					}else if(m.getName().equals("Blue")){//edge of mouth
+						m.setColor(THREE.Color(0x007ebb));
+						m.setSpecular(THREE.Color(0xffffff));
+						m.setShininess(100);
+					}else if(m.getName().equals("Pink01")){//mouth and inside
+						m.setColor(THREE.Color(0xffa3ac));
+						m.setSpecular(THREE.Color(0x888888));
+						m.setShininess(50);
+					}else if(m.getName().equals("Pink02") || m.getName().equals("Lip")){//face & lip
+						m.setColor(THREE.Color(0xFFE4C6));
+						m.setSpecular(THREE.Color(0x111111));
+						m.setShininess(5);
+					}else if(m.getName().equals("gum")){//edge of mouth
+						m.setColor(THREE.Color(0x7c4f53));
+						m.setSpecular(THREE.Color(0x111111));
+						m.setShininess(5);
+					}else{//
+						m.setSpecular(THREE.Color(0x111111));//less shine
+						m.setShininess(5);
+					}	
+				}
+				}
+				
+				boolean hasHead=false;
+				JsArray<Material> filterd=JavaScriptUtils.createJSArray();
+				//filterd.push(material);
+				
+				if(materials!=null){
+				for(int i=0;i<materials.length();i++){
+					
+					//if exists
+					if(materials.get(i).getName().equals("Eyes") || materials.get(i).getName().equals("Pink02")){//eye & tooth
+						//LogUtils.log(i+" white");
+						//materials.set(i, material);
+						
+						
+						//filterd.push(materials.get(i));
+						//filterd.push(eyeMaterial);
+						continue;
+					}
+					
+					//if exists
+					//body
+					if(materials.get(i).getName().equals("head")){
+						hasHead=true;
+						//LogUtils.log("head:"+i+" pink02");
+						//this make problem ,i know when transparent?
+						//materials.get(i).setVisible(false);//allow modify
+						//materials.set(i, material);
+						filterd.push(material);
+						//filterd.push(THREE.MeshBasicMaterial());
+						
+						//filterd.push(materials.get(i));
+						continue;
+					}
+					filterd.push(materials.get(i));
+				}
+				}
+				if(!hasHead){
+					LogUtils.log("this model not contain head-material,not work canvas-painter");
+				}
+				//var mat=THREE.MultiMaterial( materials);//MultiMaterial mat=THREE.MultiMaterial( materials);//var mat=new THREE.MultiMaterial( materials);
+				
+			
+				//MultiMaterial mat=THREE.MultiMaterial(materials );
+				
+				MultiMaterial mat=THREE.MultiMaterial(filterd);
+				if(filterd.length()==0){
+					mesh = THREE.SkinnedMesh( geometry, material2 );//using texture switch
+				}else{
+					LogUtils.log("use json-models multi-material");
+					//multi material:not so good,because of speed
+					mesh = THREE.SkinnedMesh( geometry, mat );
+				}
+				
+				
+				//materials.push(material);
+				//material=mat.cast();
+				
+				
+				
+				mesh.setName("model");//mesh.setName("model");//mesh.setName("model");//mesh.name = "model";
+				mesh.getPosition().set( x, y, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.getPosition().set( x, y - bb.getMin().y * s, z );//mesh.position.set( x, y - bb.min.y * s, z );
+				mesh.getScale().set( characterScale, characterScale, characterScale );//mesh.getScale().set( s, s, s );//mesh.getScale().set( s, s, s );//mesh.scale.set( s, s, s );
+				mesh.updateMatrixWorld();
+				scene.add( mesh );
+				
+				
+				mixer = THREE.AnimationMixer(mesh);
+				
+				//mesh.setVisible(false);
+				
+				//temp test
+				
+				characterX=x;
+				characterY=y;
+				characterZ=z;
+				
+				//update hair position if exist
+				
+				basicPanel.setMesh(mesh);
+				
+			}
+
+});
+	}
 	@Override
 	public void onBeforeStartApp() {
 		
@@ -1252,6 +1267,7 @@ private void insertSwitchTextureAnimations(double duration) {
 	private TextureTab textureTab;
 	private double duration=1;
 	private RecorderPanel recorderPanel;
+	private MeshPhongMaterial material2;
 
 
 	public List<Mbl3dData> getMbl3dDatas(){
@@ -1302,6 +1318,10 @@ private void insertSwitchTextureAnimations(double duration) {
 		double h=needH?SCREEN_HEIGHT-1:SCREEN_HEIGHT;
 	
 		renderer.setSize(w, h);
+	}
+
+	public void setHairScale(int scale) {
+		hairScale=scale;//mesh is update from caller
 	}
 	
 }

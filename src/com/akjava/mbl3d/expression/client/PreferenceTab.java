@@ -89,7 +89,7 @@ public class PreferenceTab extends VerticalPanel{
 			@Override
 			public void onLoad(String text) {
 				colorLabelDatas=new ColorLabelDataConverter().reverse().convert(text);
-				hairColorListBox.setValue(colorLabelDatas.get(0));
+				hairColorListBox.setValue(colorLabelDatas.get(0),true);
 				hairColorListBox.setAcceptableValues(colorLabelDatas);
 				
 				//not update,because hard to sync loading hair-model

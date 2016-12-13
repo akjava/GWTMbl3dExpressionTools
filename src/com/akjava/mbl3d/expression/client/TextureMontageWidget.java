@@ -246,6 +246,7 @@ THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHR
 				boolean finded=false;
 				for(TextureMontageData data:textureMontageDatas){
 					if(data.getKeyName().equals(newdata.getKeyName())){
+						data.setEnabled(newdata.isEnabled());
 						data.setOpacity(newdata.getOpacity());
 						data.setValue(newdata.getValue());
 						finded=true;
