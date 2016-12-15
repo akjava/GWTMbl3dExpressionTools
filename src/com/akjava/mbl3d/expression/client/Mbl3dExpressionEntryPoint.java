@@ -142,10 +142,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		//light
 		
 		//0xaaaaaa
-		AmbientLight ambient = THREE.AmbientLight( 0x666666 );//var ambient = new THREE.AmbientLight( 0xffffff );
+		AmbientLight ambient = THREE.AmbientLight( 0xaaaaaa );//var ambient = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambient );
 
-		DirectionalLight directionalLight = THREE.DirectionalLight( 0xaaaaaa );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
+		DirectionalLight directionalLight = THREE.DirectionalLight( 0x666666 );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
 		directionalLight.getPosition().set( -0.5, 1, -1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
 		scene.add( directionalLight );
 		
@@ -964,14 +964,12 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		//insertSwitchTextureAnimations(duration);
 		//insertVisibleTextureAnimations(duration);
-		
-		onAnimationBooleanUpdated();
-		
+		//onAnimationBooleanUpdated();
 		
 		
-		
+		//
 		insertMaterialAlphaAnimations(material,duration);
-		
+		//LogUtils.log("4");
 		
 	}
 	
@@ -984,6 +982,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		return animationBoolean;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public void onAnimationBooleanUpdated(){
 		for(int i=0;i<animationBoolean.size();i++){
 			canvasTexturePainter.getTextureLayers().setAlpha(i, 100);

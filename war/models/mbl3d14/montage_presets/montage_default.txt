@@ -32,6 +32,9 @@ eyelash/lower_eyelash2.png
 eyelash/lower_eyelash3.png
 #mouse,true
 mouse/mouse1.png
+mouse/mouse1_no_teeth.png
+mouse/mouse1_upper_teeth.png
+mouse/mouse1_lower_gum.png
 #eye,true
 eye/eye1.png
 eye/eye1a.png
@@ -89,6 +92,8 @@ top/bra_white.png
 #eyeshadow
 eyeshadow/blue.png
 eyeshadow/blue2.png
+eyeshadow/line.png
+eyeshadow/line2.png
 #cheek
 cheek/cheek1.png
 cheek/cheek1a.png

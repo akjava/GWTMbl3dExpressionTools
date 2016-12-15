@@ -6,13 +6,16 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.google.common.base.Converter;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.MapDifference.ValueDifference;
@@ -23,6 +26,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.text.shared.Renderer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -151,12 +156,68 @@ public class BasicExpressionPanel extends VerticalPanel {
 		overwriteButton.setEnabled(false);
 		
 		
+		//download image panel
+		LogUtils.log("tools");
+		HorizontalPanel toolsPanel=new HorizontalPanel();
+		toolsPanel.setVerticalAlignment(ALIGN_MIDDLE);
+		this.add(toolsPanel);
+		
+		
+		final HorizontalPanel dlPanel=new HorizontalPanel();
+		dlPanel.setSpacing(4);
+		
+		Button imageBt=new Button("Image",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				//still confusing how to handle non indexed data.
+				String fileBaseName="unknown";
+				
+				String generated=generateFileName();
+				if(!generated.isEmpty()){
+					fileBaseName=generated;
+				}
+				
+				String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();
+				Anchor a=HTML5Download.get().generateBase64DownloadLink(url, "image/png", fileBaseName+".png", "Download", true);
+				dlPanel.clear();
+				dlPanel.add(a);
+			}
+		});
+		toolsPanel.add(imageBt);
+		toolsPanel.add(dlPanel);
+		
+		
+		
 		Label morph=new Label("Morph");
 		this.add(morph);
 		
 		morphTargetPanel = new VerticalPanel();
 		this.add(morphTargetPanel);
 		
+	}
+	
+	public String generateFileName(){
+		List<String> keys=Lists.newArrayList();
+		for(String key:ranges.keySet()){
+			LabeledInputRangeWidget2 widget=ranges.get(key);
+			
+			//need only
+			double value=widget.getValue();
+			if(value!=0){
+				//shorten
+				if(key.startsWith("Expressions_")){
+					key=key.substring("Expressions_".length());
+				}
+				
+				if(value==1){
+					keys.add(key);
+				}else{
+					keys.add(key+"_"+value);
+				}
+			}
+			
+		}
+		return Joiner.on("-").join(keys);
 	}
 	
 	public void setMesh(final Mesh morphMesh){
