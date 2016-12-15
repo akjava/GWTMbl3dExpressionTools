@@ -40,6 +40,9 @@ mouse/mouse1.png
 mouse/mouse1_no_teeth.png
 mouse/mouse1_upper_teeth.png
 mouse/mouse1_lower_gum.png
+mouse/mouse1-tongue.png
+mouse/mouse1-tongue2.png
+mouse/mouse1-tongue3.png
 #eye,true
 eye/eye1.png
 eye/eye1a.png
