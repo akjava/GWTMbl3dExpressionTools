@@ -167,7 +167,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				.transparent(true)
 				.alphaTest(0.5)
 				.opacity(1)
-				.side(THREE.DoubleSide)//tongue need this?
+				.side(THREE.DoubleSide)//tongue need this
 				//.specular(0xffffff).shininess(100) //need map?
 				//.specular(0x111111).shininess(200)
 				);

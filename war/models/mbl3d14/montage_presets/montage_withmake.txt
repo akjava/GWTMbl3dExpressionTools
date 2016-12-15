@@ -1,7 +1,7 @@
 #body,,
 anime_dermal.png
 #skin,true,
-skin1.png
+skin/skin1.png
 #uv,,
 uv2048-mbl3d14.png
 #eyeborder,true,

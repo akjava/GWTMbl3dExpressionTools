@@ -1,7 +1,7 @@
 #body,,,
 anime_dermal.png
 #skin,true,,
-skin1.png
+skin/skin1.png
 skin2.png
 skin3.png
 skin_pink.png

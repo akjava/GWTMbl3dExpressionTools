@@ -1,7 +1,11 @@
 brown,#553817
+brown2,#5f2923
 brond1,#fafdc4
 black,#000000
 green,#64b992
 dark,#383838
 purple,#e8e2f0
+purple2,#d7d2ec
 pink,#ffc7d2
+pink2,#ff9ed5
+blue,#61a5ff
