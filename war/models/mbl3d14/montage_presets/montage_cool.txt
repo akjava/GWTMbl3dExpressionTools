@@ -34,12 +34,8 @@ eyelash/lower_eyelash0.png
 eyelash/lower_eyelash1.png
 eyelash/lower_eyelash2.png
 eyelash/lower_eyelash3.png
-#mouse,true,,mouse/mouse1_lower_gum.png
-mouse/mouse1.png
-mouse/mouse1_no_teeth.png
-mouse/mouse1_upper_teeth.png
-mouse/mouse1_lower_gum.png
-#eye,true,eye/eye1a.png,
+#mouth,true,,mouth/mouth1_lower_gum.png
+mouth/mouth1.png
 eye/eye1.png
 eye/eye1a.png
 eye/eye2.png

@@ -27,8 +27,8 @@ eyelash/lower_eyelash0.png
 eyelash/lower_eyelash1.png
 eyelash/lower_eyelash2.png
 eyelash/lower_eyelash3.png
-#mouse,true,,
-mouse/mouse1.png
+#mouth,true,,
+mouth/mouth1.png
 #eye,true,eye/eye2.png,
 eye/eye1.png
 eye/eye1a.png
