@@ -3,3 +3,5 @@ montage_mixed.txt
 montage_withmake.txt
 montage_ol.txt
 montage_cool.txt
+montage_modern.txt
+montage_real.txt

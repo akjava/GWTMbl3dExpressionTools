@@ -401,7 +401,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					tab.add(createDataListTab(),"DataList");
 					
-					tab.add(createPatternTab(),"Pattern");
+					//disable right now
+					//tab.add(createPatternTab(),"Pattern");
 					
 					
 					
