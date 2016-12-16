@@ -6,7 +6,7 @@ import com.akjava.gwt.three.client.js.textures.Texture;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * TODO full javascript
+ * trying have layer
  * @author aki
  *
  */

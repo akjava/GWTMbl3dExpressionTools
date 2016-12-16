@@ -89,7 +89,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	
 	private CanvasTexturePainter canvasTexturePainter;
 	
-	private TextureSwitcher textureSwitcher; //i'm not sure,what is this?maybe for graduate texture change
+	//private TextureSwitcher textureSwitcher; //i'm not sure,what is this?maybe for graduate texture change
 	
 	@Override
 	public WebGLRendererParameter createRendererParameter() {
@@ -143,8 +143,13 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		//0xaaaaaa
 		AmbientLight ambient = THREE.AmbientLight( 0xaaaaaa );//var ambient = new THREE.AmbientLight( 0xffffff );
+		//AmbientLight ambient = THREE.AmbientLight( 0xc38038);
 		scene.add( ambient );
 
+		
+		
+		//DirectionalLight directionalLight = THREE.DirectionalLight( 0xffffff );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
+		
 		DirectionalLight directionalLight = THREE.DirectionalLight( 0x666666 );//var directionalLight = new THREE.DirectionalLight( 0x444444 );
 		directionalLight.getPosition().set( -0.5, 1, -1 ).normalize();//directionalLight.position.set( -1, 1, 1 ).normalize();
 		scene.add( directionalLight );
@@ -168,8 +173,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				.alphaTest(0.5)
 				.opacity(1)
 				.side(THREE.DoubleSide)//tongue need this
-				//.specular(0xffffff).shininess(100) //need map?
-				//.specular(0x111111).shininess(200)
+				.shininess(15)
+				//.specular(0xffffff).shininess(200) //need map?
+				//.specular(0x111111).shininess(0)
 				);
 		
 		
@@ -264,10 +270,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	}
 	
 	/**
-	 * @deprecated
+	 * @using texture switcher purpose is making animated changing texture
 	 * @param material
 	 */
-				protected void loadTextures(final MeshPhongMaterial material) {
+				/*protected void loadTextures(final MeshPhongMaterial material) {
 					THREE.XHRLoader().load("textures.txt", new XHRLoadHandler() {
 						@Override
 						public void onLoad(String text) {
@@ -314,7 +320,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							
 						}
 					});
-				}
+				}*/
 
 				private Panel createBasicPanel(){
 					basicPanel = new BasicExpressionPanel(this);
@@ -728,7 +734,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			}
 			
 			mixer.update(frameTime);	
-			textureSwitcher.update();
+		//	textureSwitcher.update();
 			
 			renderer.render(scene, camera);
 			
@@ -743,9 +749,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 				
 			}	
 			
-			if(textureSwitcher!=null){
+			/*if(textureSwitcher!=null){
 				textureSwitcher.update();
-			}
+			}*/
 			
 			renderer.render(scene, camera);
 		}
@@ -1124,7 +1130,8 @@ private void insertMaterialAlphaAnimations(Material material,double duration) {
 		action.play();
 	}
 
-private void insertSwitchTextureAnimations(double duration) {	
+/* trying graduate color
+ * private void insertSwitchTextureAnimations(double duration) {	
 	for(int i=0;i<canvasTexturePainter.getTextureLayers().size();i++){
 		canvasTexturePainter.getTextureLayers().setAlpha(i, 1);
 	}
@@ -1170,7 +1177,7 @@ private void insertSwitchTextureAnimations(double duration) {
 		AnimationMixerAction action=getMixer().clipAction(clip2,textureSwitcher);
 		
 		action.play();
-	}
+	}*/
 	
 	private void insertVisibleTextureAnimations(double duration) {
 		
