@@ -43,6 +43,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 	Mbl3dExpressionReceiver receiver;
 	private Button overwriteButton;
 	private VerticalPanel morphTargetPanel;
+	private LabeledInputRangeWidget2 eyeModifier;
 	
 	public BasicExpressionPanel(final Mbl3dExpressionReceiver receiver){
 		this.receiver=receiver;
@@ -191,9 +192,18 @@ public class BasicExpressionPanel extends VerticalPanel {
 		Label morph=new Label("Morph");
 		this.add(morph);
 		
+		eyeModifier = new LabeledInputRangeWidget2("Eye-Modifier", 0.5, 1, 0.1);
+		eyeModifier.setValue(1.0);
+		eyeModifier.setTitle("for eyes-01min/max 03min/max,setted by model load");
+		this.add(eyeModifier);
+		
 		morphTargetPanel = new VerticalPanel();
 		this.add(morphTargetPanel);
 		
+	}
+	private static final List<String> needModiferKeys=Lists.newArrayList("eyes01_min","eyes01_max","eyes03_min","eyes03_max");
+	public boolean isNeedModifer(String shortenName){
+		return needModiferKeys.contains(shortenName);
 	}
 	
 	public String generateFileName(){
@@ -234,10 +244,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 			}
 			final int index=param.getInt(key);
 			String originKey=key;
-			key=key.substring("Expressions_".length());
+			final String shortKeyName=key.substring("Expressions_".length());
 			HorizontalPanel inputPanel=new HorizontalPanel();
 			
-			Label nameLabel=new Label(key);
+			Label nameLabel=new Label(shortKeyName);
 			
 			
 			inputPanel.add(nameLabel);
@@ -245,7 +255,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			
 			
-			final LabeledInputRangeWidget2 inputRange=new LabeledInputRangeWidget2(key, 0, 1, 0.01);
+			final LabeledInputRangeWidget2 inputRange=new LabeledInputRangeWidget2(shortKeyName, 0, 1, 0.01);
 			inputRange.getLabel().setVisible(false);
 			inputRange.getRange().setWidth("110px");
 			
@@ -253,7 +263,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			inputRange.getTextBox().setHeight("12px");
 			
 			
-			debug+=key+"\n";
+			debug+=shortKeyName+"\n";
 			
 			
 			inputRange.setValue(0);
@@ -281,7 +291,8 @@ public class BasicExpressionPanel extends VerticalPanel {
 			inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Number> event) {
-					morphMesh.getMorphTargetInfluences().set(index, event.getValue().doubleValue());
+					double influenceValue=isNeedModifer(shortKeyName)?eyeModifier.getValue()*event.getValue().doubleValue():event.getValue().doubleValue();
+					morphMesh.getMorphTargetInfluences().set(index, influenceValue);
 				}
 			});
 		}
