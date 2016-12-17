@@ -498,6 +498,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					
 	private String modelName;
+	public void setEyeModifier(double value){
+		basicPanel.getEyeModifier().setValue(value);//expression must be reset
+	}
 	public void loadModel(final String modelUrl){
 		if(mesh!=null){
 			scene.remove( mesh );
@@ -945,7 +948,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	}
 
 	public String createAnimationJson(){
-		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression();
+		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(false);
 		AnimationClip clip=converToAnimationClip("test", expression, true, true, true);
 		
 		

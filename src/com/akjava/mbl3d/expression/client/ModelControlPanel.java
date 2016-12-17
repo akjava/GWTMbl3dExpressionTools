@@ -8,6 +8,8 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
+import com.akjava.mbl3d.expression.client.model.ModelInfoData;
+import com.akjava.mbl3d.expression.client.model.ModelInfoDataConverter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -21,7 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ModelControlPanel extends VerticalPanel{
 	private Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint;
-	private ValueListBox<String> hairListBox;
+	private ValueListBox<ModelInfoData> modelInfoDataBox;
 	
 
 	public static String toModelName(String url){
@@ -34,18 +36,18 @@ public class ModelControlPanel extends VerticalPanel{
 		add(new Label("Model Control"));
 		
 		
-		hairListBox = new ValueListBox<String>(new Renderer<String>() {
+		modelInfoDataBox = new ValueListBox<ModelInfoData>(new Renderer<ModelInfoData>() {
 
 			@Override
-			public String render(String object) {
+			public String render(ModelInfoData object) {
 				if(object!=null){
-					return toModelName(object);
+					return toModelName(object.getPath());
 				}
 				return null;
 			}
 
 			@Override
-			public void render(String object, Appendable appendable) throws IOException {
+			public void render(ModelInfoData object, Appendable appendable) throws IOException {
 				// TODO Auto-generated method stub
 				
 			}
@@ -58,7 +60,7 @@ public class ModelControlPanel extends VerticalPanel{
 		Label nameLabel=new Label("Name:");
 		nameLabel.setWidth(labelWidth);
 		namePanel.add(nameLabel);
-		namePanel.add(hairListBox);
+		namePanel.add(modelInfoDataBox);
 		add(namePanel);
 		
 		
@@ -66,7 +68,7 @@ public class ModelControlPanel extends VerticalPanel{
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				String value=hairListBox.getValue();
+				String value=modelInfoDataBox.getValue().getPath();
 				if(value==null){
 					return;
 				}
@@ -77,8 +79,8 @@ public class ModelControlPanel extends VerticalPanel{
 				}else{
 					index++;
 				}
-				String newValue=hairListData.get(index);
-				hairListBox.setValue(newValue,true);
+				ModelInfoData newValue=hairListData.get(index);
+				modelInfoDataBox.setValue(newValue,true);
 			}
 		});
 		namePanel.add(next);
@@ -87,25 +89,27 @@ public class ModelControlPanel extends VerticalPanel{
 		String hairList="models.txt";
 		String hairBase="";
 		
-		hairListBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+		modelInfoDataBox.addValueChangeHandler(new ValueChangeHandler<ModelInfoData>() {
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				ModelControlPanel.this.mbl3dExpressionEntryPoint.loadModel(event.getValue());
+			public void onValueChange(ValueChangeEvent<ModelInfoData> event) {
+				ModelControlPanel.this.mbl3dExpressionEntryPoint.loadModel(event.getValue().getPath());
+				ModelControlPanel.this.mbl3dExpressionEntryPoint.setEyeModifier(event.getValue().getEyeModifier());
+				//
 			}
 		});
 		
 		loadHairList(hairList);
 	}
 	
-	private List<String> hairListData;
+	private List<ModelInfoData> hairListData;
 	
 	protected void loadHairList(String hairListPath){
 		THREE.XHRLoader().load(hairListPath+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
 			@Override
 			public void onLoad(String text) {
-				hairListData = CSVUtils.splitLinesWithGuava(text);
-				hairListBox.setValue(hairListData.get(0),true);
-				hairListBox.setAcceptableValues(hairListData);
+				hairListData = new ModelInfoDataConverter().convert(text);
+				modelInfoDataBox.setValue(hairListData.get(0),true);
+				modelInfoDataBox.setAcceptableValues(hairListData);
 				
 			}
 		});

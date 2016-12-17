@@ -112,6 +112,9 @@ private ListBox addExpressionBox;
 		writing=false;
 	}
 
+	/*
+	 * TODO solve,i dont know what is this?
+	 */
 	protected void startRecord() {
 		Mbl3dExpressionEntryPoint.INSTANCE.fixRenderSize();
 		//stop first
@@ -125,7 +128,7 @@ private ListBox addExpressionBox;
 		
 		List<Mbl3dExpression> expressions=null;
 		if(type.isEmpty()){
-			Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression();
+			Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(true);
 			expressions=Lists.newArrayList(expression);
 		}else{
 			

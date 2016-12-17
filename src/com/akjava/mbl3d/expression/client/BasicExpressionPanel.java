@@ -45,6 +45,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 	private VerticalPanel morphTargetPanel;
 	private LabeledInputRangeWidget2 eyeModifier;
 	
+	public LabeledInputRangeWidget2 getEyeModifier() {
+		return eyeModifier;
+	}
+
 	public BasicExpressionPanel(final Mbl3dExpressionReceiver receiver){
 		this.receiver=receiver;
 		ranges=Maps.newHashMap();
@@ -192,7 +196,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 		Label morph=new Label("Morph");
 		this.add(morph);
 		
-		eyeModifier = new LabeledInputRangeWidget2("Eye-Modifier", 0.5, 1, 0.1);
+		eyeModifier = new LabeledInputRangeWidget2("Eye-Modifier", 0.5, 1, 0.01);
 		eyeModifier.setValue(1.0);
 		eyeModifier.setTitle("for eyes-01min/max 03min/max,setted by model load");
 		this.add(eyeModifier);
@@ -202,7 +206,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 		
 	}
 	private static final List<String> needModiferKeys=Lists.newArrayList("eyes01_min","eyes01_max","eyes03_min","eyes03_max");
-	public boolean isNeedModifer(String shortenName){
+	public boolean isNeedModifier(String shortenName){
+		if(shortenName.startsWith("Expressions_")){
+			shortenName=shortenName.substring("Expressions_".length());
+		}
 		return needModiferKeys.contains(shortenName);
 	}
 	
@@ -291,11 +298,15 @@ public class BasicExpressionPanel extends VerticalPanel {
 			inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Number> event) {
-					double influenceValue=isNeedModifer(shortKeyName)?eyeModifier.getValue()*event.getValue().doubleValue():event.getValue().doubleValue();
+					double influenceValue=isNeedModifier(shortKeyName)?toEyeModifiedValue(event.getValue().doubleValue()):event.getValue().doubleValue();
 					morphMesh.getMorphTargetInfluences().set(index, influenceValue);
 				}
 			});
 		}
+	}
+	
+	public double toEyeModifiedValue(double value){
+		return eyeModifier.getValue()*value;
 	}
 	
 	
@@ -338,12 +349,16 @@ public class BasicExpressionPanel extends VerticalPanel {
 			*/
 		}
 	}
-	public Mbl3dExpression currentRangesToMbl3dExpression() {
+	public Mbl3dExpression currentRangesToMbl3dExpression(boolean doModify) {
 		Mbl3dExpression expression=new Mbl3dExpression();
 		for(String key:ranges.keySet()){
 			LabeledInputRangeWidget2 widget=ranges.get(key);
 			if(widget.getValue()!=0){
-				expression.set(key, widget.getValue());
+				if(doModify && isNeedModifier(key)){
+					expression.set(key, toEyeModifiedValue(widget.getValue()));
+				}else{
+					expression.set(key, widget.getValue());
+				}
 			}
 		}
 		

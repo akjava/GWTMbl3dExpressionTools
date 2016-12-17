@@ -49,7 +49,7 @@ public class PlayerPanel extends VerticalPanel{
 
 	protected void doPlay() {
 		
-		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression();
+		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(true);
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(expression,true,true,true);
 		
 		

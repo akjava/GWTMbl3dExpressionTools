@@ -1,4 +1,4 @@
-models/mbl3d14/models/round-head.json
+models/mbl3d14/models/round-head.json,0.85
 models/mbl3d14/models/half-bold.json
 models/mbl3d14/models/bold.json
 models/mbl3d14/models/round-head2.json
@@ -38,5 +38,5 @@ models/mbl3d14/models/roundhead5b.json
 models/mbl3d14/models/roundhead5-06.json
 models/mbl3d14/models/roundhead5-07.json
 models/mbl3d14/models/roundhead5-08.json
-models/mbl3d14/models/roundhead6.json
-models/mbl3d14/models/roundhead6a.json
+models/mbl3d14/models/roundhead6.json,0.74
+models/mbl3d14/models/roundhead6a.json,0.68
