@@ -5,3 +5,4 @@ montage_ol.txt
 montage_cool.txt
 montage_modern.txt
 montage_real.txt
+montage_gumi.txt

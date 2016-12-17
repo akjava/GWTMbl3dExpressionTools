@@ -24,6 +24,11 @@ public class ModelControlPanel extends VerticalPanel{
 	private ValueListBox<String> hairListBox;
 	
 
+	public static String toModelName(String url){
+		String file=FileNames.getFileNameAsSlashFileSeparator(url);//TODO add fileNames?
+		String name=FileNames.getRemovedExtensionName(file);
+		return name;
+	}
 	public ModelControlPanel(Mbl3dExpressionEntryPoint mbl3dExpressionEntryPoint){
 		this.mbl3dExpressionEntryPoint=mbl3dExpressionEntryPoint;
 		add(new Label("Model Control"));
@@ -34,13 +39,7 @@ public class ModelControlPanel extends VerticalPanel{
 			@Override
 			public String render(String object) {
 				if(object!=null){
-					String file=FileNames.getFileNameAsSlashFileSeparator(object);
-					String name=FileNames.getRemovedExtensionName(file);
-					
-					//get last directory name
-					
-					//TODO dir check;
-					return name;
+					return toModelName(object);
 				}
 				return null;
 			}

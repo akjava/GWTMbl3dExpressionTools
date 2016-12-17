@@ -170,11 +170,11 @@ public class BasicExpressionPanel extends VerticalPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				//still confusing how to handle non indexed data.
-				String fileBaseName="unknown";
+				String fileBaseName=Mbl3dExpressionEntryPoint.INSTANCE.getModelName();
 				
 				String generated=generateFileName();
 				if(!generated.isEmpty()){
-					fileBaseName=generated;
+					fileBaseName+="_"+generated;
 				}
 				
 				String url=Mbl3dExpressionEntryPoint.INSTANCE.toImageDataUrl();

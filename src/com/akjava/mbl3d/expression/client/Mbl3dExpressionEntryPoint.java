@@ -497,7 +497,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					
 					
-	public void loadModel(String modelUrl){
+	private String modelName;
+	public void loadModel(final String modelUrl){
 		if(mesh!=null){
 			scene.remove( mesh );
 		}
@@ -509,7 +510,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			
 			@Override
 			public void loaded(Geometry geometry,JsArray<Material> materials) {
-				
+				modelName=ModelControlPanel.toModelName(modelUrl);
 				//Geometry geometry=loadedObject.getGeometry();
 				
 				geometry.computeBoundingBox();
@@ -678,6 +679,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	}
 	
 	
+	public String getModelName() {
+		return modelName;
+	}
+
 	public final native void subdivision(int division,Geometry geometry)/*-{
 	var modifier = new $wnd.THREE.SubdivisionModifier( division );
     modifier.modify( geometry );
