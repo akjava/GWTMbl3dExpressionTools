@@ -418,8 +418,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 							EmotionsData emotionData=new EmotionsData(emotions);
 							dataListPanel.setEmotions(emotions);
-							combinePatternPanel.setEmotion(emotions);
 							
+							if(combinePatternPanel!=null)
+							combinePatternPanel.setEmotion(emotions);
+							if(recorderPanel!=null)
 							recorderPanel.setEmotionData(emotionData);
 						}
 					});

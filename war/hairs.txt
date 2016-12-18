@@ -1,3 +1,4 @@
+geometry-twelve-short.json
 geometry-twelve-bob-divided.json
 geometry-twelve-bob.json
 geometry-twelve-extra_long.json
@@ -7,7 +8,6 @@ geometry-twelve-semi_long.json
 geometry-twelve-short_bob.json
 geometry-twelve-short_bob2.json
 geometry-twelve-short_bob3.json
-geometry-twelve-short.json
 geometry-twelve-super_long.json
 geometry-twelve-very_short.json
 geometry-twelve01-hair01a.json

@@ -208,8 +208,19 @@ public class BasicExpressionPanel extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				setMbl3dExpression(new Mbl3dExpression());
+				setMbl3dExpression(new Mbl3dExpression());//set widget 0
 				setOverwriteEnable(false);
+				
+				//force reset getMorphTargetInfluences,if animation going strange things happen.
+				
+				//TODO make gwtClearMorphTargetInfluences()
+				JSParameter morphTargetDictionary = morphMesh.getMorphTargetDictionary().cast();
+				for(String key:ranges.keySet()){
+					int index=morphTargetDictionary.getInt(key);
+					morphMesh.getMorphTargetInfluences().set(index, 0);
+				}
+				
+				
 			}
 		});
 		buttons.add(clearBt);
@@ -219,6 +230,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 		
 	}
 	private static final List<String> needModiferKeys=Lists.newArrayList("eyes01_min","eyes01_max","eyes03_min","eyes03_max");
+	
 	public boolean isNeedModifier(String shortenName){
 		if(shortenName.startsWith("Expressions_")){
 			shortenName=shortenName.substring("Expressions_".length());
@@ -250,19 +262,21 @@ public class BasicExpressionPanel extends VerticalPanel {
 		return Joiner.on("-").join(keys);
 	}
 	
+	private Mesh morphMesh;
 	public void setMesh(final Mesh morphMesh){
+		this.morphMesh=morphMesh;
 		morphTargetPanel.clear();
 		String debug="";//for get key all
-		JSParameter param=morphMesh.getMorphTargetDictionary().cast();
+		JSParameter morphTargetDictionary = morphMesh.getMorphTargetDictionary().cast();
 		
-		JsArrayString keys=param.getKeys();
+		JsArrayString keys=morphTargetDictionary.getKeys();
 		for(int i=0;i<keys.length();i++){
 			String key=keys.get(i);
 			if(!key.startsWith("Expressions_")){
 				LogUtils.log("only support start 'Expressions_ and valid format key name:"+key);
 				continue;
 			}
-			final int index=param.getInt(key);
+			final int index=morphTargetDictionary.getInt(key);
 			String originKey=key;
 			final String shortKeyName=key.substring("Expressions_".length());
 			HorizontalPanel inputPanel=new HorizontalPanel();
@@ -317,6 +331,8 @@ public class BasicExpressionPanel extends VerticalPanel {
 			});
 		}
 	}
+	
+	
 	
 	public double toEyeModifiedValue(double value){
 		return eyeModifier.getValue()*value;

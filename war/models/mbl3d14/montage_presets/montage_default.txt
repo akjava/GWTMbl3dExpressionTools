@@ -21,7 +21,6 @@ eye/eye1_brown_down_s.png
 eye/eye1_brown_down_l.png
 eye/eye1_brown_down_l2.png
 eye/eye1_brown_down2.png
-
 eye/eye1a.png
 eye/eye2.png
 eye/eye3_brown.png
@@ -64,6 +63,8 @@ eyelash/lower_eyelash3.png
 #eyeshadow
 eyeshadow/blue.png
 eyeshadow/blue2.png
+eyeshadow/grey.png
+eyeshadow/grey2.png
 eyeshadow/line.png
 eyeshadow/line2.png
 #eyelight,true
