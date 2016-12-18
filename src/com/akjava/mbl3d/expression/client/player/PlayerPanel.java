@@ -9,6 +9,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PlayerPanel extends VerticalPanel{
@@ -45,12 +46,42 @@ public class PlayerPanel extends VerticalPanel{
 				Mbl3dExpressionEntryPoint.INSTANCE.setDuration(event.getValue().doubleValue());
 			}
 		});
+		HorizontalPanel startPanel=new HorizontalPanel();
+		Label fromLabel=new Label("From:");
+		this.add(startPanel);
+		startPanel.add(fromLabel);
+		final Label selectionLabel=new Label();
+		selectionLabel.setWidth("100%");
+		startPanel.add(selectionLabel);
+		
+		Button setBt=new Button("set",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				fromExpression=currentRangesToMbl3dExpression();
+				//how to get name?,
+				String label=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().generateFileName();
+				selectionLabel.setText(label);
+			}
+		});
+		startPanel.add(setBt);
+		Button clearBt=new Button("clear",new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				fromExpression=null;
+				selectionLabel.setText("");
+			}
+		});
+		startPanel.add(clearBt);
+	}
+	private Mbl3dExpression fromExpression;
+	private Mbl3dExpression currentRangesToMbl3dExpression(){
+		return Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(true);
 	}
 
 	protected void doPlay() {
 		
-		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(true);
-		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(expression,true,true,true);
+		Mbl3dExpression toExpression=currentRangesToMbl3dExpression();
+		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(fromExpression,toExpression,true,true,true);
 		
 		
 	}

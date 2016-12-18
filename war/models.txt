@@ -15,7 +15,7 @@ models/mbl3d14/models/smooth-breast2.json
 models/mbl3d14/models/has-tongue.json
 models/mbl3d14/models/has-tongue2.json
 models/mbl3d14/models/has-tongue2-teeth.json
-models/mbl3d14/models/mod-teeth.json
+models/mbl3d14/models/mod-teeth.json,0.85
 models/mbl3d14/models/caucasion_female.json
 models/mbl3d14/models/asian_female.json
 models/mbl3d14/models/aflo_female.json

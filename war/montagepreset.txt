@@ -6,3 +6,4 @@ montage_cool.txt
 montage_modern.txt
 montage_real.txt
 montage_gumi.txt
+montage_small_eye.txt

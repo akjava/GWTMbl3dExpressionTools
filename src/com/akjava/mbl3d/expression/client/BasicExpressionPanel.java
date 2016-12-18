@@ -201,6 +201,19 @@ public class BasicExpressionPanel extends VerticalPanel {
 		eyeModifier.setTitle("for eyes-01min/max 03min/max,setted by model load");
 		this.add(eyeModifier);
 		
+		HorizontalPanel buttons=new HorizontalPanel();
+		this.add(buttons);
+		
+		Button clearBt=new Button("clear",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				setMbl3dExpression(new Mbl3dExpression());
+				setOverwriteEnable(false);
+			}
+		});
+		buttons.add(clearBt);
+		
 		morphTargetPanel = new VerticalPanel();
 		this.add(morphTargetPanel);
 		

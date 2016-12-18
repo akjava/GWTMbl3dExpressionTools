@@ -2,13 +2,14 @@ package com.akjava.mbl3d.expression.client;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.akjava.gwt.lib.client.CanvasUtils;
 import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.experimental.AsyncMultiCaller;
-import com.akjava.gwt.three.client.examples.ColladaLoader.ColladaLoadHandler;
 import com.akjava.gwt.three.client.examples.js.THREEExp;
 import com.akjava.gwt.three.client.examples.js.controls.OrbitControls;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
@@ -17,8 +18,6 @@ import com.akjava.gwt.three.client.gwt.core.BoundingBox;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
 import com.akjava.gwt.three.client.java.ui.experiments.ThreeAppEntryPointWithControler;
 import com.akjava.gwt.three.client.java.utils.Mbl3dLoader;
-import com.akjava.gwt.three.client.java.utils.MultiTextureLoader;
-import com.akjava.gwt.three.client.java.utils.MultiTextureLoader.MultiTextureLoaderListener;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.AnimationMixer;
@@ -26,7 +25,6 @@ import com.akjava.gwt.three.client.js.animation.AnimationMixerAction;
 import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.BooleanKeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
-import com.akjava.gwt.three.client.js.animation.tracks.StringKeyframeTrack;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.core.Clock;
 import com.akjava.gwt.three.client.js.core.Geometry;
@@ -41,21 +39,18 @@ import com.akjava.gwt.three.client.js.math.THREEMath;
 import com.akjava.gwt.three.client.js.math.Vector3;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
-import com.akjava.gwt.three.client.js.textures.Texture;
 import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.recorder.RecorderPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
-import com.akjava.mbl3d.expression.client.texture.TextureSwitcher;
 import com.google.common.collect.Lists;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayBoolean;
 import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
@@ -889,13 +884,34 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	/*
 	 * convert Mbl3dExpression to AnimationClip
 	 */
-	public AnimationClip converToAnimationClip(String name,Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth){
+	
+	/*public AnimationClip converToAnimationClip(String name,Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth){
+	return converToAnimationClip(name,expression,filterBrow,filterEyes,filterMouth);
+	}*/
+	
+	public AnimationClip converToAnimationClip(String name,@Nullable Mbl3dExpression fromExpression,Mbl3dExpression toExpression,boolean filterBrow,boolean filterEyes,boolean filterMouth){
 		JSParameter param=mesh.getMorphTargetDictionary().cast();
+		
+		if(fromExpression==null){
+			fromExpression=new Mbl3dExpression();//
+		}
+		
+		List<String> keys=Lists.newArrayList();
+		for(String key:fromExpression.getKeys()){
+			if(!keys.contains(key)){
+				keys.add(key);
+			}
+		}
+		for(String key:toExpression.getKeys()){
+			if(!keys.contains(key)){
+				keys.add(key);
+			}
+		}
 		
 		
 		
 		JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
-		for(String key:expression.getKeys()){
+		for(String key:keys){
 			boolean passed=false;
 			if(!passed && filterBrow && Mbl3dDataPredicates.passBrowOnly().apply(key)){
 				passed=true;
@@ -914,7 +930,9 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			int index=param.getInt(key);
 			
 			String trackName=".morphTargetInfluences["+index+"]";
-			double value=expression.get(key);
+			
+			double fromValue=fromExpression.containsKey(key)?fromExpression.get(key):0;
+			double toValue=toExpression.containsKey(key)?toExpression.get(key):0;
 			
 			
 			
@@ -928,10 +946,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			*/
 			
 			JsArrayNumber values=JavaScriptObject.createArray().cast();
-			values.push(0);
-			values.push(value);
-			//values.push(value);
-			values.push(0);
+			values.push(fromValue);
+			
+			values.push(toValue);
+			
+			values.push(fromValue);
 			
 			NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
 			tracks.push(track);
@@ -952,7 +971,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 
 	public String createAnimationJson(){
 		Mbl3dExpression expression=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().currentRangesToMbl3dExpression(false);
-		AnimationClip clip=converToAnimationClip("test", expression, true, true, true);
+		AnimationClip clip=converToAnimationClip("test", null,expression, true, true, true);
 		
 		
 		LogUtils.log(AnimationClip.toJSON(clip));
@@ -962,7 +981,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		return object.toString();
 	}
 	
-	public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
+	/*public void playAnimation(Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
+		playAnimation(null,expression,filterBrow,filterEyes,filterMouth);
+	}*/
+	
+	public void playAnimation(@Nullable Mbl3dExpression fromExpression,Mbl3dExpression expression,boolean filterBrow,boolean filterEyes,boolean filterMouth) {
 		//test(1);
 		stopAnimation();
 		
@@ -971,7 +994,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 			return;
 		}
 		
-		AnimationClip clip=converToAnimationClip("test", expression, filterBrow, filterEyes, filterMouth);
+		AnimationClip clip=converToAnimationClip("test", fromExpression,expression, filterBrow, filterEyes, filterMouth);
 		
 		getMixer().uncacheClip(clip);//same name cache that.
 		getMixer().clipAction(clip).play();
@@ -986,7 +1009,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		
 		
 		//
-		insertMaterialAlphaAnimations(material,duration);
+		//insertMaterialAlphaAnimations(material,duration);
 		//LogUtils.log("4");
 		
 	}

@@ -177,7 +177,7 @@ private ListBox addExpressionBox;
 		Mbl3dExpressionEntryPoint.INSTANCE.getMixer().uncacheClip(clip);//same name cache that.
 		Mbl3dExpressionEntryPoint.INSTANCE.getMixer().clipAction(clip).play();
 		
-		Mbl3dExpressionEntryPoint.INSTANCE.insertMaterialAlphaAnimations();
+		//Mbl3dExpressionEntryPoint.INSTANCE.insertMaterialAlphaAnimations();
 		
 		maxFrame=(int)(clip.getDuration()*1000/(1000.0/30))+1;
 		

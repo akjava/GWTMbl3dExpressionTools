@@ -483,7 +483,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		}
 		
 		if(playAnimationOnSelect){
-			Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(currentSelectedExpression,filterBrow,filterEyes,filterMouth);
+			Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(null,currentSelectedExpression,filterBrow,filterEyes,filterMouth);
 		}
 	}
 	private Mbl3dDataComparator comparator;
