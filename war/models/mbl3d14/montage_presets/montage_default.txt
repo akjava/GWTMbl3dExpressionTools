@@ -14,11 +14,14 @@ uv2048-mbl3d14.png
 #eye,true
 eye/eye1.png
 eye/eye1_brown.png
+eye/eye1_brown_oval.png
+eye/eye1_brown_pin.png
 eye/eye1_brown_down.png
 eye/eye1_brown_down_s.png
 eye/eye1_brown_down_l.png
 eye/eye1_brown_down_l2.png
 eye/eye1_brown_down2.png
+
 eye/eye1a.png
 eye/eye2.png
 eye/eye3_brown.png

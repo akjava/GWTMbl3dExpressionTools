@@ -450,8 +450,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					preferenceTab = new PreferenceTab(this,dataListPanel);
 					//if need set
 					
+					/*
+					 * maybe for making animation,right now stop using this.
 					recorderPanel = new RecorderPanel();
 					preferenceTab.add(recorderPanel);
+					*/
 					
 					
 					//

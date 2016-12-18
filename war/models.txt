@@ -28,8 +28,8 @@ models/mbl3d14/models/large-eye.json
 models/mbl3d14/models/eyelid.json
 models/mbl3d14/models/eyelid2.json
 models/mbl3d14/models/smalleye.json
-models/mbl3d14/models/roundsmalleye.json
-models/mbl3d14/models/roundsmalleye_withnosefix.json
+models/mbl3d14/models/roundsmalleye.json,0.6
+models/mbl3d14/models/roundsmalleye_withnosefix.json,0.6
 models/mbl3d14/models/roundface4.json
 models/mbl3d14/models/roundface4a.json
 models/mbl3d14/models/roundhead5.json
@@ -40,3 +40,10 @@ models/mbl3d14/models/roundhead5-07.json
 models/mbl3d14/models/roundhead5-08.json
 models/mbl3d14/models/roundhead6.json,0.74
 models/mbl3d14/models/roundhead6a.json,0.68
+models/mbl3d14/models/custom1.json
+models/mbl3d14/models/custom2.json,0.85
+models/mbl3d14/models/custom3.json,0.85
+models/mbl3d14/models/custom4.json,0.85
+models/mbl3d14/models/custom4a.json,0.87
+models/mbl3d14/models/custom4a_nosefix.json,0.87
+models/mbl3d14/models/custom4b.json,0.87

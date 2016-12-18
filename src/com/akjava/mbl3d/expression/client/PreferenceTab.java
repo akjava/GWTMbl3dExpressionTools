@@ -42,7 +42,7 @@ public class PreferenceTab extends VerticalPanel{
 		this.add(new Label("Player"));
 		this.add(new PlayerPanel());
 		
-		this.add(new Label("CanvasTexturePainter"));
+		//this.add(new Label("CanvasTexturePainter"));
 		canvasTexturePainterPanel = new VerticalPanel();//canvasTexturePainterPanel is almost deprecated
 		//this.add(canvasTexturePainterPanel);
 		
