@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.akjava.gwt.lib.client.CanvasUtils;
+import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.MultiImageElementLoader;
 import com.akjava.gwt.lib.client.MultiImageElementLoader.MultiImageElementListener;
@@ -76,13 +77,15 @@ public class TextureMontage {
 		
 		final Map<String,Double> alphas=Maps.newHashMap();
 		
+		String paramTime=GWTHTMLUtils.parameterTime();
+		
 		for(TextureMontageData data:textureMontageDatas){
 			if(!data.isEnabled()){
 				continue;
 			}
 			
 			if(data.getType()==TextureMontageData.TYPE_LIST){
-				String path=baseDirectory+data.getValue();
+				String path=baseDirectory+data.getValue()+paramTime;
 				paths.add(path);
 				double alpha=data.getOpacity()==100?1.0:(double)data.getOpacity()/100;
 				alphas.put(path,alpha);

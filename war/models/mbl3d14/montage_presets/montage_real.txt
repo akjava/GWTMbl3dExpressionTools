@@ -35,12 +35,12 @@ eyelash/lower_eyelash0.png
 eyelash/lower_eyelash1.png
 eyelash/lower_eyelash2.png
 eyelash/lower_eyelash3.png
-#mouth,true,mouth/mouth1_lower_gum.png,
+#mouth,
 mouth/mouth1.png
 mouth/mouth1_no_teeth.png
 mouth/mouth1_upper_teeth.png
 mouth/mouth1_lower_gum.png
-#tongue,true,tongue/tongue3.png,
+#tongue,
 tongue/tongue1.png
 tongue/tongue2.png
 tongue/tongue3.png

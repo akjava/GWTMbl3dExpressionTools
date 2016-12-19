@@ -69,6 +69,12 @@ eyeshadow/line.png
 eyeshadow/line2.png
 #eyelight,true
 eyelight/eyelight1.png
+eyelight/circle_l.png
+eyelight/circle_m.png
+eyelight/circle_s.png
+eyelight/square.png
+eyelight/square2.png
+eyelight/square3.png
 #lip,true
 lip/lip1.png
 lip/lip1a50.png
@@ -85,6 +91,12 @@ mouth/mouth1.png
 mouth/mouth1_no_teeth.png
 mouth/mouth1_upper_teeth.png
 mouth/mouth1_lower_gum.png
+mouth/mouth_human.png
+#tongue
+tongue/tongue1.png
+tongue/tongue2.png
+tongue/tongue3.png
+tongue/tongue_human.png
 #cheek
 cheek/cheek1.png
 cheek/cheek1a.png
@@ -131,10 +143,6 @@ cheek/cheek21.png
 cheek/cheek22.png
 cheek/cheek23.png
 cheek/cheek24a.png
-#tongue
-tongue/tongue1.png
-tongue/tongue2.png
-tongue/tongue3.png
 #nail,true
 nail/nail_white.png
 nail/nail_pink.png
