@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.akjava.gwt.lib.client.GWTHTMLUtils;
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
-import com.akjava.lib.common.utils.CSVUtils;
 import com.akjava.lib.common.utils.FileNames;
 import com.akjava.mbl3d.expression.client.model.ModelInfoData;
 import com.akjava.mbl3d.expression.client.model.ModelInfoDataConverter;
@@ -68,17 +68,19 @@ public class ModelControlPanel extends VerticalPanel{
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				String value=modelInfoDataBox.getValue().getPath();
+				ModelInfoData value=modelInfoDataBox.getValue();
 				if(value==null){
 					return;
 				}
 				
 				int index=hairListData.indexOf(value);
+				
 				if(index==hairListData.size()-1){
 					index=0;
 				}else{
 					index++;
 				}
+				
 				ModelInfoData newValue=hairListData.get(index);
 				modelInfoDataBox.setValue(newValue,true);
 			}

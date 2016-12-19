@@ -175,7 +175,20 @@ public class TextureMontageWidget extends VerticalPanel{
 		
 		//presets
 		final HorizontalPanel presetPanel=new HorizontalPanel();
+		presetPanel.setVerticalAlignment(ALIGN_MIDDLE);
 		add(presetPanel);
+		
+		Button reloadBt=new Button("Reload",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				reloadDefault();
+			}
+		});
+
+		presetPanel.add(reloadBt);
+		
+		
 		Label presetLabel=new Label("Preset:");
 		presetPanel.add(presetLabel);
 		
@@ -228,14 +241,7 @@ THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHR
 });
 		
 
-Button reloadBt=new Button("Reload",new ClickHandler() {
-	
-	@Override
-	public void onClick(ClickEvent event) {
-		reloadDefault();
-	}
-});
-presetPanel.add(reloadBt);
+
 	}
 	private ValueListBox<String> presetListBox;
 	private void reloadDefault(){

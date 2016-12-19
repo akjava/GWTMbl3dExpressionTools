@@ -41,7 +41,7 @@ eye/eye4c_brown.png
 eye/eye4d_brown.png
 eye/eye4e_brown.png
 eye/eye4f_brown.png
-#eyeborder,true,,
+#eyeborder,true,eyeborder/eyeborder_black2.png,
 eyeborder/eyeborder_black.png
 eyeborder/eyeborder_black2.png
 eyeborder/eyeborder_blackplus.png

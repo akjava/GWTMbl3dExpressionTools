@@ -21,6 +21,8 @@ eye/eye1_shadow3b.png
 eye/eye1_shadow_b.png
 eye/eye1_shadow_b2.png
 eye/eye1_shadow_b3.png
+eye/eye1_shadow_b3a.png
+eye/eye1_shadow_b3b.png
 eye/eye1_brown.png
 eye/eye1_brown_oval.png
 eye/eye1_brown_pin.png
