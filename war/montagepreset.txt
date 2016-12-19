@@ -1,4 +1,5 @@
 montage_default.txt
+montage_naturalmake.txt
 montage_mixed.txt
 montage_withmake.txt
 montage_ol.txt

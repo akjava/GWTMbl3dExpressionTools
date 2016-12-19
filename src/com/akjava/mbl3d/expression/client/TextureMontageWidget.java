@@ -167,7 +167,7 @@ public class TextureMontageWidget extends VerticalPanel{
 			
 			@Override
 			public void uploaded(File file, String text) {
-				loadData(text);
+				loadData(text,typeBox.getSelectedIndex()==1);
 			}
 		}, true);
 		upload.setAccept(FileUploadForm.ACCEPT_TXT);
@@ -182,11 +182,13 @@ public class TextureMontageWidget extends VerticalPanel{
 THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
 			
 
+			
+
 			@Override
 			public void onLoad(String text) {
 				List<String> lines=CSVUtils.splitLinesWithGuava(text,true);//empty no need
 				
-				ValueListBox<String> presetListBox=new ValueListBox<String>(new Renderer<String>() {
+				presetListBox = new ValueListBox<String>(new Renderer<String>() {
 
 					@Override
 					public String render(String object) {
@@ -216,7 +218,7 @@ THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHR
 						THREE.XHRLoader().load("models/mbl3d14/montage_presets/"+event.getValue()+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
 							@Override
 							public void onLoad(String text) {
-								loadData(text);
+								loadData(text,typeBox.getSelectedIndex()==1);
 							}
 						});
 						
@@ -225,15 +227,42 @@ THREE.XHRLoader().load("montagepreset.txt"+GWTHTMLUtils.parameterTime(), new XHR
 			}
 });
 		
+
+Button reloadBt=new Button("Reload",new ClickHandler() {
+	
+	@Override
+	public void onClick(ClickEvent event) {
+		reloadDefault();
+	}
+});
+presetPanel.add(reloadBt);
+	}
+	private ValueListBox<String> presetListBox;
+	private void reloadDefault(){
+		
+		final String current=new TextureMontageDataConverter().reverse().convert(textureMontageDatas);
+		
+		
+		THREE.XHRLoader().load("models/mbl3d14/montage_presets/montage_default.txt"+GWTHTMLUtils.parameterTime(), new XHRLoadHandler() {
+			@Override
+			public void onLoad(String text) {
+				loadData(text,true);//re-init
+				loadData(current,false);
+				
+			}
+		});
+		
+		
 		
 	}
-	public void loadData(String text){
+	
+	public void loadData(String text,boolean replace){
 		//TODO validate
 		List<TextureMontageData> montageData=new TextureMontageDataConverter().convert(text);
 		
 		
 		//replace
-		if(typeBox.getSelectedIndex()==1){
+		if(replace){
 		//copy?
 		TextureMontageWidget.this.textureMontageDatas.clear();
 		for(TextureMontageData data:montageData){
