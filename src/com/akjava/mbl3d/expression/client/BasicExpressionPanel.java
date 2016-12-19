@@ -349,6 +349,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 		//TODO not set direct via label
 		for(String key:ranges.keySet()){
 			LabeledInputRangeWidget2 widget=ranges.get(key);
+			if(widget==null){
+				LogUtils.log("not contain expression:key="+key);
+				continue;
+			}
 			widget.setValue(0,true);
 		}
 			
@@ -368,6 +372,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 		for(String key:expression.getKeys()){
 			
 			LabeledInputRangeWidget2 widget=ranges.get(key);
+			if(widget==null){
+				//LogUtils.log("not contain expression:key="+key);
+				continue;
+			}
 			double value=expression.get(key);
 			widget.setValue(value,true);
 			
