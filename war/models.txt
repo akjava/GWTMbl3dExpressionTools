@@ -1,5 +1,6 @@
 models/mbl3d14/models/round-head.json,0.85
 models/mbl3d14/models/modern-pupil1.json,0.85
+models/mbl3d14/models/round-head-pupil_morph_pupil_mouse0611_tongue_fixed.json,0.85
 models/mbl3d14/models/half-bold.json
 models/mbl3d14/models/bold.json
 models/mbl3d14/models/round-head2.json
