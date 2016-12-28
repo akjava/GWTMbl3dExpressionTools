@@ -45,6 +45,7 @@ import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.recorder.RecorderPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
+import com.akjava.mbl3d.expression.client.timetable.TimeTableDataPanel;
 import com.google.common.collect.Lists;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -425,9 +426,11 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 							recorderPanel.setEmotionData(emotionData);
 						}
 					});
+					
+					
+					timeTableDataPanel = new TimeTableDataPanel("timetable",storageControler);
+					tab.add(timeTableDataPanel,"TimeTable");
 				}
-				
-				
 				
 				
 				
@@ -1325,6 +1328,7 @@ private void insertMaterialAlphaAnimations(Material material,double duration) {
 	private double duration=1;
 	private RecorderPanel recorderPanel;
 	private MeshPhongMaterial material2;
+	private TimeTableDataPanel timeTableDataPanel;
 
 
 	public List<Mbl3dData> getMbl3dDatas(){
