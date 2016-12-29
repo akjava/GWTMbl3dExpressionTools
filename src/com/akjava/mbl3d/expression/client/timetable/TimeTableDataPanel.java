@@ -110,6 +110,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 			if(cellObjects.isSelected()){
 				cellObjects.update();
 				cellObjects.unselect();
+				storeData();
 			}else{
 				addData(newData,true);
 				editor.setValue(new TimeTableData());//for continue data
@@ -121,7 +122,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	addOrUpdateBt.setWidth("80px");
 	buttons.add(addOrUpdateBt);
 	
-	Button copyBt=new Button("copy",new ClickHandler() {
+	copyBt = new Button("copy",new ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
@@ -131,15 +132,16 @@ public class TimeTableDataPanel extends VerticalPanel{
 			}
 			TimeTableData newData=copy(selection);
 			addData(newData,true);
-			cellObjects.setSelected(newData, true);
+			
+			cellObjects.setSelected(newData, true);//no selection version
 			
 		}
 	});
 	buttons.add(copyBt);
-	
+	copyBt.setEnabled(false);
 
 	
-	Button removeBt=new Button("remove",new ClickHandler() {
+	removeBt = new Button("remove",new ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
@@ -149,6 +151,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 	});
 	buttons.add(removeBt);
+	removeBt.setEnabled(false);
 	
 	Button removeAll=new Button("remove All",new ClickHandler() {
 		@Override
@@ -258,6 +261,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 	private String baseFileName="TimeTableData";
 	private Button newBt;
 	private Button addOrUpdateBt;
+	private Button removeBt;
+	private Button copyBt;
 	protected String getDownloadFileName() {
 		return baseFileName+".csv";
 	}
@@ -278,7 +283,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		cellObjects.addItem(data);
 		onDataAdded(data);//link something
 		
-		if(updateStorages){
+		if(updateStorages){//on initialize no need re-store
 			storeData();
 		}
 	}
@@ -286,7 +291,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	public void storeData(){
 		 //store data
 		 String lines=toStoreText();
-		 LogUtils.log(lines);
+		
 		 try {
 			storageControler.setValue(storageKey, lines);
 		} catch (StorageException e) {
@@ -319,17 +324,21 @@ public class TimeTableDataPanel extends VerticalPanel{
 	public void onDataSelected(@Nullable TimeTableData selection) {
 	if(selection==null){
 		newBt.setEnabled(false);
+		copyBt.setEnabled(false);
+		removeBt.setEnabled(false);
 		editor.setValue(new TimeTableData());
 		addOrUpdateBt.setText("Add");
 	}else{
 		addOrUpdateBt.setText("Update");
 		newBt.setEnabled(true);
+		copyBt.setEnabled(true);
+		removeBt.setEnabled(true);
 		editor.setValue(selection);
 	}
 	}
 
 	public void onDataRemoved(TimeTableData data){
-		
+		storeData();
 	}
 	public void onDataAdded(TimeTableData data){
 		
