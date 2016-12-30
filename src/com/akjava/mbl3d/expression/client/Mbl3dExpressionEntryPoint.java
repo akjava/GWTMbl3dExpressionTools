@@ -1,6 +1,9 @@
 package com.akjava.mbl3d.expression.client;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -47,6 +50,7 @@ import com.akjava.mbl3d.expression.client.recorder.RecorderPanel;
 import com.akjava.mbl3d.expression.client.texture.CanvasTexturePainter;
 import com.akjava.mbl3d.expression.client.timetable.TimeTableDataPanel;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -409,7 +413,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					textureTab=new TextureTab(this);
 					tab.add(textureTab,"Texture");
 					
-					tab.selectTab(3);
+					
 					
 					
 					THREE.XHRLoader().load("models/mbl3d/emotions.csv", new XHRLoadHandler() {
@@ -430,6 +434,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					timeTableDataPanel = new TimeTableDataPanel("timetable",storageControler);
 					tab.add(timeTableDataPanel,"TimeTable");
+					
+					tab.selectTab(4);
 				}
 				
 				
@@ -894,6 +900,59 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 	return converToAnimationClip(name,expression,filterBrow,filterEyes,filterMouth);
 	}*/
 	
+	//TODO make class
+	/**
+	 * 
+	 * @param name
+	 * @param timeList  second,warning timetable data is millisecond
+	 * @param expressions
+	 * @return
+	 */
+	public AnimationClip converToAnimationClip(String name,List<Double> timeList,List<Mbl3dExpression> expressions){
+		checkArgument(timeList.size()==expressions.size(),"times and expression is not same length");
+		JSParameter morphTargetDictionary=mesh.getMorphTargetDictionary().cast();
+		
+		
+		
+		Set<String> keys=Sets.newHashSet();
+		
+		for(Mbl3dExpression expression:expressions){
+			for(String key:expression.getKeys()){
+				keys.add(key);
+			}
+		}
+		
+		
+		
+		
+		
+		JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
+		
+		for(String key:keys){
+			JsArrayNumber times=JavaScriptObject.createArray().cast();
+			JsArrayNumber values=JavaScriptObject.createArray().cast();
+			
+			int index=morphTargetDictionary.getInt(key);
+			String trackName=".morphTargetInfluences["+index+"]";
+			
+		for(int i=0;i<expressions.size();i++){
+			times.push(timeList.get(i));
+			Mbl3dExpression expression=expressions.get(i);
+			double value=expression.containsKey(key)?expression.get(key):0;	
+			values.push(value);
+		}
+		
+		NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
+		tracks.push(track);
+		}
+
+		
+		//Mbl3dExpressionEntryPoint.INSTANCE.
+		//morph animation
+		AnimationClip clip=THREE.AnimationClip(name, -1, tracks);
+		return clip;
+	}
+	
 	public AnimationClip converToAnimationClip(String name,@Nullable Mbl3dExpression fromExpression,Mbl3dExpression toExpression,boolean filterBrow,boolean filterEyes,boolean filterMouth){
 		JSParameter param=mesh.getMorphTargetDictionary().cast();
 		
@@ -1017,6 +1076,10 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 		//insertMaterialAlphaAnimations(material,duration);
 		//LogUtils.log("4");
 		
+	}
+	public void playAnimation(AnimationClip clip){
+		getMixer().uncacheClip(clip);//same name cache that.
+		getMixer().clipAction(clip).play();
 	}
 	
 	/**

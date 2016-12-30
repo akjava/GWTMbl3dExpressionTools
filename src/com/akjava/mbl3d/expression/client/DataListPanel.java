@@ -601,6 +601,14 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		return dataObjects.getDatas();
 	}
 	
+	public Mbl3dData getDataById(int id){
+		for(Mbl3dData data:getDatas()){
+			if(data.getId()==id){
+				return data;
+			}
+		}
+		return null;
+	}
 	
 	
 	

@@ -31,24 +31,19 @@ public class DumpRestoreClearPanel extends VerticalPanel{
 		this.dumpFileName = dumpFileName;
 	}
 
+	private SimpleTextDatasOwner owner;
+	private HorizontalPanel downloadPanel;
 	public DumpRestoreClearPanel(final SimpleTextDatasOwner owner){
+		this.owner=owner;
 		HorizontalPanel dumpPanel=new HorizontalPanel();
 		this.add(dumpPanel);
-		final HorizontalPanel downloadPanel = new HorizontalPanel();
+		downloadPanel = new HorizontalPanel();
 		downloadPanel.setSpacing(4);
 		
 		Button exportBt=new Button("Dump csv all",new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				List<SimpleTextData> datas=owner.getStorageDataList().getDataList();
-				if(datas.isEmpty()){
-					Window.alert("empty.quit");
-					return;
-				}
-				String text=new SimpleTextDatasCsvConverter().convert(datas);
-				Anchor anchor=HTML5Download.get().generateTextDownloadLink(text, dumpFileName, "Push to download",true);
-				downloadPanel.clear();
-				downloadPanel.add(anchor);
+				executeDump();
 			}
 		});
 		exportBt.setWidth("120px");
@@ -80,16 +75,35 @@ public class DumpRestoreClearPanel extends VerticalPanel{
 		Button clearBt=new Button("Clear all datas",new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				boolean confirm=Window.confirm("Clear All Data.Are  you sure?recommend dump first");
+				if(owner.getStorageDataList().getDataList().isEmpty()){
+					return;
+				}
+				boolean confirm=Window.confirm("Warning!!Clear All Data.Are you sure?\nThis action can't cancel or undo.\nAuto dump would execute.if you need download and restore it.");
 				if(!confirm){
 					return;
 				}
+				
+				executeDump();//backup first
+				
 				SimpleTextDataUtils.execClear(owner.getStorageDataList());
 				owner.initializeListData();
+				
 			}
 		});
 		
 		add(clearBt);
 		clearBt.setWidth("120px");
+	}
+	
+	private void executeDump(){
+		List<SimpleTextData> datas=owner.getStorageDataList().getDataList();
+		if(datas.isEmpty()){
+			Window.alert("empty datas.quit");
+			return;
+		}
+		String text=new SimpleTextDatasCsvConverter().convert(datas);
+		Anchor anchor=HTML5Download.get().generateTextDownloadLink(text, dumpFileName, "Push to download",true);
+		downloadPanel.clear();
+		downloadPanel.add(anchor);
 	}
 }

@@ -45,6 +45,9 @@ public class BasicExpressionPanel extends VerticalPanel {
 	private VerticalPanel morphTargetPanel;
 	private LabeledInputRangeWidget2 eyeModifier;
 	
+	public double getEyeModifierValue(){
+		return eyeModifier.getValue();
+	}
 	public LabeledInputRangeWidget2 getEyeModifier() {
 		return eyeModifier;
 	}
@@ -231,7 +234,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 	}
 	private static final List<String> needModiferKeys=Lists.newArrayList("eyes01_min","eyes01_max","eyes03_min","eyes03_max");
 	
-	public boolean isNeedModifier(String shortenName){
+	public static  boolean isNeedEyeModifier(String shortenName){
 		if(shortenName.startsWith("Expressions_")){
 			shortenName=shortenName.substring("Expressions_".length());
 		}
@@ -325,7 +328,7 @@ public class BasicExpressionPanel extends VerticalPanel {
 			inputRange.addtRangeListener(new ValueChangeHandler<Number>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<Number> event) {
-					double influenceValue=isNeedModifier(shortKeyName)?toEyeModifiedValue(event.getValue().doubleValue()):event.getValue().doubleValue();
+					double influenceValue=isNeedEyeModifier(shortKeyName)?toEyeModifiedValue(event.getValue().doubleValue()):event.getValue().doubleValue();
 					morphMesh.getMorphTargetInfluences().set(index, influenceValue);
 				}
 			});
@@ -343,6 +346,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 		overwriteButton.setEnabled(enabled);
 	}
 	
+	/**
+	 * simplly set range,do't care eye-modifier
+	 * @param expression
+	 */
 	public void setMbl3dExpression(@Nullable Mbl3dExpression expression) {
 		//updateClosedLabel(expression);
 		
@@ -386,12 +393,16 @@ public class BasicExpressionPanel extends VerticalPanel {
 			*/
 		}
 	}
+	
+	/*
+	 * this method modify eye,should separate eyemodifier to mbl3dexpression
+	 */
 	public Mbl3dExpression currentRangesToMbl3dExpression(boolean doModify) {
 		Mbl3dExpression expression=new Mbl3dExpression();
 		for(String key:ranges.keySet()){
 			LabeledInputRangeWidget2 widget=ranges.get(key);
 			if(widget.getValue()!=0){
-				if(doModify && isNeedModifier(key)){
+				if(doModify && isNeedEyeModifier(key)){
 					expression.set(key, toEyeModifiedValue(widget.getValue()));
 				}else{
 					expression.set(key, widget.getValue());
@@ -443,5 +454,6 @@ public class BasicExpressionPanel extends VerticalPanel {
 	public ClosedResult findClosed(Mbl3dExpression expression){
 		return Mbl3dExpression.findClosed(expression, expressionList);
 	}
+	
 	
 }

@@ -15,8 +15,16 @@ import com.akjava.gwt.lib.client.StorageException;
 import com.akjava.gwt.lib.client.json.JSONFormatConverter;
 import com.akjava.gwt.lib.client.widget.cell.EasyCellTableObjects;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
-import com.google.common.base.Joiner;
+import com.akjava.gwt.three.client.js.animation.AnimationClip;
+import com.akjava.lib.common.utils.TimeUtils.TimeValue;
+import com.akjava.mbl3d.expression.client.Mbl3dExpression;
+import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunction;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithEyeModifier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorDelegate;
@@ -31,7 +39,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
@@ -60,25 +67,48 @@ public class TimeTableDataPanel extends VerticalPanel{
 	SimpleCellTable<TimeTableData> table=new SimpleCellTable<TimeTableData>() {
 		@Override
 		public void addColumns(CellTable<TimeTableData> table) {
-			TextColumn<TimeTableData> nameColumn=new TextColumn<TimeTableData>() {
+			TextColumn<TimeTableData> labelColumn=new TextColumn<TimeTableData>() {
 				@Override
 				public String getValue(TimeTableData object) {
 					return object.getLabel();
 				}
 			};
-			table.addColumn(nameColumn);
+			
+			table.addColumn(labelColumn);
+			table.setColumnWidth(labelColumn, "120px");
+			
 			
 			TextColumn<TimeTableData> typeColumn=new TextColumn<TimeTableData>() {
 				@Override
 				public String getValue(TimeTableData object) {
 					//TODO convert time label
-					return ""+object.getTime();
+					TimeValue timeValue=new TimeValue((long)object.getTime());
+					return ""+timeValue.toMinuteString();
 				}
 			};
 			table.addColumn(typeColumn);
+			
+			TextColumn<TimeTableData> referenceColumn=new TextColumn<TimeTableData>() {
+				@Override
+				public String getValue(TimeTableData object) {
+					int id=object.getReferenceId();
+					if(!object.isReference()||id==-1){
+						return "";
+					}
+					
+					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+					if(data==null){
+						return "#"+id+" NOT FOUND";
+					}else{
+						return data.getName();
+					}
+				}
+			};
+			table.addColumn(referenceColumn);
+			table.setColumnWidth(referenceColumn, "120px");
 		}
 	};
-	this.add(table);
+	
 	
 	cellObjects = new EasyCellTableObjects<TimeTableData>(table){
 		@Override
@@ -122,7 +152,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	addOrUpdateBt.setWidth("80px");
 	buttons.add(addOrUpdateBt);
 	
-	copyBt = new Button("copy",new ClickHandler() {
+	copyBt = new Button("clone",new ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
@@ -164,6 +194,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 	});
 	buttons.add(removeAll);
+	
 	
 	
 	//download replace import widget
@@ -219,6 +250,11 @@ public class TimeTableDataPanel extends VerticalPanel{
 	 downloadPanels.add(downloadBt);
 	 downloadPanels.add(download);
 	 
+	 
+	 
+	 this.add(table);
+	 
+	 
 	 this.add(uploadPanel);
 	 this.add(downloadPanels);
 	
@@ -235,7 +271,79 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 	}
 	
+	
+
+	
+	HorizontalPanel playerPanel=new HorizontalPanel();
+	this.add(playerPanel);
+	Button play=new Button("Play",new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			doPlay();
+		}
+	});
+	playerPanel.add(play);
+	
+	Button stop=new Button("Stop",new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			Mbl3dExpressionEntryPoint.INSTANCE.stopAnimation();
+		}
+	});
+	playerPanel.add(stop);
+	
 }
+	protected void doPlay() {
+		List<Double> times=Lists.newArrayList();
+		List<Mbl3dExpression> expressions=Lists.newArrayList();
+		
+		Mbl3dExpressionFunctionWithEyeModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithEyeModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue());
+		
+		for(TimeTableData data:cellObjects.getDatas()){
+			if(data.isReference()){
+				int id=data.getReferenceId();
+				
+				double time=data.getTime();
+				
+				if(times.size()>0 && times.get(times.size()-1)>=time){
+					LogUtils.log("skipped time, smaller than last time");
+					continue;
+				}
+				
+				/*
+				 * -1 is used as clear
+				 */
+				Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+				Mbl3dExpression expression=mbl3dExpressionFunctionWithEyeModifier.apply(mbl3dData);
+				
+				expressions.add(expression);
+				times.add(time/1000);//clip animation is second base,
+			}else{
+				//TODO
+			}
+		}
+	
+		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
+		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
+	}
+	
+	//TODO merge above
+	public Mbl3dExpression timeTableDataToMbl3dExpression(TimeTableData data){
+		if(data.isReference()){
+			int id=data.getReferenceId();
+			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+			if(mbl3dData==null){
+				return null;
+			}
+			return Mbl3dDataFunctions.getMbl3dExpressionFunction().apply(mbl3dData);
+		}else{
+			//TODO
+			return null;
+		}
+	}
+	
+	
+	
 	private Iterable<TimeTableData> jsonTextToTimeTableDatas(String text){
 		
 		JSONFormatConverter converter=new JSONFormatConverter("TimeTable","timetable");
@@ -322,6 +430,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	 }
 
 	public void onDataSelected(@Nullable TimeTableData selection) {
+	//enabling buttons
 	if(selection==null){
 		newBt.setEnabled(false);
 		copyBt.setEnabled(false);
@@ -335,6 +444,18 @@ public class TimeTableDataPanel extends VerticalPanel{
 		removeBt.setEnabled(true);
 		editor.setValue(selection);
 	}
+	
+	//update range
+	if(selection!=null){
+		Mbl3dExpression expression=timeTableDataToMbl3dExpression(selection);
+		if(expression!=null){
+			Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().setMbl3dExpression(expression);
+		}else{
+			LogUtils.log("somehow can't converted.skipped selecting range");
+		}
+	}else{
+		Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().setMbl3dExpression(null);//meaning empty
+		}
 	}
 
 	public void onDataRemoved(TimeTableData data){
@@ -353,7 +474,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	public class TimeTableDataEditor extends VerticalPanel implements Editor<TimeTableData>,ValueAwareEditor<TimeTableData>{
 		private TimeTableData value;
 		private TextBox labelEditor;
-		private DoubleBox timeEditor;
+		private MinuteTimeEditor timeEditor;
 		private IntegerBox referenceIdEditor;
 		private CheckBox referenceEditor;
 
@@ -362,7 +483,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 		
 		public TimeTableDataEditor(){
-			String labelWidth="180px";
+			String labelWidth="100px";
 			int fontSize=14;
 
 						HorizontalPanel labelPanel=new HorizontalPanel();
@@ -373,7 +494,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 						labelLabel.setWidth(labelWidth);
 						labelPanel.add(labelLabel);
 						labelEditor=new TextBox();
-			labelEditor.setWidth("100px");
+			labelEditor.setWidth("200px");
 						labelPanel.add(labelEditor);
 
 
@@ -384,8 +505,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 						timeLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 						timeLabel.setWidth(labelWidth);
 						timePanel.add(timeLabel);
-						timeEditor=new DoubleBox();
-			timeEditor.setWidth("100px");
+						timeEditor=new MinuteTimeEditor();
+			//timeEditor.setWidth("100px");
 						timePanel.add(timeEditor);
 
 
@@ -413,7 +534,11 @@ public class TimeTableDataPanel extends VerticalPanel{
 						referencePanel.add(referenceEditor);
 
 
+						
+						
 		}
+
+
 @Override
 			public void setDelegate(EditorDelegate<TimeTableData> delegate) {
 				// TODO Auto-generated method stub

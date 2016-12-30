@@ -1,5 +1,6 @@
 package com.akjava.mbl3d.expression.client.datalist;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public  class Mbl3dData{
@@ -42,6 +43,9 @@ public  class Mbl3dData{
 		}
 		public void setValues(Map<String, String> values) {
 			this.values = values;
+		}
+		public Mbl3dData(){
+			this("","","",new HashMap<String,String>());
 		}
 		public Mbl3dData(String name,String type, String description, Map<String, String> values) {
 			super();
