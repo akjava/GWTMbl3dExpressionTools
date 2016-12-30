@@ -1,6 +1,5 @@
 package com.akjava.mbl3d.expression.client.texture;
 
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.js.materials.Material;
 import com.akjava.gwt.three.client.js.textures.Texture;
 import com.google.gwt.core.client.JavaScriptObject;

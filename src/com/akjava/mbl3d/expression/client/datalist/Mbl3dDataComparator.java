@@ -3,7 +3,6 @@ package com.akjava.mbl3d.expression.client.datalist;
 import java.util.Comparator;
 import java.util.List;
 
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.mbl3d.expression.client.Emotion;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;

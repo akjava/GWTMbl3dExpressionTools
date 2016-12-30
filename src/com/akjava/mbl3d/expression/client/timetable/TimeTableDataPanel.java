@@ -14,14 +14,16 @@ import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageException;
 import com.akjava.gwt.lib.client.json.JSONFormatConverter;
 import com.akjava.gwt.lib.client.widget.cell.EasyCellTableObjects;
+import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
+import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
+import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunction;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithEyeModifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -35,6 +37,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -67,15 +70,93 @@ public class TimeTableDataPanel extends VerticalPanel{
 	SimpleCellTable<TimeTableData> table=new SimpleCellTable<TimeTableData>() {
 		@Override
 		public void addColumns(CellTable<TimeTableData> table) {
-			TextColumn<TimeTableData> labelColumn=new TextColumn<TimeTableData>() {
+			
+			ExtentedSafeHtmlCell extentedCell=new ExtentedSafeHtmlCell(){
 				@Override
-				public String getValue(TimeTableData object) {
-					return object.getLabel();
-				}
-			};
+				public void onDoubleClick(int clientX, int clientY) {
+					//
+				}};
+			
+				
+				 StyledTextColumn<TimeTableData> labelColumn=new StyledTextColumn<TimeTableData>(extentedCell){
+					@Override
+					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
+						// TODO Auto-generated method stub
+						return new StyleAndLabel("",object.getLabel());
+					}
+					 
+				 };
+			
 			
 			table.addColumn(labelColumn);
 			table.setColumnWidth(labelColumn, "120px");
+			
+			final SimpleContextMenu simpleMenu=new SimpleContextMenu();
+			
+			simpleMenu.addCommand("MoveTop", new Command(){
+				@Override
+				public void execute() {
+					cellObjects.topItem(cellObjects.getSelection());
+					storeData();
+					simpleMenu.hide();
+				}
+
+				
+
+				});
+			
+			simpleMenu.addCommand("MoveUp", new Command(){
+				@Override
+				public void execute() {
+					cellObjects.upItem(cellObjects.getSelection());
+					storeData();
+					simpleMenu.hide();
+				}
+
+				
+
+				});
+			simpleMenu.addCommand("MoveDown", new Command(){
+				@Override
+				public void execute() {
+					cellObjects.downItem(cellObjects.getSelection());
+					storeData();
+					simpleMenu.hide();
+				}
+
+				});
+			
+			simpleMenu.addCommand("MoveBottom", new Command(){
+				@Override
+				public void execute() {
+					cellObjects.bottomItem(cellObjects.getSelection());
+					storeData();
+					simpleMenu.hide();
+				}
+
+				
+
+				});
+			simpleMenu.addSeparator();
+			
+			extentedCell.setCellContextMenu(simpleMenu);
+			
+			
+			 StyledTextColumn<TimeTableData> timeColumn=new StyledTextColumn<TimeTableData>(extentedCell){
+					@Override
+					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
+						String style="";
+						if(!isLargerTime(object)){
+							style="red";
+							LogUtils.log("style-red");
+						}
+						TimeValue timeValue=new TimeValue((long)object.getTime());
+						
+						return new StyleAndLabel(style,timeValue.toMinuteString());
+					}
+					 
+				 };
+				 
 			
 			
 			TextColumn<TimeTableData> typeColumn=new TextColumn<TimeTableData>() {
@@ -86,7 +167,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					return ""+timeValue.toMinuteString();
 				}
 			};
-			table.addColumn(typeColumn);
+			table.addColumn(timeColumn);
 			
 			TextColumn<TimeTableData> referenceColumn=new TextColumn<TimeTableData>() {
 				@Override
@@ -470,6 +551,19 @@ public class TimeTableDataPanel extends VerticalPanel{
 	}
 	
 
+	private boolean isLargerTime(TimeTableData data){
+		int index=cellObjects.getDatas().indexOf(data);
+		if(index==-1){
+			return false;
+		}
+		double max=-1;
+		for(int i=0;i<index;i++){
+			if(max<cellObjects.getDatas().get(i).getTime()){
+				max=cellObjects.getDatas().get(i).getTime();
+			}
+		}
+		return data.getTime()>max;
+	}
 	
 	public class TimeTableDataEditor extends VerticalPanel implements Editor<TimeTableData>,ValueAwareEditor<TimeTableData>{
 		private TimeTableData value;

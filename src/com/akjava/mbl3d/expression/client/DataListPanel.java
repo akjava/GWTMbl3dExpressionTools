@@ -15,8 +15,6 @@ import com.akjava.gwt.lib.client.datalist.SimpleTextData;
 import com.akjava.gwt.lib.client.datalist.SimpleTextDatasOwner;
 import com.akjava.gwt.lib.client.widget.cell.EasyCellTableObjects;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
-import com.akjava.gwt.three.client.js.THREE;
-import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.datalist.CellTableResources;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;

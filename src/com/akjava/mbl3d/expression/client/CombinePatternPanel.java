@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.eclipse.jetty.util.StringUtil;
-
 import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
@@ -16,10 +14,7 @@ import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageException;
 import com.akjava.gwt.lib.client.widget.EnterKeySupportTextBox;
-import com.akjava.gwt.three.client.js.THREE;
-import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.CSVUtils;
-import com.akjava.lib.common.utils.StringUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
 import com.google.common.base.Joiner;
