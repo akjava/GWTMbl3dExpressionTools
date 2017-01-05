@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner{
+public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner,Mbl3dDataHolder{
 	public static DateTimeFormat dateFormat=DateTimeFormat.getFormat("yy/MM/dd HH:mm");
 	
 	private StorageDataList dataList;
@@ -599,6 +599,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		return dataObjects.getDatas();
 	}
 	
+	@Override
 	public Mbl3dData getDataById(int id){
 		for(Mbl3dData data:getDatas()){
 			if(data.getId()==id){

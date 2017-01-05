@@ -267,7 +267,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	Button removeAll=new Button("remove All",new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			boolean confirm=Window.confirm("remove all?");
+			boolean confirm=Window.confirm("TimeTableData:remove all datas?you should export first.");
 			if(!confirm){
 				return;
 			}
@@ -453,7 +453,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	private Button removeBt;
 	private Button copyBt;
 	protected String getDownloadFileName() {
-		return baseFileName+".csv";
+		return baseFileName+".json";
 	}
 
 	public TimeTableData copy(TimeTableData data){
