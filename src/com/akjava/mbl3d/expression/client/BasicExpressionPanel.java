@@ -356,8 +356,10 @@ public class BasicExpressionPanel extends VerticalPanel {
 				LogUtils.log("not contain expression:key="+key);
 				continue;
 			}
-			widget.setValue(0,true);
+			widget.setValue(0,false);
 		}
+		//from widget,if widget value is already 0 never clear,often happen when animation
+		Mbl3dExpressionEntryPoint.INSTANCE.getMesh().gwtClearMorphTargetInfluences();
 			
 		//clear 0 first
 		/*

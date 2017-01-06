@@ -5,11 +5,12 @@ import java.util.List;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
 import com.akjava.mbl3d.expression.client.BasicExpressionPanel;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
 
-public class AnimationKeyFrameUtils {
-private AnimationKeyFrameUtils(){}
+public class AnimationKeyUtils {
+private AnimationKeyUtils(){}
 
 /*
  * must be same key
@@ -37,5 +38,7 @@ private static double toModifyValue(String key,double value,double modifyValue) 
 		return value;
 	}
 }
+
+
 
 }

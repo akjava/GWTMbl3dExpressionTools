@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
@@ -217,8 +218,12 @@ public AnimationClip converToAnimationClip(String name,double eyeFilterValue,JSP
 	JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
 	for(String key:frameListMap.keySet()){
 		List<AnimationKeyFrame> list=frameListMap.get(key);
+		if(!param.exists(key)){
+			LogUtils.log("converToAnimationClip:call not exist key="+key+".skipped creating track");
+			continue;
+		}
 		int index=param.getInt(key);//possible null?
-		NumberKeyframeTrack track=AnimationKeyFrameUtils.toTrack(index,list,eyeFilterValue);
+		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(index,list,eyeFilterValue);
 		tracks.push(track);
 	}
 	

@@ -2,12 +2,14 @@ package com.akjava.mbl3d.expression.client.timetable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.Mbl3dDataHolder;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 //TODO many test
 public class AnimationKeyFrameBuilder {
@@ -22,6 +24,23 @@ public class AnimationKeyFrameBuilder {
 	}
 	public void setTotalTime(double totalTime) {
 		this.totalTime = totalTime;
+	}
+	
+	private Set<String> keys=Sets.newHashSet();
+	
+	//can set from morphtargets
+	public  void setKeys(Iterable<TimeTableDataBlock> blocks){
+		keys.clear();
+		for(TimeTableDataBlock block:blocks){
+			for(TimeTableData data:block.getTimeTableDatas()){
+				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId());
+				if(mbl3d!=null){
+					for(String key:mbl3d.getValues().keySet()){
+						keys.add(key);
+					}
+				}
+			}
+		}
 	}
 	public  AnimationKeyGroup createGroup(TimeTableDataBlock block){
 		List<AnimationKeyFrame> frames=Lists.newArrayList();
@@ -70,10 +89,17 @@ public class AnimationKeyFrameBuilder {
 				//LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
 				data=clerData;//-1 means empty
 			}
+			List<String> remains=Lists.newArrayList(keys);
 			for(String key:data.getValues().keySet()){
 				double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
 				AnimationKeyFrame frame=new AnimationKeyFrame(key, time, value);
 				frames.add(frame);
+				remains.remove(key);
+			}
+			
+			//for reset
+			for(String key:remains){
+				frames.add(new AnimationKeyFrame(key, time, 0));
 			}
 		}
 		timeAt+=block.getLastTime();
@@ -113,6 +139,37 @@ public class AnimationKeyFrameBuilder {
 		AnimationKeyGroup group=new AnimationKeyGroup(frames);
 		return group;
 	}
+	
+	public  AnimationKeyGroup createMergedGroup(Iterable<TimeTableDataBlock> blocks){
+		setKeys(blocks);
+		
+		List<AnimationKeyGroup> groups=Lists.newArrayList();
+		for(TimeTableDataBlock block:blocks){
+			AnimationKeyGroup group=createGroup(block);
+			//System.out.println("[group[\n"+group+"\n");
+			//System.out.println("group:start="+group.getStartTime()+",end="+group.getEndTime());
+			groups.add(group);
+		}
+		
+		for(int i=groups.size()-1;i>0;i--){
+			AnimationKeyGroup last=groups.get(i);
+			for(int j=i-1;j>=0;j--){
+			AnimationKeyGroup prev=groups.get(j);
+			prev.cut(last);
+			}
+		}
+		
+		while(groups.size()>1){
+			AnimationKeyGroup first=groups.get(0);
+			AnimationKeyGroup next=groups.get(1);
+			
+			//pre.cut(last);
+			first.merge(next);
+			groups.remove(next);
+		}
+		return groups.get(0);
+	}
+	
 	private Mbl3dData createClearData( List<TimeTableData> datas){
 		Map<String,String> values=Maps.newHashMap();
 		for(TimeTableData tdata:datas){

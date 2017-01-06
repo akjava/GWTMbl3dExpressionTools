@@ -412,6 +412,9 @@ public class TimeTableDataPanel extends VerticalPanel{
 		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);*/
 		
+		final TimeTableDataBlock others=new TimeTableDataBlock(cellObjects.getDatas());
+		others.setStartAt(2000);
+		
 THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 			
 			@Override
@@ -419,10 +422,16 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 				List<TimeTableData> newDatas=Lists.newArrayList(jsonTextToTimeTableDatas(text));
 				TimeTableDataBlock eyeblink=new TimeTableDataBlock(newDatas);
 				eyeblink.setLoop(true);
-				eyeblink.setLoopTime(10);
+				eyeblink.setLoopTime(5);
 				eyeblink.setLoopInterval(1000);
 				AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
-				AnimationKeyGroup group=builder.createGroup(eyeblink);
+				
+				
+				List<TimeTableDataBlock> blocks=Lists.newArrayList(eyeblink,others);
+				
+				
+				AnimationKeyGroup group=builder.createMergedGroup(blocks);
+				
 				JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
 				AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue(),param);
 			
