@@ -4,11 +4,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.gwt.JSParameter;
+import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
+import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
+import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 
 /*
  * the data after solving loops
@@ -193,14 +198,32 @@ public String toString(){
  * 
  * eyeFilterValue is eyemodifier
  */
-public AnimationClip converToAnimationClip(String name,double eyeFilterValue){
+public AnimationClip converToAnimationClip(String name,double eyeFilterValue,JSParameter param){
 	//sort
 	Collections.sort(frames, new AnimationKeyFrameComparator());
 	//split by type
+	Map<String,List<AnimationKeyFrame>> frameListMap=Maps.newLinkedHashMap();
 	
-	//check not same value exist.
-	//make track from key ,convert time,modify value
-	return null;
+	for(AnimationKeyFrame frame:frames){
+		String key=frame.getKeyName();
+		List<AnimationKeyFrame> list=frameListMap.get(key);
+		if(list==null){
+			list=Lists.newArrayList();
+			frameListMap.put(key, list);
+		}
+		list.add(frame);
+	}
+	
+	JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
+	for(String key:frameListMap.keySet()){
+		List<AnimationKeyFrame> list=frameListMap.get(key);
+		int index=param.getInt(key);//possible null?
+		NumberKeyframeTrack track=AnimationKeyFrameUtils.toTrack(index,list,eyeFilterValue);
+		tracks.push(track);
+	}
+	
+	AnimationClip clip=THREE.AnimationClip(name, -1, tracks);
+	return clip;
 }
 
 }

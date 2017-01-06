@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/threeTest"/>
 	<classpathentry kind="lib" path="/GWTLib2011/lib/guava-gwt.jar"/>
 	<classpathentry kind="lib" path="/GWTLib2011/lib/guava.jar" sourcepath="/GWTLib2011/lib/guava-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
