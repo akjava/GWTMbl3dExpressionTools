@@ -25,7 +25,10 @@ public void setLoopInterval(double loopInterval) {
 private double afterMargin;
 
 private boolean loop;
-private double loopInterval;
+/*
+ * very important ,if use loop ,must greater than 0
+ */
+private double loopInterval=1;
 
 public boolean isLoop() {
 	return loop;

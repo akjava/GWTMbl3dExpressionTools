@@ -16,6 +16,12 @@ public class AnimationKeyFrameBuilder {
 		this.mbl3dDataHolder = mbl3dDataHolder;
 	}
 	private double totalTime;//most length time;
+	public double getTotalTime() {
+		return totalTime;
+	}
+	public void setTotalTime(double totalTime) {
+		this.totalTime = totalTime;
+	}
 	public  AnimationKeyGroup createGroup(TimeTableDataBlock block){
 		List<AnimationKeyFrame> frames=Lists.newArrayList();
 		
@@ -31,6 +37,8 @@ public class AnimationKeyFrameBuilder {
 			double time=totalTime-block.getStartAt()-block.getBeforeMargin();//ignore after-margin
 			double lastTime=block.getLastTime();
 			
+			//System.out.println("time="+time+",ltime="+lastTime+",l+interval="+(lastTime+block.getLoopInterval()));
+			
 			if(time>lastTime){
 				time-=lastTime;
 				int tmp=(int)(time/(lastTime+block.getLoopInterval()));
@@ -39,7 +47,14 @@ public class AnimationKeyFrameBuilder {
 			}else{
 				remainTime=time;
 			}
+			
+			
+			//handling remainTime hard than expected just one more, it so far
+			if(remainTime!=0){
+				loopTime++;
+			}
 		}
+		
 		
 		//solving loop action
 		double timeAt=block.getStartAt();
@@ -58,27 +73,39 @@ public class AnimationKeyFrameBuilder {
 				frames.add(frame);
 			}
 		}
-		timeAt+=block.getLastTime()+block.getLoopInterval();
-		}
-		
-		//modify remainTime
-		if(remainTime>0){
-			double lastTime=block.getLastTime();
-			double ratio=remainTime/lastTime;
-			for(TimeTableData timeTableData:block.getTimeTableDatas()){
-				double time=timeAt+timeTableData.getTime();
-				Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId());
-				if(data==null){
-					LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
-					continue;
-				}
-				for(String key:data.getValues().keySet()){
-					double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
-					AnimationKeyFrame frame=new AnimationKeyFrame(key, time, value*ratio);
-					frames.add(frame);
-				}
+		timeAt+=block.getLastTime();
+		if(i!=loopTime-1){
+			timeAt+=+block.getLoopInterval();
 			}
 		}
+		
+		
+	//modify remainTime
+	/*	if(remainTime>0){
+			if(remainTime<=block.getLoopInterval()){
+				//handle interval
+				double ratio=remainTime/block.getLoopInterval();
+				
+			}else{
+				double lastTime=block.getLastTime();
+				double ratio=remainTime/lastTime;
+				for(TimeTableData timeTableData:block.getTimeTableDatas()){
+					double time=timeAt+timeTableData.getTime();
+					Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId());
+					if(data==null){
+						LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
+						continue;
+					}
+					for(String key:data.getValues().keySet()){
+						double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
+						AnimationKeyFrame frame=new AnimationKeyFrame(key, time, value*ratio);
+						frames.add(frame);
+					}
+				}
+			}
+			
+			
+		}*/
 		
 		AnimationKeyGroup group=new AnimationKeyGroup(frames);
 		return group;

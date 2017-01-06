@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -73,29 +74,40 @@ public void cut(AnimationKeyGroup group){
 	double start=group.getStartTime();
 	double end=group.getEndTime();
 	
+	
 	List<AnimationKeyFrame> newFrames=Lists.newArrayList();
 	if(start==end){
 		//TODO
-		throw new RuntimeException("cut:same time,not support yet");
+		throw new RuntimeException("cut:same time,not support yet.start="+start+",end="+end);
 	}else{
 		
 		for(AnimationKeyFrame frame:frames){
 			double time=frame.getTime();
 			if(time>start&&time<end){
+				boolean inserted=false;
 				//possible ignore
 				if(frame.getType()==AnimationKeyFrame.TYPE_EYEBROW){
 					if(!group.haveEyeBrow()){
 						newFrames.add(frame);
+						inserted=true;
 					}
 				}else if(frame.getType()==AnimationKeyFrame.TYPE_EYE){
 					if(!group.haveEye()){
 						newFrames.add(frame);
+						inserted=true;
 					}
 				}else if(frame.getType()==AnimationKeyFrame.TYPE_MOUTH){
 					if(!group.haveMouth()){
 						newFrames.add(frame);
+						inserted=true;
 					}
 				}
+				
+				if(!inserted){
+					//debug
+					//System.out.println("start="+start+",end="+end+",time="+time);
+				}
+				
 				
 			}else{
 				newFrames.add(frame);
@@ -103,20 +115,51 @@ public void cut(AnimationKeyGroup group){
 		}
 		
 		//insert reset key at start and end
-		for(String key:getKeys()){
-			AnimationKeyFrame startFrame=new AnimationKeyFrame(key, start, 0);
-			newFrames.add(startFrame);
+		for(AnimationKeyFrame frame:frames){
+			double time=frame.getTime();
+			if(time>start&&time<end){
+			boolean needReset=false;
+			if(frame.getType()==AnimationKeyFrame.TYPE_EYEBROW){
+				if(group.haveEyeBrow()){
+					needReset=true;
+				}
+			}else if(frame.getType()==AnimationKeyFrame.TYPE_EYE){
+				if(group.haveEye()){
+					needReset=true;
+				}
+			}else if(frame.getType()==AnimationKeyFrame.TYPE_MOUTH){
+				if(group.haveMouth()){
+					needReset=true;
+				}
+			}
 			
-			AnimationKeyFrame endFrame=new AnimationKeyFrame(key, end, 0);
-			newFrames.add(endFrame);
+			if(frame.getKeyName().equals("eyes2")){
+				//System.out.println(frame.getType()+",have-eye="+group.haveEye()+",needreset="+needReset);
+			}
+			
+			if(needReset){
+				String key=frame.getKeyName();
+				AnimationKeyFrame startFrame=new AnimationKeyFrame(key, start, 0);
+				newFrames.add(startFrame);
+				
+				AnimationKeyFrame endFrame=new AnimationKeyFrame(key, end, 0);
+				newFrames.add(endFrame);
+			}
+			}	
 		}
+	
 		
 		frames=newFrames;//replace
+		Collections.sort(frames, new AnimationKeyFrameComparator());
 	}
 }
 private String toNameAndTime(AnimationKeyFrame frame){
 	return frame.getKeyName()+":"+frame.getTime();
 }
+/**
+ * should cut before merge
+ * @param group
+ */
 public void merge(AnimationKeyGroup group){
 	Map<String,AnimationKeyFrame> newFrameMap=Maps.newLinkedHashMap();
 	for(AnimationKeyFrame frame:frames){
@@ -136,7 +179,7 @@ public void merge(AnimationKeyGroup group){
 	
 	frames=newFrame;
 	
-	//TODO sort
+	
 	Collections.sort(frames, new AnimationKeyFrameComparator());
 }
 

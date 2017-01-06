@@ -15,22 +15,45 @@ public class DummyMbl3dDataHolder implements Mbl3dDataHolder{
 		data.setValues(values);
 		switch(id){
 		case 0:
-			values.put("eye", "0");
+			values.put("eyes", "0");
 			values.put("mouth", "0");
 			values.put("eyebrow", "0");
 			
 			break;
 		case 1:
-			values.put("eye", "1");
+			values.put("eyes", "1");
 			break;
 		case 2:
-			values.put("eye", "1");
+			values.put("eyes", "1");
 			values.put("mouth", "1");
 			break;
 		case 3:
-			values.put("eye", "1");
+			values.put("eyes", "1");
 			values.put("mouth", "1");
 			values.put("eyebrow", "1");
+			break;
+		case 4:
+			values.put("eyes", "0");
+			break;
+		case 5:
+			values.put("mouth", "0");
+			break;
+		case 6:
+			values.put("mouth", "1");
+			break;
+		case 7:
+			values.put("eyes", "0.4");
+			break;
+		case 8:
+			values.put("eyes", "0.6");
+			break;
+		case 9:
+			values.put("eyes", "0");
+			values.put("eyes2", "0");
+			break;
+		case 10:
+			values.put("eyes", "1");
+			values.put("eyes2", "1");
 			break;
 		}
 		return data;
