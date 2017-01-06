@@ -223,7 +223,7 @@ public AnimationClip converToAnimationClip(String name,double eyeFilterValue,JSP
 			continue;
 		}
 		int index=param.getInt(key);//possible null?
-		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(index,list,eyeFilterValue);
+		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(key,index,list,eyeFilterValue);
 		tracks.push(track);
 	}
 	
