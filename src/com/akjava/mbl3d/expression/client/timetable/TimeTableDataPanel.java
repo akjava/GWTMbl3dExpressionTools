@@ -17,15 +17,13 @@ import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
-import com.akjava.gwt.three.client.gwt.JSParameter;
-import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
-import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithEyeModifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style.Unit;
@@ -370,6 +368,41 @@ public class TimeTableDataPanel extends VerticalPanel{
 	
 }
 	protected void doPlay() {
+		List<Double> times=Lists.newArrayList();
+		List<Mbl3dExpression> expressions=Lists.newArrayList();
+		
+		Mbl3dExpressionFunctionWithEyeModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithEyeModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue());
+		
+		for(TimeTableData data:cellObjects.getDatas()){
+			if(data.isReference()){
+				int id=data.getReferenceId();
+				
+				double time=data.getTime();
+				
+				if(times.size()>0 && times.get(times.size()-1)>=time){
+					LogUtils.log("skipped time, smaller than last time");
+					continue;
+				}
+				
+				
+				// * -1 is used as clear
+				 
+				Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+				Mbl3dExpression expression=mbl3dExpressionFunctionWithEyeModifier.apply(mbl3dData);
+				
+				expressions.add(expression);
+				times.add(time/1000);//clip animation is second base,
+			}else{
+				//TODO
+			}
+		}
+		
+		
+	
+		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
+		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
+		
+		
 		/*List<Double> times=Lists.newArrayList();
 		List<Mbl3dExpression> expressions=Lists.newArrayList();
 		
@@ -404,32 +437,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);*/
 		
-		final TimeTableDataBlock others=new TimeTableDataBlock(cellObjects.getDatas());
-		others.setStartAt(2000);
-		
-THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
-			
-			@Override
-			public void onLoad(String text) {
-				List<TimeTableData> newDatas=Lists.newArrayList(jsonTextToTimeTableDatas(text));
-				TimeTableDataBlock eyeblink=new TimeTableDataBlock(newDatas);
-				eyeblink.setLoop(true);
-				eyeblink.setLoopTime(5);
-				eyeblink.setLoopInterval(1000);
-				AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
-				
-				
-				List<TimeTableDataBlock> blocks=Lists.newArrayList(eyeblink,others);
-				
-				
-				AnimationKeyGroup group=builder.createMergedGroup(blocks);
-				
-				JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
-				AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue(),param);
-			
-				Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
-			}
-		});
+
 	}
 	
 	//TODO merge above

@@ -366,39 +366,21 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 	
 }
 	protected void doPlay() {
-		/*List<Double> times=Lists.newArrayList();
-		List<Mbl3dExpression> expressions=Lists.newArrayList();
 		
-		Mbl3dExpressionFunctionWithEyeModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithEyeModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue());
-		
-		for(TimeTableData data:cellObjects.getDatas()){
-			if(data.isReference()){
-				int id=data.getReferenceId();
-				
-				double time=data.getTime();
-				
-				if(times.size()>0 && times.get(times.size()-1)>=time){
-					LogUtils.log("skipped time, smaller than last time");
-					continue;
-				}
-				
-				
-				 * -1 is used as clear
-				 
-				Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
-				Mbl3dExpression expression=mbl3dExpressionFunctionWithEyeModifier.apply(mbl3dData);
-				
-				expressions.add(expression);
-				times.add(time/1000);//clip animation is second base,
-			}else{
-				//TODO
-			}
-		}
+		AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
 		
 		
+		List<TimeTableDataBlock> blocks=cellObjects.getDatas();
+		
+		builder.setTotalTimeByBlocks(blocks);
+		
+		AnimationKeyGroup group=builder.createMergedGroup(blocks);
+		
+		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
+		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue(),param);
 	
-		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
-		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);*/
+		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
+		
 		
 		
 	}

@@ -140,8 +140,23 @@ public class AnimationKeyFrameBuilder {
 		return group;
 	}
 	
+	/**
+	 * used for endless loop
+	 * @param blocks
+	 */
+	public void setTotalTimeByBlocks(Iterable<TimeTableDataBlock> blocks){
+		double max=0;
+		for(TimeTableDataBlock block:blocks){
+			double time=block.calcurateEndTime();
+			if(time>max){
+				max=time;
+			}
+		}
+		setTotalTime(max);
+	}
 	public  AnimationKeyGroup createMergedGroup(Iterable<TimeTableDataBlock> blocks){
 		setKeys(blocks);
+		
 		
 		List<AnimationKeyGroup> groups=Lists.newArrayList();
 		for(TimeTableDataBlock block:blocks){
