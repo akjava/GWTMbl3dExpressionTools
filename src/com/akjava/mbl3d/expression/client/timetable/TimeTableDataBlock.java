@@ -1,8 +1,16 @@
 package com.akjava.mbl3d.expression.client.timetable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeTableDataBlock {
+private String name;
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
 private double beforeMargin;
 public double getBeforeMargin() {
 	return beforeMargin;
@@ -63,14 +71,25 @@ public void setStartAt(double startAt) {
 private int loopTime;
 private List<TimeTableData> timeTableDatas;
 
+public TimeTableDataBlock(){
+	this(new ArrayList<TimeTableData>());
+}
 public TimeTableDataBlock(List<TimeTableData> timeTableDatas) {
 	super();
 	this.timeTableDatas = timeTableDatas;
 }
 public double getLastTime(){
+	if(timeTableDatas.isEmpty()){
+		return 0;
+	}
 	return timeTableDatas.get(timeTableDatas.size()-1).getTime();
 }
-public double calcurateTotalTime(){
+/**
+ * technically this is end time
+ * if need length,minus start-time
+ * @return
+ */
+public double calcurateEndTime(){
 	double lastTime=getLastTime();
 	
 	double totalTime=startAt;

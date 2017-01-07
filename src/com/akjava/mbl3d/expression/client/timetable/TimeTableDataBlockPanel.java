@@ -1,6 +1,5 @@
 package com.akjava.mbl3d.expression.client.timetable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -11,6 +10,8 @@ import com.akjava.gwt.html5.client.file.FileUploadForm;
 import com.akjava.gwt.html5.client.file.FileUtils;
 import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
 import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.lib.client.StorageControler;
+import com.akjava.gwt.lib.client.StorageException;
 import com.akjava.gwt.lib.client.json.JSONFormatConverter;
 import com.akjava.gwt.lib.client.widget.cell.EasyCellTableObjects;
 import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
@@ -21,7 +22,6 @@ import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
-import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
@@ -43,6 +43,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
@@ -50,24 +51,39 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class TimeTableDataPanel extends VerticalPanel{
+public class TimeTableDataBlockPanel extends VerticalPanel{
 	 
-	private TimeTableDataEditor editor;
-	private EasyCellTableObjects<TimeTableData> cellObjects;
-	private TimeTableDataBlockPanel timeTableDataBlockPanel;
-	public TimeTableDataPanel(TimeTableDataBlockPanel timeTableDataBlockPanel) {
-		this.timeTableDataBlockPanel=timeTableDataBlockPanel;
-		editor = new TimeTableDataEditor();    
+	private TimeTableDataBlockEditor editor;
+	private EasyCellTableObjects<TimeTableDataBlock> cellObjects;
+
+	private String storageKey;
+	private StorageControler storageControler;
+	public TimeTableDataBlockPanel(String storageKey,StorageControler storageControler) {
+		this.storageKey=storageKey;
+		this.storageControler=storageControler;
+		
+		
+		
+		add(new Label("TimeTable"));
+		
+		timeTableDataPanel = new TimeTableDataPanel(this);
+		
+		add(timeTableDataPanel);
+		
+		add(new Label("Blocks"));
+		
+		
+		editor = new TimeTableDataBlockEditor();    
 				
-		editor.setValue(new TimeTableData());
+		editor.setValue(new TimeTableDataBlock());
 		this.add(editor);
 
 
 	
 	//create easy cell tables
-	SimpleCellTable<TimeTableData> table=new SimpleCellTable<TimeTableData>(6) {
+	SimpleCellTable<TimeTableDataBlock> table=new SimpleCellTable<TimeTableDataBlock>() {
 		@Override
-		public void addColumns(CellTable<TimeTableData> table) {
+		public void addColumns(CellTable<TimeTableDataBlock> table) {
 			
 			ExtentedSafeHtmlCell extentedCell=new ExtentedSafeHtmlCell(){
 				@Override
@@ -76,18 +92,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				}};
 			
 				
-				 StyledTextColumn<TimeTableData> labelColumn=new StyledTextColumn<TimeTableData>(extentedCell){
-					@Override
-					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
-						// TODO Auto-generated method stub
-						return new StyleAndLabel("",object.getLabel());
-					}
-					 
-				 };
 			
-			
-			table.addColumn(labelColumn);
-			table.setColumnWidth(labelColumn, "120px");
 			
 			final SimpleContextMenu simpleMenu=new SimpleContextMenu();
 			
@@ -140,59 +145,46 @@ public class TimeTableDataPanel extends VerticalPanel{
 			extentedCell.setCellContextMenu(simpleMenu);
 			
 			
-			 StyledTextColumn<TimeTableData> timeColumn=new StyledTextColumn<TimeTableData>(extentedCell){
+			 StyledTextColumn<TimeTableDataBlock> nameColumn=new StyledTextColumn<TimeTableDataBlock>(extentedCell){
 					@Override
-					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
+					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableDataBlock object) {
 						String style="";
-						if(!isLargerTime(object)){
-							style="red";
-							LogUtils.log("style-red");
-						}
-						TimeValue timeValue=new TimeValue((long)object.getTime());
 						
-						return new StyleAndLabel(style,timeValue.toMinuteString());
+						return new StyleAndLabel(style,object.getName());
 					}
 					 
 				 };
 				 
+				 table.addColumn(nameColumn);
 			
-			
-			TextColumn<TimeTableData> typeColumn=new TextColumn<TimeTableData>() {
+			TextColumn<TimeTableDataBlock> startColumn=new TextColumn<TimeTableDataBlock>() {
 				@Override
-				public String getValue(TimeTableData object) {
-					//TODO convert time label
-					TimeValue timeValue=new TimeValue((long)object.getTime());
-					return ""+timeValue.toMinuteString();
+				public String getValue(TimeTableDataBlock object) {
+					return String.valueOf(object.getStartAt());//TODO
 				}
 			};
-			table.addColumn(timeColumn);
+			table.addColumn(startColumn);
 			
-			TextColumn<TimeTableData> referenceColumn=new TextColumn<TimeTableData>() {
+			TextColumn<TimeTableDataBlock> endColumn=new TextColumn<TimeTableDataBlock>() {
 				@Override
-				public String getValue(TimeTableData object) {
-					int id=object.getReferenceId();
-					if(!object.isReference()||id==-1){
+				public String getValue(TimeTableDataBlock object) {
+					double value=object.calcurateEndTime();
+					if(value==0){
 						return "";
 					}
-					
-					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
-					if(data==null){
-						return "#"+id+" NOT FOUND";
-					}else{
-						return data.getName();
-					}
+					return String.valueOf(value);//TODO
 				}
 			};
-			table.addColumn(referenceColumn);
-			table.setColumnWidth(referenceColumn, "120px");
+			table.addColumn(endColumn);
+			
+			table.setColumnWidth(nameColumn, "120px");
 		}
 	};
 	
 	
-	
-	cellObjects = new EasyCellTableObjects<TimeTableData>(table){
+	cellObjects = new EasyCellTableObjects<TimeTableDataBlock>(table){
 		@Override
-		public void onSelect(TimeTableData selection) {
+		public void onSelect(TimeTableDataBlock selection) {
 			editor.setValue(selection);
 			onDataSelected(selection);
 		}};
@@ -205,7 +197,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			editor.setValue(new TimeTableData());
+			editor.setValue(new TimeTableDataBlock());
 			cellObjects.unselect();
 		}
 	});
@@ -216,14 +208,14 @@ public class TimeTableDataPanel extends VerticalPanel{
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			TimeTableData newData=makeData();
+			TimeTableDataBlock newData=makeData();
 			if(cellObjects.isSelected()){
 				cellObjects.update();
 				cellObjects.unselect();
 				storeData();
 			}else{
 				addData(newData,true);
-				editor.setValue(new TimeTableData());//for continue data
+				editor.setValue(new TimeTableDataBlock());//for continue data
 			//cellObjects.setSelected(newData, true);
 			}
 			
@@ -236,11 +228,11 @@ public class TimeTableDataPanel extends VerticalPanel{
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			TimeTableData selection=cellObjects.getSelection();
+			TimeTableDataBlock selection=cellObjects.getSelection();
 			if(selection==null){
 				return;
 			}
-			TimeTableData newData=copy(selection);
+			TimeTableDataBlock newData=copy(selection);
 			addData(newData,true);
 			
 			cellObjects.setSelected(newData, true);//no selection version
@@ -294,14 +286,14 @@ public class TimeTableDataPanel extends VerticalPanel{
 				clearAllData();
 			}
 			
-			Iterable<TimeTableData> newDatas=jsonTextToTimeTableDatas(text);
+			Iterable<TimeTableDataBlock> newDatas=jsonTextToTimeTableDatas(text);
 			
 			if(newDatas==null){
 				Window.alert("invalid file format.see log");
 				return;
 			}
 			
-			 for(TimeTableData newData:newDatas){
+			 for(TimeTableDataBlock newData:newDatas){
 				 addData(newData,false);
 				 cellObjects.setSelected(newData, true);//maybe last selected
 			 }
@@ -331,21 +323,25 @@ public class TimeTableDataPanel extends VerticalPanel{
 	 downloadPanels.add(download);
 	 
 	 
-	 /*
-	  * some how directly set table,not good at VerticalAlignment
-	  */
-	 VerticalPanel v=new VerticalPanel();
-	 v.setHeight("180px");
-	 v.setVerticalAlignment(ALIGN_TOP);
-	 this.add(v);
 	 
-	 v.add(table);
+	 this.add(table);
 	 
 	 
 	 this.add(uploadPanel);
 	 this.add(downloadPanels);
 	
-
+	//initial load from storage
+	String jsonText=storageControler.getValue(storageKey, null);
+	if(jsonText!=null){
+		Iterable<TimeTableDataBlock> datas=jsonTextToTimeTableDatas(jsonText);
+		if(datas!=null){
+		for(TimeTableDataBlock data:datas){
+			addData(data,false);
+		}
+		}else{
+			LogUtils.log("stored data is invalid");
+		}
+	}
 	
 	
 
@@ -404,32 +400,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);*/
 		
-		final TimeTableDataBlock others=new TimeTableDataBlock(cellObjects.getDatas());
-		others.setStartAt(2000);
 		
-THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
-			
-			@Override
-			public void onLoad(String text) {
-				List<TimeTableData> newDatas=Lists.newArrayList(jsonTextToTimeTableDatas(text));
-				TimeTableDataBlock eyeblink=new TimeTableDataBlock(newDatas);
-				eyeblink.setLoop(true);
-				eyeblink.setLoopTime(5);
-				eyeblink.setLoopInterval(1000);
-				AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
-				
-				
-				List<TimeTableDataBlock> blocks=Lists.newArrayList(eyeblink,others);
-				
-				
-				AnimationKeyGroup group=builder.createMergedGroup(blocks);
-				
-				JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
-				AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue(),param);
-			
-				Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
-			}
-		});
 	}
 	
 	//TODO merge above
@@ -449,15 +420,15 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 	
 	
 	
-	private Iterable<TimeTableData> jsonTextToTimeTableDatas(String text){
+	private Iterable<TimeTableDataBlock> jsonTextToTimeTableDatas(String text){
 		
-		JSONFormatConverter converter=new JSONFormatConverter("TimeTable","timetable");
+		JSONFormatConverter converter=new JSONFormatConverter("TimeTableBlock","timetableblock");
 		//todo check validate
 		JSONValue jsonValue=null;
 		
-		/**
-		 * converter make null error 
-		 */
+		
+		// * converter make null error 
+		 
 		try{
 			jsonValue=converter.convert(text);
 		}catch (Exception e) {
@@ -467,44 +438,34 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 		
 		List<JSONObject> datas=converter.toJsonObjectList(jsonValue);
 		
-		 Iterable<TimeTableData> newDatas=new TimeTableDataConverter().reverse().convertAll(datas);
+		 Iterable<TimeTableDataBlock> newDatas=new TimeTableDataBlockConverter().reverse().convertAll(datas);
 		 return newDatas;
 	}
 	
-	private String baseFileName="TimeTableData";
+	private String baseFileName="TimeTableDataBlock";
 	private Button newBt;
 	private Button addOrUpdateBt;
 	private Button removeBt;
 	private Button copyBt;
+	private TimeTableDataPanel timeTableDataPanel;
 	protected String getDownloadFileName() {
 		return baseFileName+".json";
 	}
 
-	public TimeTableData copy(TimeTableData data){
-		TimeTableDataConverter converter=new TimeTableDataConverter();
+	public TimeTableDataBlock copy(TimeTableDataBlock data){
+		TimeTableDataBlockConverter converter=new TimeTableDataBlockConverter();
 		return converter.reverse().convert(converter.convert(data));
+		
 	}
 	
-	protected TimeTableData makeData() {
+	protected TimeTableDataBlock makeData() {
 		editor.flush();
 		
 		return editor.getValue();
 	}
 
-	public void setValue(List<TimeTableData> datas){
-		if(datas==null){
-		cellObjects.setDatas(new ArrayList<TimeTableData>());
-		cellObjects.update();
-		editor.setValue(new TimeTableData());//for clear
-		editor.setValue(null);//for disable
-		}else{
-		cellObjects.setDatas(datas);
-		cellObjects.update();
-		editor.setValue(new TimeTableData());
-		}
-	}
 
-	public void addData(TimeTableData data,boolean updateStorages) {
+	public void addData(TimeTableDataBlock data,boolean updateStorages) {
 		cellObjects.addItem(data);
 		onDataAdded(data);//link something
 		
@@ -514,16 +475,24 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 	}
 	
 	public void storeData(){
-		timeTableDataBlockPanel.storeData();
+		 //store data
+		 String lines=toStoreText();
+		
+		 try {
+			storageControler.setValue(storageKey, lines);
+		} catch (StorageException e) {
+			//possible quote error
+			Window.alert(e.getMessage());
+		}
 	}
 	
 	protected void clearAllData() {
-		 for(TimeTableData data:ImmutableList.copyOf(cellObjects.getDatas())){
+		 for(TimeTableDataBlock data:ImmutableList.copyOf(cellObjects.getDatas())){
 				removeData(data);
 			}
 	}
 	
-	 public void removeData(TimeTableData data){
+	 public void removeData(TimeTableDataBlock data){
 		 if(data==null){
 			 return;
 		 }
@@ -532,19 +501,19 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 	 }
 	
 	public String toStoreText(){
-		JSONFormatConverter converter=new JSONFormatConverter("TimeTableDataPanel", "timetable");
-		JSONValue value=converter.fromJsonObjectList(new TimeTableDataConverter().convertAll(cellObjects.getDatas()));
+		JSONFormatConverter converter=new JSONFormatConverter("TimeTableDataBlockPanel", "timetableblock");
+		JSONValue value=converter.fromJsonObjectList(new TimeTableDataBlockConverter().convertAll(cellObjects.getDatas()));
 		return converter.reverse().convert(value);
 		//return Joiner.on("\r\n").join();
 	 }
 
-	public void onDataSelected(@Nullable TimeTableData selection) {
+	public void onDataSelected(@Nullable TimeTableDataBlock selection) {
 	//enabling buttons
 	if(selection==null){
 		newBt.setEnabled(false);
 		copyBt.setEnabled(false);
 		removeBt.setEnabled(false);
-		editor.setValue(new TimeTableData());
+		editor.setValue(new TimeTableDataBlock());
 		addOrUpdateBt.setText("Add");
 	}else{
 		addOrUpdateBt.setText("Update");
@@ -556,107 +525,133 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 	
 	//update range
 	if(selection!=null){
-		Mbl3dExpression expression=timeTableDataToMbl3dExpression(selection);
-		if(expression!=null){
-			Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().setMbl3dExpression(expression);
-		}else{
-			LogUtils.log("somehow can't converted.skipped selecting range");
-		}
+		timeTableDataPanel.setValue(selection.getTimeTableDatas());
 	}else{
-		Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().setMbl3dExpression(null);//meaning empty
+		timeTableDataPanel.setValue(null);
 		}
 	}
 
-	public void onDataRemoved(TimeTableData data){
+	public void onDataRemoved(TimeTableDataBlock data){
 		storeData();
-		timeTableDataBlockPanel.onDataUpdated(null);
 	}
-	public void onDataAdded(TimeTableData data){
+	public void onDataAdded(TimeTableDataBlock data){
 		
-		timeTableDataBlockPanel.onDataUpdated(null);
 	}
-	public void onDataUpdated(TimeTableData data){
+	/**
+	 * calling when timetabledata update
+	 * @param data
+	 */
+	public void onDataUpdated(@Nullable TimeTableDataBlock data){
 		//TODO link something
 		cellObjects.getSimpleCellTable().getCellTable().redraw();
-		timeTableDataBlockPanel.onDataUpdated(null);
+		storeData();
 	}
 	
 
-	private boolean isLargerTime(TimeTableData data){
-		int index=cellObjects.getDatas().indexOf(data);
-		if(index==-1){
-			return false;
-		}
-		double max=-1;
-		for(int i=0;i<index;i++){
-			if(max<cellObjects.getDatas().get(i).getTime()){
-				max=cellObjects.getDatas().get(i).getTime();
-			}
-		}
-		return data.getTime()>max;
-	}
+	public class TimeTableDataBlockEditor extends VerticalPanel implements Editor<TimeTableDataBlock>,ValueAwareEditor<TimeTableDataBlock>{
+		private TimeTableDataBlock value;
+		private TextBox nameEditor;
 	
-	public class TimeTableDataEditor extends VerticalPanel implements Editor<TimeTableData>,ValueAwareEditor<TimeTableData>{
-		private TimeTableData value;
-		private TextBox labelEditor;
-		private MinuteTimeEditor timeEditor;
-		private IntegerBox referenceIdEditor;
-		private CheckBox referenceEditor;
+		private DoubleBox startAtEditor;
+		private DoubleBox beforeMarginEditor;
+		private DoubleBox afterMarginEditor;
+		private CheckBox loopEditor;
+		private IntegerBox loopTimeEditor;
+		private DoubleBox loopIntervalEditor;
 
-		public TimeTableData getValue() {
+
+		public TimeTableDataBlock getValue() {
 			return value;
 		}
 		
-		public TimeTableDataEditor(){
+		public TimeTableDataBlockEditor(){
 			String labelWidth="100px";
 			int fontSize=14;
 
 						HorizontalPanel labelPanel=new HorizontalPanel();
 						labelPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
 						add(labelPanel);
-						Label labelLabel=new Label("Label");
+						Label labelLabel=new Label("Name");
 						labelLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 						labelLabel.setWidth(labelWidth);
 						labelPanel.add(labelLabel);
-						labelEditor=new TextBox();
-			labelEditor.setWidth("200px");
-						labelPanel.add(labelEditor);
+						nameEditor=new TextBox();
+						nameEditor.setWidth("200px");
+						labelPanel.add(nameEditor);
 
 
-						HorizontalPanel timePanel=new HorizontalPanel();
-						timePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-						add(timePanel);
-						Label timeLabel=new Label("Time");
-						timeLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-						timeLabel.setWidth(labelWidth);
-						timePanel.add(timeLabel);
-						timeEditor=new MinuteTimeEditor();
-			//timeEditor.setWidth("100px");
-						timePanel.add(timeEditor);
+									HorizontalPanel startAtPanel=new HorizontalPanel();
+									startAtPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(startAtPanel);
+									Label startAtLabel=new Label("StartAt");
+									startAtLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									startAtLabel.setWidth(labelWidth);
+									startAtPanel.add(startAtLabel);
+									startAtEditor=new DoubleBox();
+						startAtEditor.setWidth("100px");
+									startAtPanel.add(startAtEditor);
 
 
-						HorizontalPanel referenceIdPanel=new HorizontalPanel();
-						referenceIdPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-						add(referenceIdPanel);
-						Label referenceIdLabel=new Label("ReferenceId");
-						referenceIdLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-						referenceIdLabel.setWidth(labelWidth);
-						referenceIdPanel.add(referenceIdLabel);
-						referenceIdEditor=new IntegerBox();
-			referenceIdEditor.setWidth("100px");
-						referenceIdPanel.add(referenceIdEditor);
+									HorizontalPanel beforeMarginPanel=new HorizontalPanel();
+									beforeMarginPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(beforeMarginPanel);
+									Label beforeMarginLabel=new Label("BeforeMargin");
+									beforeMarginLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									beforeMarginLabel.setWidth(labelWidth);
+									beforeMarginPanel.add(beforeMarginLabel);
+									beforeMarginEditor=new DoubleBox();
+						beforeMarginEditor.setWidth("100px");
+									beforeMarginPanel.add(beforeMarginEditor);
 
 
-						HorizontalPanel referencePanel=new HorizontalPanel();
-						referencePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-						add(referencePanel);
-						Label referenceLabel=new Label("Reference");
-						referenceLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-						referenceLabel.setWidth(labelWidth);
-						referencePanel.add(referenceLabel);
-						referenceEditor=new CheckBox();
-			referenceEditor.setWidth("100px");
-						referencePanel.add(referenceEditor);
+									HorizontalPanel afterMarginPanel=new HorizontalPanel();
+									afterMarginPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(afterMarginPanel);
+									Label afterMarginLabel=new Label("AfterMargin");
+									afterMarginLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									afterMarginLabel.setWidth(labelWidth);
+									afterMarginPanel.add(afterMarginLabel);
+									afterMarginEditor=new DoubleBox();
+						afterMarginEditor.setWidth("100px");
+									afterMarginPanel.add(afterMarginEditor);
+
+
+									HorizontalPanel loopPanel=new HorizontalPanel();
+									loopPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(loopPanel);
+									Label loopLabel=new Label("Loop");
+									loopLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									loopLabel.setWidth(labelWidth);
+									loopPanel.add(loopLabel);
+									loopEditor=new CheckBox();
+						loopEditor.setWidth("100px");
+									loopPanel.add(loopEditor);
+
+
+									HorizontalPanel loopTimePanel=new HorizontalPanel();
+									loopTimePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(loopTimePanel);
+									Label loopTimeLabel=new Label("LoopTime");
+									loopTimeLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									loopTimeLabel.setWidth(labelWidth);
+									loopTimePanel.add(loopTimeLabel);
+									loopTimeEditor=new IntegerBox();
+						loopTimeEditor.setWidth("100px");
+									loopTimePanel.add(loopTimeEditor);
+
+
+									HorizontalPanel loopIntervalPanel=new HorizontalPanel();
+									loopIntervalPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(loopIntervalPanel);
+									Label loopIntervalLabel=new Label("LoopInterval");
+									loopIntervalLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									loopIntervalLabel.setWidth(labelWidth);
+									loopIntervalPanel.add(loopIntervalLabel);
+									loopIntervalEditor=new DoubleBox();
+						loopIntervalEditor.setWidth("100px");
+									loopIntervalPanel.add(loopIntervalEditor);
+
+
 
 
 						
@@ -665,7 +660,7 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 
 
 @Override
-			public void setDelegate(EditorDelegate<TimeTableData> delegate) {
+			public void setDelegate(EditorDelegate<TimeTableDataBlock> delegate) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -674,10 +669,13 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 			public void flush() {
 				
 				
-				value.setLabel(labelEditor.getValue());
-				value.setTime(timeEditor.getValue());
-				value.setReferenceId(referenceIdEditor.getValue());
-				value.setReference(referenceEditor.getValue());
+				value.setName(nameEditor.getValue());
+				value.setStartAt(startAtEditor.getValue());
+				value.setBeforeMargin(beforeMarginEditor.getValue());
+				value.setAfterMargin(afterMarginEditor.getValue());
+				value.setLoop(loopEditor.getValue());
+				value.setLoopTime(loopTimeEditor.getValue());
+				value.setLoopInterval(loopIntervalEditor.getValue());
 
 				onDataUpdated(value);
 			}
@@ -689,29 +687,39 @@ THREE.XHRLoader().load("animations/eyeblink.json", new XHRLoadHandler() {
 			}
 
 			@Override
-			public void setValue(@Nullable TimeTableData value) {
-				
+			public void setValue(@Nullable TimeTableDataBlock value) {
 				this.value=value;
 				if(value==null){
 					//set disable
-					labelEditor.setEnabled(false);
-					timeEditor.setEnabled(false);
-					referenceIdEditor.setEnabled(false);
-					referenceEditor.setEnabled(false);
+					nameEditor.setEnabled(false);
+					startAtEditor.setEnabled(false);
+					beforeMarginEditor.setEnabled(false);
+					afterMarginEditor.setEnabled(false);
+					loopEditor.setEnabled(false);
+					loopTimeEditor.setEnabled(false);
+					loopIntervalEditor.setEnabled(false);
+
 					return;
 				}else{
 					//set enable
-					labelEditor.setEnabled(true);
-					timeEditor.setEnabled(true);
-					referenceIdEditor.setEnabled(true);
-					referenceEditor.setEnabled(true);
+					nameEditor.setEnabled(true);
+					startAtEditor.setEnabled(true);
+					beforeMarginEditor.setEnabled(true);
+					afterMarginEditor.setEnabled(true);
+					loopEditor.setEnabled(true);
+					loopTimeEditor.setEnabled(true);
+					loopIntervalEditor.setEnabled(true);
+
 
 				}
 				
-				labelEditor.setValue(value.getLabel());
-				timeEditor.setValue(value.getTime());
-				referenceIdEditor.setValue(value.getReferenceId());
-				referenceEditor.setValue(value.isReference());
+				nameEditor.setValue(value.getName());
+				startAtEditor.setValue(value.getStartAt());
+				beforeMarginEditor.setValue(value.getBeforeMargin());
+				afterMarginEditor.setValue(value.getAfterMargin());
+				loopEditor.setValue(value.isLoop());
+				loopTimeEditor.setValue(value.getLoopTime());
+				loopIntervalEditor.setValue(value.getLoopInterval());
 
 			}
 	}

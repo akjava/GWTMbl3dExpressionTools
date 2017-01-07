@@ -19,7 +19,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		TimeTableDataBlock block=new TimeTableDataBlock(datas);
 		
 		double correct=1000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	
 	public void testMargin1(){
@@ -34,7 +34,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setBeforeMargin(1000);
 		
 		double correct=2000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testMargin2(){
 		TimeTableData data1=new TimeTableData();
@@ -47,7 +47,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setAfterMargin(1000);
 		
 		double correct=2000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testMargin3(){
 		TimeTableData data1=new TimeTableData();
@@ -61,7 +61,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setBeforeMargin(1000);
 		
 		double correct=3000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	
 	public void testLoop1(){
@@ -75,7 +75,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setLoop(true);
 		
 		double correct=0;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop2(){
 		TimeTableData data1=new TimeTableData();
@@ -89,7 +89,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setLoopTime(1);
 		
 		double correct=1000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop3(){
 		TimeTableData data1=new TimeTableData();
@@ -104,7 +104,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setLoopInterval(500);
 		
 		double correct=1000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop4(){
 		TimeTableData data1=new TimeTableData();
@@ -118,7 +118,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setLoopTime(2);
 		
 		double correct=2000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop5(){
 		TimeTableData data1=new TimeTableData();
@@ -133,7 +133,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setLoopInterval(500);
 		
 		double correct=2500;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop6(){
 		TimeTableData data1=new TimeTableData();
@@ -150,7 +150,7 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setBeforeMargin(1000);
 		
 		double correct=6000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 	public void testLoop7(){
 		TimeTableData data1=new TimeTableData();
@@ -168,6 +168,6 @@ public class TimeTableDataBlockCalcurateTest extends TestCase{
 		block.setBeforeMargin(1000);
 		
 		double correct=8000;
-		assertEquals( correct, block.calcurateTotalTime());
+		assertEquals( correct, block.calcurateEndTime());
 	}
 }
