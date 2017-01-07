@@ -46,7 +46,7 @@ private PlusMinusIntegerBox millisecondBox;
 	
 	timePanel.add(new Label("."));
 	
-	millisecondBox = new PlusMinusIntegerBox(0,999,50);
+	millisecondBox = new PlusMinusIntegerBox(0,950,50);
 	millisecondBox.getValueBox().setWidth("30px");
 	timePanel.add(millisecondBox);
 	
