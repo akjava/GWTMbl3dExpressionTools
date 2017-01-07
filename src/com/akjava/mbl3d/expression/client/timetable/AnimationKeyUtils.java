@@ -16,13 +16,13 @@ private AnimationKeyUtils(){}
 /*
  * must be same key
  */
-public static NumberKeyframeTrack toTrack(String keyName,int index,List<AnimationKeyFrame> frames,double modifyValue){
+public static NumberKeyframeTrack toTrack(String keyName,int index,List<Mbl3dAnimationKeyFrame> frames,double modifyValue){
 	String trackName=".morphTargetInfluences["+index+"]";
 	
 	
 	JsArrayNumber times=JavaScriptObject.createArray().cast();
 	JsArrayNumber values=JavaScriptObject.createArray().cast();
-	for(AnimationKeyFrame frame:frames){
+	for(Mbl3dAnimationKeyFrame frame:frames){
 		times.push(frame.getTime()/1000);//millisecond to second
 		values.push(toModifyValue(keyName,frame.getValue(),modifyValue));
 	}

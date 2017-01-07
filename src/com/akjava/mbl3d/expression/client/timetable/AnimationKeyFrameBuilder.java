@@ -43,7 +43,7 @@ public class AnimationKeyFrameBuilder {
 		}
 	}
 	public  AnimationKeyGroup createGroup(TimeTableDataBlock block){
-		List<AnimationKeyFrame> frames=Lists.newArrayList();
+		List<Mbl3dAnimationKeyFrame> frames=Lists.newArrayList();
 		
 		//Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
 		
@@ -92,14 +92,14 @@ public class AnimationKeyFrameBuilder {
 			List<String> remains=Lists.newArrayList(keys);
 			for(String key:data.getValues().keySet()){
 				double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
-				AnimationKeyFrame frame=new AnimationKeyFrame(key, time, value);
+				Mbl3dAnimationKeyFrame frame=new Mbl3dAnimationKeyFrame(key, time, value);
 				frames.add(frame);
 				remains.remove(key);
 			}
 			
 			//for reset
 			for(String key:remains){
-				frames.add(new AnimationKeyFrame(key, time, 0));
+				frames.add(new Mbl3dAnimationKeyFrame(key, time, 0));
 			}
 		}
 		timeAt+=block.getLastTime();
