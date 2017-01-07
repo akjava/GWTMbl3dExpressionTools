@@ -156,26 +156,37 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 				 };
 				 
 				 table.addColumn(nameColumn);
-			
-			TextColumn<TimeTableDataBlock> startColumn=new TextColumn<TimeTableDataBlock>() {
-				@Override
-				public String getValue(TimeTableDataBlock object) {
-					return String.valueOf(object.getStartAt());//TODO
-				}
-			};
+				 
+		
+				 StyledTextColumn<TimeTableDataBlock> startColumn=new StyledTextColumn<TimeTableDataBlock>(extentedCell){
+						@Override
+						public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableDataBlock object) {
+							String style="";
+							
+							return new StyleAndLabel(style,String.valueOf(object.getStartAt()));
+						}
+						 
+					 };
 			table.addColumn(startColumn);
 			
-			TextColumn<TimeTableDataBlock> endColumn=new TextColumn<TimeTableDataBlock>() {
-				@Override
-				public String getValue(TimeTableDataBlock object) {
-					double value=object.calcurateEndTime();
-					if(value==0){
-						return "";
+			 StyledTextColumn<TimeTableDataBlock> endColumn=new StyledTextColumn<TimeTableDataBlock>(extentedCell){
+					@Override
+					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableDataBlock object) {
+						String style="";
+						
+						String text="";
+						double value=object.calcurateEndTime();
+						if(value!=0){
+							text=String.valueOf(value);
+						}
+						
+						return new StyleAndLabel(style,text);
 					}
-					return String.valueOf(value);//TODO
-				}
-			};
-			table.addColumn(endColumn);
+					 
+				 };
+				 
+
+					table.addColumn(endColumn);
 			
 			table.setColumnWidth(nameColumn, "120px");
 		}
