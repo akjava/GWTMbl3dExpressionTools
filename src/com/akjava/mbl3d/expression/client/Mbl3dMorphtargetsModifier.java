@@ -2,11 +2,11 @@ package com.akjava.mbl3d.expression.client;
 
 
 /*
- * have fix key
+ * all keys start with 'Expressions_'
  */
 public class Mbl3dMorphtargetsModifier extends MorphtargetsModifier{
 	public Double get(String key){
-		return get(fixKey(key));
+		return super.get(fixKey(key));
 	}
 	
 	private String fixKey(String key){
@@ -17,12 +17,12 @@ public class Mbl3dMorphtargetsModifier extends MorphtargetsModifier{
 	}
 	
 	public void remove(String key){
-		remove(fixKey(key));
+		super.remove(fixKey(key));
 	}
 
 	public void set(String key,double value){
 		
-		set(fixKey(key), value);
+		super.set(fixKey(key), value);
 	}
 	
 }

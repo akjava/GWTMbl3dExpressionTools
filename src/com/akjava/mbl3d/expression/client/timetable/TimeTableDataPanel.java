@@ -348,7 +348,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	
 
 	
-	HorizontalPanel playerPanel=new HorizontalPanel();
+	/*HorizontalPanel playerPanel=new HorizontalPanel();
 	this.add(playerPanel);
 	Button play=new Button("Play",new ClickHandler() {
 		@Override
@@ -364,7 +364,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 			Mbl3dExpressionEntryPoint.INSTANCE.stopAnimation();
 		}
 	});
-	playerPanel.add(stop);
+	playerPanel.add(stop);*/
 	
 }
 	protected void doPlay() {
