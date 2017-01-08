@@ -10,6 +10,7 @@ import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
+import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -199,7 +200,7 @@ public String toString(){
  * 
  * eyeFilterValue is eyemodifier
  */
-public AnimationClip converToAnimationClip(String name,double eyeFilterValue,JSParameter param){
+public AnimationClip converToAnimationClip(String name,MorphtargetsModifier modifier,JSParameter param){
 	//sort
 	Collections.sort(frames, new AnimationKeyFrameComparator());
 	//split by type
@@ -223,7 +224,7 @@ public AnimationClip converToAnimationClip(String name,double eyeFilterValue,JSP
 			continue;
 		}
 		int index=param.getInt(key);//possible null?
-		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(key,index,list,eyeFilterValue);
+		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(key,index,list,modifier);
 		tracks.push(track);
 	}
 	

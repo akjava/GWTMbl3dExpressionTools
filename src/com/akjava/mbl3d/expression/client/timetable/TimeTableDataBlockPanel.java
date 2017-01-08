@@ -390,7 +390,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 		//LogUtils.log(group);
 		
 		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
-		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue(),param);
+		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier(),param);
 	
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
 		

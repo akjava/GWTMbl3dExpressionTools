@@ -1,8 +1,10 @@
 package com.akjava.mbl3d.expression.client.datalist;
 
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.BasicExpressionPanel;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
+import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 
@@ -60,11 +62,11 @@ public class Mbl3dDataFunctions {
 	}
 	
 	
-	public static class Mbl3dExpressionFunctionWithEyeModifier implements Function<Mbl3dData,Mbl3dExpression>{
-		private double eyeModifier;
-		public Mbl3dExpressionFunctionWithEyeModifier(double eyeModifier) {
+	public static class Mbl3dExpressionFunctionWithModifier implements Function<Mbl3dData,Mbl3dExpression>{
+		private MorphtargetsModifier modifier;
+		public Mbl3dExpressionFunctionWithModifier(MorphtargetsModifier modifier) {
 			super();
-			this.eyeModifier = eyeModifier;
+			this.modifier = modifier;
 		}
 		@Override
 		public Mbl3dExpression apply(Mbl3dData input) {
@@ -82,12 +84,9 @@ public class Mbl3dDataFunctions {
 					continue;
 				}
 				
-				//modifier
-				if(BasicExpressionPanel.isNeedEyeModifier(name)){
-					v=eyeModifier*v;
-				}
+				LogUtils.log("Mbl3dExpressionFunctionWithModifier:key="+name);
 				
-				expression.set(name, v);
+				expression.set(name, modifier.getModifiedValue(name, v));
 			}
 		
 			return expression;

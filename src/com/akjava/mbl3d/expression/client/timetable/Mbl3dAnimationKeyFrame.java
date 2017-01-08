@@ -1,6 +1,6 @@
 package com.akjava.mbl3d.expression.client.timetable;
 
-import com.akjava.gwt.three.client.java.ui.experiments.MorphTargetKeyFrame;
+import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 
 

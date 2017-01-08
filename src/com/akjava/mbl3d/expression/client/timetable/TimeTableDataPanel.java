@@ -23,7 +23,7 @@ import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithEyeModifier;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithModifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style.Unit;
@@ -371,7 +371,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		List<Double> times=Lists.newArrayList();
 		List<Mbl3dExpression> expressions=Lists.newArrayList();
 		
-		Mbl3dExpressionFunctionWithEyeModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithEyeModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getEyeModifierValue());
+		Mbl3dExpressionFunctionWithModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier());
 		
 		for(TimeTableData data:cellObjects.getDatas()){
 			if(data.isReference()){

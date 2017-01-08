@@ -508,8 +508,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					
 	private String modelName;
-	public void setEyeModifier(double value){
-		basicPanel.getEyeModifier().setValue(value);//expression must be reset
+	public void setEyeModifier(MorphtargetsModifier modifier){
+		basicPanel.setMorphtargetsModifier(modifier);//expression must be reset
 	}
 	public void loadModel(final String modelUrl){
 		if(mesh!=null){

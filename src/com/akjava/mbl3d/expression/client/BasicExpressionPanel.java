@@ -39,14 +39,24 @@ public class BasicExpressionPanel extends VerticalPanel {
 	Mbl3dExpressionReceiver receiver;
 	private Button overwriteButton;
 	private VerticalPanel morphTargetPanel;
-	private LabeledInputRangeWidget2 eyeModifier;
+	private LabeledInputRangeWidget2 eyeModifierRange;
 	
-	public double getEyeModifierValue(){
-		return eyeModifier.getValue();
+	private MorphtargetsModifier morphtargetsModifier;
+	
+	public MorphtargetsModifier getMorphtargetsModifier() {
+		return morphtargetsModifier;
 	}
-	public LabeledInputRangeWidget2 getEyeModifier() {
-		return eyeModifier;
+	public void setMorphtargetsModifier(MorphtargetsModifier morphtargetsModifier) {
+		this.morphtargetsModifier = morphtargetsModifier;
+		
+		//on this time use single slider for mbl3dmodel @see Mbl3dModelInfoData
+		for(String key:morphtargetsModifier.keySet()){
+			double value=morphtargetsModifier.get(key);
+			eyeModifierRange.setValue(value);
+			break;
+		}
 	}
+	
 
 	public BasicExpressionPanel(final Mbl3dExpressionReceiver receiver){
 		this.receiver=receiver;
@@ -195,10 +205,20 @@ public class BasicExpressionPanel extends VerticalPanel {
 		Label morph=new Label("Morph");
 		this.add(morph);
 		
-		eyeModifier = new LabeledInputRangeWidget2("Eye-Modifier", 0.5, 1, 0.01);
-		eyeModifier.setValue(1.0);
-		eyeModifier.setTitle("for eyes-01min/max 03min/max,setted by model load");
-		this.add(eyeModifier);
+		eyeModifierRange = new LabeledInputRangeWidget2("Eye-Modifier", 0.5, 1, 0.01);
+		eyeModifierRange.setValue(1.0);
+		eyeModifierRange.setTitle("for eyes-01min/max 03min/max,setted by model load");
+		this.add(eyeModifierRange);
+		eyeModifierRange.addtRangeListener(new ValueChangeHandler<Number>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Number> event) {
+				//mbl3dmodel specific update all value so far.
+				double v=event.getValue().doubleValue();
+				for(String key:morphtargetsModifier.keySet()){
+					morphtargetsModifier.set(key, v);
+				}
+			}
+		});
 		
 		HorizontalPanel buttons=new HorizontalPanel();
 		this.add(buttons);
@@ -228,13 +248,13 @@ public class BasicExpressionPanel extends VerticalPanel {
 		this.add(morphTargetPanel);
 		
 	}
-	private static final List<String> needModiferKeys=Lists.newArrayList("eyes01_min","eyes01_max","eyes03_min","eyes03_max");
 	
-	public static  boolean isNeedEyeModifier(String shortenName){
-		if(shortenName.startsWith("Expressions_")){
-			shortenName=shortenName.substring("Expressions_".length());
+	public   boolean isNeedEyeModifier(String shortenName){
+		String name=shortenName;
+		if(!shortenName.startsWith("Expressions_")){
+			name="Expressions_"+name;
 		}
-		return needModiferKeys.contains(shortenName);
+		return morphtargetsModifier.containsKey(name);
 	}
 	
 	public String generateFileName(){
@@ -332,9 +352,9 @@ public class BasicExpressionPanel extends VerticalPanel {
 	}
 	
 	
-	
+	//TODO switch morphtargetModifier base
 	public double toEyeModifiedValue(double value){
-		return eyeModifier.getValue()*value;
+		return eyeModifierRange.getValue()*value;
 	}
 	
 	
