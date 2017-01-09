@@ -6,12 +6,14 @@ import java.util.Map;
 
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
+import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.KeyframeTrack;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
-import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -196,40 +198,68 @@ public String toString(){
 }
 
 
-/*
+/**
  * 
- * eyeFilterValue is eyemodifier
+ * @param animationClipName
+ * @param modifier,modify value,usually mbl3dmodel's eyes need modify
+ * @param morphTargetDictionary  find morphtarget index #Mesh.getMorphTargetDictionary()
+ * @return
  */
-public AnimationClip converToAnimationClip(String name,MorphtargetsModifier modifier,JSParameter param){
-	//sort
-	Collections.sort(frames, new AnimationKeyFrameComparator());
-	//split by type
-	Map<String,List<Mbl3dAnimationKeyFrame>> frameListMap=Maps.newLinkedHashMap();
+public AnimationClip converToAnimationClip(String animationClipName,MorphtargetsModifier modifier,JSParameter morphTargetDictionary){
 	
-	for(Mbl3dAnimationKeyFrame frame:frames){
-		String key=frame.getKeyName();
-		List<Mbl3dAnimationKeyFrame> list=frameListMap.get(key);
-		if(list==null){
-			list=Lists.newArrayList();
-			frameListMap.put(key, list);
-		}
-		list.add(frame);
-	}
+	Map<String,List<Mbl3dAnimationKeyFrame>> frameListMap=toListMap();
 	
 	JsArray<KeyframeTrack> tracks=JavaScriptObject.createArray().cast();
 	for(String key:frameListMap.keySet()){
 		List<Mbl3dAnimationKeyFrame> list=frameListMap.get(key);
-		if(!param.exists(key)){
+		if(!morphTargetDictionary.exists(key)){
 			LogUtils.log("converToAnimationClip:call not exist key="+key+".skipped creating track");
 			continue;
 		}
-		int index=param.getInt(key);//possible null?
+		int index=morphTargetDictionary.getInt(key);//possible null?
 		NumberKeyframeTrack track=AnimationKeyUtils.toTrack(key,index,list,modifier);
 		tracks.push(track);
 	}
 	
-	AnimationClip clip=THREE.AnimationClip(name, -1, tracks);
+	AnimationClip clip=THREE.AnimationClip(animationClipName, -1, tracks);
 	return clip;
+}
+
+private Map<String,List<Mbl3dAnimationKeyFrame>> toListMap(){
+	//sort
+		Collections.sort(frames, new AnimationKeyFrameComparator());
+		//split by type
+		Map<String,List<Mbl3dAnimationKeyFrame>> frameListMap=Maps.newLinkedHashMap();
+		
+		for(Mbl3dAnimationKeyFrame frame:frames){
+			String key=frame.getKeyName();
+			List<Mbl3dAnimationKeyFrame> list=frameListMap.get(key);
+			if(list==null){
+				list=Lists.newArrayList();
+				frameListMap.put(key, list);
+			}
+			list.add(frame);
+		}
+		return frameListMap;
+}
+/**
+ * see  #MorphTargetKeyFrameConverter,#JSONMorphTargetsFileConverter
+ * 
+ * @return
+ */
+public List<List<MorphTargetKeyFrame>> converToMorphTargetKeyFrame(){
+	
+	Map<String,List<Mbl3dAnimationKeyFrame>> frameListMap=toListMap();
+
+	List<List<MorphTargetKeyFrame>> values=Lists.newArrayList();
+	for(String key:frameListMap.keySet()){
+		List<Mbl3dAnimationKeyFrame> list=frameListMap.get(key);
+		List<MorphTargetKeyFrame> newList=Lists.newArrayList();
+		Iterables.concat(newList,list);
+		values.add(newList);
+	}
+	
+	return values;
 }
 
 }

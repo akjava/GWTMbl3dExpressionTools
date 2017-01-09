@@ -9,6 +9,7 @@ import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
 import com.akjava.gwt.html5.client.file.FileUtils;
 import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
+import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageException;
@@ -19,25 +20,31 @@ import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
 import com.akjava.gwt.three.client.gwt.JSParameter;
-import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFile;
+import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFileConverter;
+import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
+import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrameConverter;
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
-import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.ValueAwareEditor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
@@ -320,13 +327,49 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 	 downloadPanels.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
 	 final HorizontalPanel download=new HorizontalPanel();
 	 
+	final  ListBox downloadTypeBox=new ListBox();
+	downloadPanels.add(downloadTypeBox);
+	 downloadTypeBox.addItem("Normal");
+	 downloadTypeBox.addItem("As Universal");
+	 downloadTypeBox.addItem("As Threejs-Clip");
+	 downloadTypeBox.setSelectedIndex(0);
+	 
+	 
 	 Button downloadBt=new Button("download",new ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
 			download.clear();
 			String text=toStoreText();
-			Anchor a=HTML5Download.get().generateTextDownloadLink(text, getDownloadFileName(), "click to download",true);
+			String fileName=getDownloadFileName();
+			int selection=downloadTypeBox.getSelectedIndex();
+			
+			if(selection==1){
+				List<TimeTableDataBlock> blocks=cellObjects.getDatas();
+				//TODO convert universal foramt
+				AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
+				
+				builder.setTotalTimeByBlocks(blocks);
+				AnimationKeyGroup group=builder.createMergedGroup(blocks);
+				List<List<MorphTargetKeyFrame>> list=group.converToMorphTargetKeyFrame();
+				Iterable<JSONMorphTargetsFile> files=new MorphTargetKeyFrameConverter().convertAll(list);
+				Iterable<JSONObject> objects=new JSONMorphTargetsFileConverter().convertAll(files);
+			
+				
+				JSONArray jsonArray=JSONFormatConverter.createJSONArray(objects);
+				
+				text=new JSONFormatConverter("Mbl3dExpression", "jsonmorphtargetsfile").reverse().convert(jsonArray);
+				fileName="jsonmorphtargetsfile.json";
+				
+			}else if(selection==2){
+				AnimationClip clip=generateAnimationClip(cellObjects.getDatas());
+				JSONObject object=new JSONObject(AnimationClip.toJSON(clip));
+				
+				text= object.toString();
+				fileName="threejs-clip.json";
+			}
+			
+			Anchor a=HTML5Download.get().generateTextDownloadLink(text, fileName, "click to download",true);
 			download.add(a);
 		}
 	});
@@ -385,13 +428,84 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 	});
 	playerPanel.add(stop);
 	
+	
+	HorizontalPanel uploadPanel2=new HorizontalPanel();
+	uploadPanel2.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+	
+	final Button play2=new Button("Play >>",new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(uploadClip);
+		}
+	});
+	uploadPanel2.add(play2);
+	play2.setEnabled(false);
+	
+	 FileUploadForm upload2=FileUtils.createSingleTextFileUploadForm(new DataURLListener() {
+		
+		@Override
+		public void uploaded(File file, String text) {
+			String type=JSONFormatConverter.parseDataType(text);
+			AnimationClip clip=null;
+			if(type!=null){
+				if(type.equals("timetableblock")){
+					Iterable<TimeTableDataBlock> newDatas=jsonTextToTimeTableDatas(text);
+					
+					if(newDatas==null){
+						Window.alert("invalid file format.see log");
+						return;
+					}
+					clip=generateAnimationClip(Lists.newArrayList(newDatas));
+					
+				}else if(type.equals("jsonmorphtargetsfile")){
+					JSONValue value=new JSONFormatConverter("Mbl3dExpression", "jsonmorphtargetsfile").convert(text);
+					
+					Iterable<JSONMorphTargetsFile> files=new JSONMorphTargetsFileConverter().reverse().convertAll(JSONFormatConverter.convertToJSONObject(value));
+					Iterable<List<MorphTargetKeyFrame>> framesList=new MorphTargetKeyFrameConverter().reverse().convertAll(files);
+					
+
+					JSParameter morphTargetDictionary=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
+					MorphtargetsModifier modifier=Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier();
+					
+					clip=MorphTargetKeyFrameConverter.converToAnimationClip(framesList, "test", modifier, morphTargetDictionary);
+					
+				}//TODO support universal
+				
+			}else{
+				JSONValue value=JSONParser.parseStrict(text);
+				clip=AnimationClip.parse(value.isObject().getJavaScriptObject());
+				
+			}
+			
+			if(clip!=null){
+			Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
+			uploadClip=clip;
+			play2.setEnabled(true);
+			}else{
+				LogUtils.log("file-uploaded.but parsing faild\n"+text);
+			}
+			
+		}
+	}, false, "UTF-8");//can't reselect same file
+	 upload2.setAccept(".json");
+	 uploadPanel2.add(upload2);
+	 this.add(uploadPanel2);
+	
 }
+	private AnimationClip uploadClip;
 	protected void doPlay() {
-		
-		AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
-		
-		
 		List<TimeTableDataBlock> blocks=cellObjects.getDatas();
+		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(generateAnimationClip(blocks));
+		
+		
+		
+	}
+	
+	private AnimationClip generateAnimationClip(List<TimeTableDataBlock> blocks){
+AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
+		
+		
+		
 		
 		builder.setTotalTimeByBlocks(blocks);
 		
@@ -402,10 +516,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
 		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier(),param);
 	
-		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
-		
-		
-		
+		return clip;
 	}
 	
 	//TODO merge above

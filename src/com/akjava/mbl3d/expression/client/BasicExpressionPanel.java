@@ -10,6 +10,7 @@ import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression.ClosedResult;
 import com.google.common.base.Converter;

@@ -1,5 +1,7 @@
 package com.akjava.mbl3d.expression.client;
 
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
+
 
 /*
  * all keys start with 'Expressions_'

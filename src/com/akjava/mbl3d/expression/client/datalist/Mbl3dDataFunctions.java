@@ -1,10 +1,9 @@
 package com.akjava.mbl3d.expression.client.datalist;
 
 import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.lib.common.utils.ValuesUtils;
-import com.akjava.mbl3d.expression.client.BasicExpressionPanel;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
-import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
 

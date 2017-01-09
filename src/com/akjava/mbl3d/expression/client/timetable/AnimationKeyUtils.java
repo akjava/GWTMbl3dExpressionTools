@@ -2,12 +2,10 @@ package com.akjava.mbl3d.expression.client.timetable;
 
 import java.util.List;
 
-import com.akjava.gwt.lib.client.LogUtils;
+import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.tracks.NumberKeyframeTrack;
-import com.akjava.mbl3d.expression.client.BasicExpressionPanel;
-import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
 
@@ -31,6 +29,8 @@ public static NumberKeyframeTrack toTrack(String keyName,int index,List<Mbl3dAni
 	NumberKeyframeTrack track=THREE.NumberKeyframeTrack(trackName, times, values);
 	return track;
 }
+
+
 
 //TODO BasicExpressionPanel to better location
 private static double toModifyValue(String key,double value,MorphtargetsModifier modifier) {

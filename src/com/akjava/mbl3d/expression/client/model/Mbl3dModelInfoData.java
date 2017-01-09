@@ -2,8 +2,8 @@ package com.akjava.mbl3d.expression.client.model;
 
 import java.util.List;
 
+import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.mbl3d.expression.client.Mbl3dMorphtargetsModifier;
-import com.akjava.mbl3d.expression.client.MorphtargetsModifier;
 import com.google.common.collect.Lists;
 
 /*
