@@ -255,7 +255,9 @@ public List<List<MorphTargetKeyFrame>> converToMorphTargetKeyFrame(){
 	for(String key:frameListMap.keySet()){
 		List<Mbl3dAnimationKeyFrame> list=frameListMap.get(key);
 		List<MorphTargetKeyFrame> newList=Lists.newArrayList();
-		Iterables.concat(newList,list);
+		for(MorphTargetKeyFrame frame:list){
+			newList.add(frame);
+		}
 		values.add(newList);
 	}
 	

@@ -352,11 +352,19 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 				builder.setTotalTimeByBlocks(blocks);
 				AnimationKeyGroup group=builder.createMergedGroup(blocks);
 				List<List<MorphTargetKeyFrame>> list=group.converToMorphTargetKeyFrame();
+				LogUtils.log("list:"+list.size());
+				
 				Iterable<JSONMorphTargetsFile> files=new MorphTargetKeyFrameConverter().convertAll(list);
+				List<JSONMorphTargetsFile> filesList=Lists.newArrayList(files);
+				LogUtils.log("files:"+filesList.size());
+				
+				
+				
 				Iterable<JSONObject> objects=new JSONMorphTargetsFileConverter().convertAll(files);
-			
+				LogUtils.log("objects");
 				
 				JSONArray jsonArray=JSONFormatConverter.createJSONArray(objects);
+				LogUtils.log("array");
 				
 				text=new JSONFormatConverter("Mbl3dExpression", "jsonmorphtargetsfile").reverse().convert(jsonArray);
 				fileName="jsonmorphtargetsfile.json";
