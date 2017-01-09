@@ -8,3 +8,4 @@ montage_modern.txt
 montage_real.txt
 montage_gumi.txt
 montage_small_eye.txt
+montage_clear.txt
