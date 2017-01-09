@@ -88,7 +88,7 @@ eyelight/circle_s.png
 eyelight/square.png
 eyelight/square2.png
 eyelight/square3.png
-#lip,true,lip/lip1-lower5,20
+#lip,true,lip/lip1-lower5.png,20
 lip/lip1.png
 lip/lip1a50.png
 lip/lip1a25.png
