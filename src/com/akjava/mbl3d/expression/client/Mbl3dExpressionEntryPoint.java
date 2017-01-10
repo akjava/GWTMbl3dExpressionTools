@@ -409,7 +409,7 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					
 					
 					
-					tab.add(cratePreferenceTab(),"Misc");
+					tab.add(cratePreferenceTab(),"Other");
 					
 					textureTab=new TextureTab(this);
 					tab.add(textureTab,"Texture");

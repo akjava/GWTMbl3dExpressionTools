@@ -11,11 +11,13 @@ import com.akjava.gwt.lib.client.datalist.SimpleTextData;
 import com.akjava.gwt.lib.client.datalist.SimpleTextDataUtils;
 import com.akjava.gwt.lib.client.datalist.SimpleTextDatasCsvConverter;
 import com.akjava.gwt.lib.client.datalist.SimpleTextDatasOwner;
+import com.google.common.base.CharMatcher;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -33,6 +35,7 @@ public class DumpRestoreClearPanel extends VerticalPanel{
 
 	private SimpleTextDatasOwner owner;
 	private HorizontalPanel downloadPanel;
+	private CheckBox asciiCharOnly;
 	public DumpRestoreClearPanel(final SimpleTextDatasOwner owner){
 		this.owner=owner;
 		HorizontalPanel dumpPanel=new HorizontalPanel();
@@ -46,8 +49,11 @@ public class DumpRestoreClearPanel extends VerticalPanel{
 				executeDump();
 			}
 		});
+		asciiCharOnly = new CheckBox("ascii only");
+		asciiCharOnly.setTitle("Ascii character only.for share everyone");
 		exportBt.setWidth("120px");
 		dumpPanel.add(exportBt);
+		dumpPanel.add(asciiCharOnly);
 		dumpPanel.add(downloadPanel);
 		
 		HorizontalPanel h2=new HorizontalPanel();
@@ -101,7 +107,12 @@ public class DumpRestoreClearPanel extends VerticalPanel{
 			Window.alert("empty datas.quit");
 			return;
 		}
+		
 		String text=new SimpleTextDatasCsvConverter().convert(datas);
+		
+		if(asciiCharOnly.getWordWrap()){
+		text=CharMatcher.ASCII.retainFrom(text);
+		}
 		Anchor anchor=HTML5Download.get().generateTextDownloadLink(text, dumpFileName, "Push to download",true);
 		downloadPanel.clear();
 		downloadPanel.add(anchor);
