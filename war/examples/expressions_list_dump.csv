@@ -1,0 +1,401 @@
+"4"	"smile4"	"Expressions_brow03_max1    Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness"	"1460349528909"
+"5"	"smile3"	"Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness"	"1460439659024"
+"6"	"smile2"	"Expressions_mouth04_max1    typecheerfulness"	"1460439659024"
+"7"	"smile1"	"Expressions_mouth01_max1    typecheerfulness    descriptionsmile1"	"1460439659024"
+"8"	"smile5"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_brow03_max1    Expressions_eyes02_min0.38    Expressions_eyes03_min1    Expressions_mouth02_max1    Expressions_mouth04_max1    Expressions_mouth06_min0.28    typecheerfulness"	"1460371246210"
+"17"	"wao"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth01_max1    Expressions_mouth09_max1    typesuprise"	"1460363783849"
+"18"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth08_max0.55    Expressions_mouth10_max0.54    typesadness"	"1460366299930"
+"19"	"confuse"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth06_max0.47    Expressions_mouth08_max0.52    typeneglect"	"1460370769062"
+"23"	"panic"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_eyes02_min1    Expressions_mouth08_min0.56    Expressions_mouth09_max0.4    Expressions_mouth10_max0.66    typehorror"	"1460372043669"
+"24"	"regret"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_eyes02_min1    Expressions_mouth01_min0.66    Expressions_mouth08_min1    Expressions_mouth09_min0.46    Expressions_mouth10_max0.55    typeshame    description"	"1460372251902"
+"25"	"mistake"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth02_min1    Expressions_mouth04_max1    Expressions_mouth05_min0.39    typeshame    description"	"1460372374116"
+"26"	"commanding"	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_mouth02_min0.51    Expressions_mouth04_min0.52    Expressions_mouth08_max0.34    typezest    description"	"1460376222535"
+"29"	""	"Expressions_brow01L_min0.49    Expressions_brow01R_min0.47    Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes03_max0.52    Expressions_eyes04_max0.45    Expressions_mouth02_min0.51    Expressions_mouth04_min0.52    Expressions_mouth08_max0.34    typedisgust    description"	"1460454371980"
+"30"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_brow03_min1    Expressions_mouth02_min0.51    Expressions_mouth04_min0.52    Expressions_mouth08_max0.34    typedisgust    description"	"1460454492967"
+"31"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth01_min0.69    Expressions_mouth09_max0.66    typeirritation    description"	"1460454641737"
+"32"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth02_min0.42    Expressions_mouth07_max1    Expressions_mouth10_max0.47    Expressions_mouth11_max0.14    typehorror    description"	"1460454949696"
+"33"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth08_max0.51    Expressions_mouth09_max0.5    typesuprise    description"	"1460455089175"
+"34"	"praise3"	"Expressions_brow02L_max1    Expressions_brow02R_max0.93    Expressions_eyes02_max0.99    Expressions_mouth01_max0.98    Expressions_mouth02_max0.99    Expressions_mouth09_max0.5    typelonging    description"	"1460455292757"
+"35"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes03_max0.42    Expressions_mouth04_min1    Expressions_mouth07_min0.16    Expressions_mouth08_min0.28    Expressions_mouth10_max0.83    typeexasperation    description"	"1460455520491"
+"36"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth04_max0.06    Expressions_mouth08_max0.58    Expressions_mouth10_max0.75    typeshame    description"	"1460455744381"
+"37"	"ecstasy3"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_eyes03_min1    Expressions_mouth07_max0.59    Expressions_mouth08_max0.24    Expressions_mouth09_max1    typelust    description"	"1460455972098"
+"38"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth04_max0.06    Expressions_mouth08_max0.58    Expressions_mouth09_max0.28    Expressions_mouth10_max0.75    typeshame    description"	"1460456087643"
+"39"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes02_max0.99    Expressions_mouth01_min0.52    Expressions_mouth09_max1    typesuprise"	"1460456208475"
+"40"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow03_min1    Expressions_eyes02_max0.54    Expressions_mouth04_min0.52    Expressions_mouth10_max0.58    Expressions_mouth11_max0.29    typesuffering    description"	"1460456334255"
+"41"	"ecstasy2"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_eyes03_min1    Expressions_mouth07_max0.65    Expressions_mouth09_max1    typelust    description"	"1460456422599"
+"42"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth01_min0.39    Expressions_mouth02_min1    Expressions_mouth08_min0.46    typeshame    description"	"1460460245941"
+"49"	"smile4b"	"Expressions_brow03_max1    Expressions_eyes03_min1    Expressions_mouth02_max1    Expressions_mouth04_max1    Expressions_mouth09_max0.37    typecheerfulness"	"1460519027517"
+"50"	"glad2"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth01_max1    Expressions_mouth02_max1    typecheerfulness    description"	"1460520699811"
+"51"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth04_max0.28    Expressions_mouth07_max0.56    Expressions_mouth08_max0.66    typesuprise    description"	"1460520880141"
+"52"	"kiss"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_max1    Expressions_eyes01_max1    Expressions_mouth07_max0.72    Expressions_mouth08_max0.79    typelust    description"	"1460520944432"
+"53"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes03_max1    Expressions_mouth02_min0.51    Expressions_mouth04_min0.52    Expressions_mouth08_max0.34    typerage    description"	"1460521042758"
+"54"	"shout"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_brow03_min0.53    Expressions_eyes03_max1    Expressions_mouth06_max0.54    Expressions_mouth11_max0.46    typezest    description"	"1460521965405"
+"55"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth04_min1    Expressions_mouth08_max0.92    typeneglect    description"	"1460522277942"
+"56"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_max1    Expressions_eyes02_min1    Expressions_eyes03_max0.21    Expressions_mouth02_min1    Expressions_mouth08_max1    typeneglect    description"	"1460522429722"
+"57"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow03_min1    Expressions_eyes01_min0.3    Expressions_mouth04_min1    Expressions_mouth08_max0.92    Expressions_mouth08_min1    typedisgust    description"	"1460522559476"
+"58"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth01_max1    Expressions_mouth02_max1    typeshame    description"	"1460525721117"
+"59"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth07_min0.58    Expressions_mouth09_max0.26    Expressions_mouth10_max0.29    typeshame    description"	"1460525880054"
+"60"	""	"Expressions_brow01L_max1    typetorment    description"	"1460600295501"
+"61"	""	"Expressions_brow01L_min1    typeirritation    description"	"1460600295508"
+"62"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    typesympathy    description"	"1460600295517"
+"63"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    typeirritation    description"	"1460600295526"
+"64"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    typesuprise    description()"	"1460600295527"
+"65"	"nervousness2"	"Expressions_brow03_min1    typenervousness    description"	"1460600295529"
+"66"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_min1    typesuprise    description"	"1460600295532"
+"68"	"thinking"	"Expressions_brow01L_min1    typezest    description()"	"1460600295536"
+"69"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    typeenvy    description"	"1460600295539"
+"70"	""	"Expressions_brow01L_max1    typedisapointment    description()"	"1460600295541"
+"71"	"glad1"	"Expressions_mouth01_max1    typecheerfulness    description"	"1460600295543"
+"72"	"praised"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth01_max1    typezest    description()"	"1460600295548"
+"73"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth01_max1    typepride    description"	"1460600295549"
+"74"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth01_max1    typeoptimism    description"	"1460600295551"
+"75"	"happ2"	"Expressions_brow03_max1    Expressions_mouth01_max1    typecheerfulness    description"	"1460600295552"
+"76"	"affection_angry1"	"Expressions_brow03_min1    Expressions_mouth01_max1    typeaffection    description"	"1460600295553"
+"77"	""	"Expressions_eyes01_max1    Expressions_mouth01_max1    typecontentment"	"1460600295555"
+"78"	""	"Expressions_brow01L_max1    Expressions_eyes01_max1    Expressions_mouth01_max1    typeoptimism    description"	"1460600295557"
+"79"	"concentration"	"Expressions_brow02L_max1    Expressions_eyes01_max1    Expressions_mouth01_max1    typezest    description"	"1460600295558"
+"80"	"affection_complain1"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth01_max1    typeaffection    description"	"1460600295562"
+"81"	"praised"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_min1    Expressions_mouth01_max1    typezest    description"	"1460600295564"
+"82"	""	"Expressions_brow01L_min1    Expressions_eyes02_max1    Expressions_mouth01_max1    typepride    description"	"1460600295565"
+"83"	"affection_suprise1"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth01_max1    typeaffection    description"	"1460600295567"
+"84"	"triumph"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth01_max1    typepride    description"	"1460600295568"
+"85"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth01_max1    typesuprise    description"	"1460600295572"
+"86"	"affection_sad4"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth01_max1    typeaffection    description"	"1460600295576"
+"87"	""	"Expressions_eyes03_min1    Expressions_mouth01_max1    typecontentment    description"	"1460600295578"
+"88"	""	"Expressions_brow01L_max1    Expressions_mouth01_max1    typeoptimism    description"	"1460600295580"
+"89"	""	"Expressions_brow02L_min1    Expressions_mouth01_max1    typesuprise    description"	"1460600295581"
+"90"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth01_max1    typesympathy    description"	"1460600295585"
+"91"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth01_max1    typepride    description"	"1460600295587"
+"92"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_mouth01_max1    typeoptimism    description"	"1460600295589"
+"93"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth01_max1    typesuprise    description"	"1460600295590"
+"94"	"sadistic"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth01_max1    typelust    description"	"1460600295591"
+"95"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth01_max1    typerelief    description"	"1460600295594"
+"96"	""	"Expressions_mouth01_min1    typesuprise    description"	"1460600295596"
+"97"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth01_min1    typehorror    description"	"1460600295597"
+"98"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth01_min1    typeirritation    description"	"1460600295601"
+"99"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth01_min1    typeneglect    description"	"1460600295602"
+"100"	""	"Expressions_brow01L_min1    Expressions_brow02R_max1    Expressions_mouth01_min1    typeirritation    description"	"1460600295604"
+"101"	""	"Expressions_brow03_max1    Expressions_mouth01_min1    typesuprise    description"	"1460600295606"
+"102"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth01_min1    typeshame    description"	"1460600295607"
+"103"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth01_min1    typeirritation    description"	"1460600295610"
+"104"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_max1    Expressions_mouth01_min1    typedisapointment    description"	"1460600295612"
+"105"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_max1    Expressions_mouth01_min1    typerage    description"	"1460600295614"
+"106"	""	"Expressions_brow01L_max1    Expressions_eyes03_min1    Expressions_mouth01_min1    typesuffering    description"	"1460600295615"
+"107"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth01_min1    typesympathy    description"	"1460600295616"
+"108"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth01_min1    typesuffering    description"	"1460600295617"
+"109"	""	"Expressions_brow01L_min1    Expressions_brow02R_min1    Expressions_eyes04_max1    Expressions_mouth01_min1    typeshame    description"	"1460600295618"
+"110"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth01_min1    typedisapointment    description"	"1460600295621"
+"111"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth01_min1    typeirritation    description"	"1460600295625"
+"112"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth01_min1    typeneglect    description"	"1460600295627"
+"113"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth02_max1    typepride    description"	"1460600295629"
+"114"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth02_max1    typesympathy    description"	"1460600295630"
+"115"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes01_max1    Expressions_mouth02_max1    typecontentment    description"	"1460600295631"
+"116"	"praised"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_min1    Expressions_mouth02_max1    typezest    description()"	"1460600295634"
+"117"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_min1    Expressions_mouth02_max1    typerelief    description"	"1460600295635"
+"118"	"affection_sad1"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth02_max1    typeaffection    description"	"1460600295636"
+"119"	"excite"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth02_max1    typezest    description"	"1460600295638"
+"120"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth02_max1    typesuprise    description"	"1460600295639"
+"121"	""	"Expressions_brow01L_max1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth02_max1    typedisgust    description"	"1460600295642"
+"122"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth02_max1    typesadness    description"	"1460600295644"
+"123"	"smilingly"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_min1    Expressions_mouth02_max1    typecheerfulness    description"	"1460600295645"
+"124"	"triumph"	"Expressions_brow01L_min1    Expressions_brow02R_min1    Expressions_eyes02_min1    Expressions_mouth02_max1    typepride    description"	"1460600295651"
+"125"	"happy3"	"Expressions_brow03_max1    Expressions_eyes02_min1    Expressions_mouth02_max1    typecheerfulness    description"	"1460600295662"
+"126"	""	"Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth02_max1    typedisgust    description"	"1460600295666"
+"127"	""	"Expressions_eyes03_max1    Expressions_mouth02_max1    typecontentment    description"	"1460600295672"
+"128"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_max1    Expressions_mouth02_max1    typedisgust    description"	"1460600295673"
+"129"	""	"Expressions_brow03_max1    Expressions_eyes03_max1    Expressions_mouth02_max1    typepride    description"	"1460600295674"
+"130"	"laugh"	"Expressions_eyes03_min1    Expressions_mouth02_max1    typecheerfulness    description"	"1460600295675"
+"131"	""	"Expressions_brow01L_min1    Expressions_eyes03_min1    Expressions_mouth02_max1    typeirritation    description"	"1460600295676"
+"132"	"shy"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth02_max1    typezest    description"	"1460600295678"
+"133"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth02_max1    typerage    description"	"1460600295681"
+"134"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes03_min1    Expressions_mouth02_max1    typecontentment    description"	"1460600295682"
+"135"	""	"Expressions_brow03_max1    Expressions_eyes03_min1    Expressions_mouth02_max1    typecontentment    description"	"1460600295683"
+"136"	""	"Expressions_brow03_min1    Expressions_eyes03_min1    Expressions_mouth02_max1    typeirritation    description"	"1460600295685"
+"137"	""	"Expressions_brow01L_max1    Expressions_mouth02_max1    typeoptimism    description"	"1460600295688"
+"138"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth02_max1    typeenthrallment    description"	"1460600295690"
+"139"	"respect"	"Expressions_brow03_max1    Expressions_mouth02_max1    typelonging    description"	"1460600295693"
+"140"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth02_max1    typesadness    description"	"1460600295696"
+"141"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth02_max1    typerage    description"	"1460600295699"
+"142"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth02_max1    typesympathy    description"	"1460600295701"
+"143"	"spiteful"	"Expressions_brow03_max1    Expressions_eyes06_max1    Expressions_mouth02_max1    typecheerfulness    description"	"1460600295702"
+"144"	""	"Expressions_brow01L_max1    Expressions_mouth02_min1    typedisgust    description"	"1460600295704"
+"145"	""	"Expressions_brow01L_min1    Expressions_mouth02_min1    typeirritation    description"	"1460600295705"
+"147"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth02_min1    typeexasperation    description"	"1460600295709"
+"148"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth02_min1    typerelief    description"	"1460600295710"
+"149"	""	"Expressions_brow03_min1    Expressions_mouth02_min1    typeirritation    description"	"1460600295712"
+"150"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth02_min1    typedisapointment    description"	"1460600295714"
+"151"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth02_min1    typetorment    description"	"1460600295715"
+"152"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth02_min1    typerelief    description"	"1460600295717"
+"153"	""	"Expressions_brow03_max1    Expressions_eyes01_max1    Expressions_mouth02_min1    typeexasperation    description"	"1460600295719"
+"154"	""	"Expressions_brow03_min1    Expressions_eyes01_min1    Expressions_mouth02_min1    typenervousness    description"	"1460600295721"
+"155"	""	"Expressions_brow01L_max1    Expressions_eyes02_max1    Expressions_mouth02_min1    typesympathy    description"	"1460600295723"
+"156"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth02_min1    typesadness"	"1460600295725"
+"157"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth02_min1    typerage    description"	"1460600295731"
+"158"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth02_min1    typesuprise    description"	"1460600295732"
+"159"	"serious"	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth02_min1    typezest    description"	"1460600295733"
+"160"	""	"Expressions_eyes02_min1    Expressions_mouth02_min1    typerelief    description"	"1460600295735"
+"161"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth02_min1    typesympathy"	"1460600295736"
+"162"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth02_min1    typerage    description"	"1460600295737"
+"163"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_min1    Expressions_mouth02_min1    typeneglect    description()"	"1460600295738"
+"164"	"nervousness3"	"Expressions_brow01L_max1    Expressions_brow02R_max1    Expressions_eyes02_min1    Expressions_mouth02_min1    typenervousness    description"	"1460600295739"
+"165"	"affection_angry3"	"Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth02_min1    typeaffection    description"	"1460600295741"
+"166"	""	"Expressions_eyes03_max1    Expressions_mouth02_min1    typeexasperation    description"	"1460600295743"
+"167"	""	"Expressions_brow01L_min1    Expressions_eyes03_max1    Expressions_mouth02_min1    typeirritation    description"	"1460600295745"
+"168"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_max1    Expressions_mouth02_min1    typeshame    description"	"1460600295750"
+"169"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_max1    Expressions_mouth02_min1    typeirritation    description"	"1460600295752"
+"170"	""	"Expressions_eyes03_min1    Expressions_mouth02_min1    typesuprise    description"	"1460600295753"
+"171"	""	"Expressions_brow01L_min1    Expressions_eyes03_min1    Expressions_mouth02_min1    typesuffering"	"1460600295754"
+"172"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth02_min1    typesuffering    description"	"1460600295756"
+"173"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth02_min1    typeirritation    description"	"1460600295760"
+"174"	""	"Expressions_mouth02_min1    typeneglect    description"	"1460600295762"
+"175"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth02_min1    typeenvy    description"	"1460600295763"
+"176"	"nervousness2"	"Expressions_brow01L_min1    Expressions_brow02R_max1    Expressions_mouth02_min1    typenervousness    description"	"1460600295764"
+"177"	""	"Expressions_mouth02_min1    typedisapointment    description"	"1460600295765"
+"178"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth02_min1    typedisapointment    description"	"1460600295766"
+"179"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth02_min1    typedisapointment    description"	"1460600295768"
+"180"	"nervousness1"	"Expressions_eyes06_max1    Expressions_mouth02_min1    typenervousness    description"	"1460600295770"
+"181"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth02_min1    typedisgust    description"	"1460600295772"
+"182"	"nervousness1"	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes06_max1    Expressions_mouth02_min1    typenervousness    description"	"1460600295773"
+"183"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth02_min1    typeneglect    description"	"1460600295774"
+"184"	"nervousness1"	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth02_min1    typenervousness    description"	"1460600295775"
+"186"	"affection_complain2"	"Expressions_brow01L_max1    Expressions_mouth04_max1    typeaffection    description"	"1460600295778"
+"187"	""	"Expressions_brow01L_min1    Expressions_mouth04_max1    typepride    description"	"1460600295779"
+"188"	"affection_sad3"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth04_max1    typeaffection    description"	"1460600295780"
+"189"	"excite"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth04_max1    typezest    description"	"1460600295787"
+"190"	"excite"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth04_max1    typezest    description"	"1460600295799"
+"191"	"smile2b"	"Expressions_brow03_max1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295805"
+"192"	"praise2"	"Expressions_brow03_min1    Expressions_mouth04_max1    typelonging    description"	"1460600295809"
+"193"	""	"Expressions_eyes01_max1    Expressions_mouth04_max1    typecontentment    description"	"1460600295810"
+"194"	""	"Expressions_brow01L_max1    Expressions_eyes01_max1    Expressions_mouth04_max1    typesadness    description"	"1460600295811"
+"195"	""	"Expressions_brow01L_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typepride    description"	"1460600295812"
+"196"	""	"Expressions_brow02L_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typerelief    description()"	"1460600295813"
+"197"	"toogood"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth04_max1    typelonging    description"	"1460600295814"
+"198"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typepride    description"	"1460600295815"
+"199"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes01_max1    Expressions_mouth04_max1    typerelief    description"	"1460600295816"
+"200"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typerelief    description"	"1460600295817"
+"201"	""	"Expressions_brow02L_max1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typepride    description"	"1460600295818"
+"202"	""	"Expressions_brow03_max1    Expressions_eyes01_max1    Expressions_mouth04_max1    typepride    description"	"1460600295819"
+"203"	""	"Expressions_brow03_min1    Expressions_eyes01_max1    Expressions_mouth04_max1    typerelief    description"	"1460600295821"
+"204"	"comfortable"	"Expressions_eyes01_min1    Expressions_mouth04_max1    typecontentment    description"	"1460600295822"
+"205"	"shy"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_min1    Expressions_mouth04_max1    typezest    description"	"1460600295823"
+"206"	"praise1"	"Expressions_eyes02_max1    Expressions_mouth04_max1    typelonging    description"	"1460600295826"
+"207"	"respect2"	"Expressions_brow01L_max1    Expressions_eyes02_max1    Expressions_mouth04_max1    typelonging    description"	"1460600295827"
+"208"	"praise2"	"Expressions_brow01L_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typelonging    description"	"1460600295829"
+"209"	"excite"	"Expressions_brow02L_max1    Expressions_eyes02_max1    Expressions_mouth04_max1    typezest    description"	"1460600295830"
+"210"	""	"Expressions_brow02L_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typesuprise    description"	"1460600295831"
+"211"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth04_max1    typesympathy    description"	"1460600295832"
+"212"	"praise2"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typelonging    description"	"1460600295833"
+"213"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typesuprise    description"	"1460600295834"
+"214"	"nervousness4"	"Expressions_brow01L_max1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typenervousness    description"	"1460600295835"
+"215"	""	"Expressions_brow01L_min1    Expressions_brow02R_max1    Expressions_eyes02_max1    Expressions_mouth04_max1    typeenthrallment    description"	"1460600295836"
+"216"	"happy4"	"Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295837"
+"217"	""	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth04_max1    typeenthrallment    description"	"1460600295838"
+"218"	"affection_suprise2"	"Expressions_eyes02_min1    Expressions_mouth04_max1    typeaffection    description"	"1460600295839"
+"219"	"affection_sad2"	"Expressions_brow01L_max1    Expressions_eyes02_min1    Expressions_mouth04_max1    typeaffection    description"	"1460600295840"
+"220"	"affection_sad1"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth04_max1    typeaffection    description"	"1460600295841"
+"221"	"affection_angry2"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth04_max1    typeaffection    description"	"1460600295842"
+"222"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes02_min1    Expressions_mouth04_max1    typeenthrallment    description"	"1460600295845"
+"223"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_min1    Expressions_mouth04_max1    typesuprise    description"	"1460600295848"
+"224"	"happy1"	"Expressions_brow03_max1    Expressions_eyes02_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295849"
+"225"	""	"Expressions_brow03_max1    Expressions_eyes03_max1    Expressions_mouth04_max1    typepride    description"	"1460600295850"
+"226"	"fun"	"Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295852"
+"227"	"bittersmile"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295853"
+"228"	"welcome"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295854"
+"229"	"smile3b"	"Expressions_brow03_max1    Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295855"
+"230"	"bittersmile"	"Expressions_brow03_min1    Expressions_eyes03_min1    Expressions_mouth04_max1    typecheerfulness    description"	"1460600295856"
+"231"	""	"Expressions_mouth04_max1    typerelief    description"	"1460600295857"
+"232"	"inspiration"	"Expressions_brow02L_min1    Expressions_mouth04_max1    typezest    description"	"1460600295858"
+"233"	"rival"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth04_max1    typelonging    description"	"1460600295859"
+"234"	"nervousness1"	"Expressions_brow01L_max1    Expressions_eyes06_max1    Expressions_mouth04_max1    typenervousness    description"	"1460600295860"
+"235"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth04_max1    typeenthrallment    description"	"1460600295861"
+"236"	"cool"	"Expressions_brow03_max1    Expressions_eyes06_max1    Expressions_mouth04_max1    typecheerfulness"	"1460600295862"
+"237"	""	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth04_max1    typepride    description"	"1460600295864"
+"238"	""	"Expressions_brow01L_max1    Expressions_mouth04_min1    typedisgust    description"	"1460600295865"
+"239"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth04_min1    typesuffering    description"	"1460600295868"
+"240"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth04_min1    typerage    description"	"1460600295869"
+"241"	"nervousness2"	"Expressions_brow03_min1    Expressions_mouth04_min1    typenervousness    description"	"1460600295870"
+"242"	""	"Expressions_eyes01_max1    Expressions_mouth04_min1    typeneglect    description"	"1460600295871"
+"243"	""	"Expressions_brow02L_min1    Expressions_eyes01_max1    Expressions_mouth04_min1    typesadness    description"	"1460600295872"
+"244"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth04_min1    typesuffering    description"	"1460600295874"
+"245"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth04_min1    typeirritation    description"	"1460600295875"
+"246"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth04_min1    typeshame    description"	"1460600295876"
+"247"	""	"Expressions_brow03_min1    Expressions_eyes01_max1    Expressions_mouth04_min1    typetorment    description"	"1460600295877"
+"248"	""	"Expressions_eyes01_min1    Expressions_mouth04_min1    typesympathy    description"	"1460600295878"
+"249"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_min1    Expressions_mouth04_min1    typedisapointment    description"	"1460600295879"
+"250"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_min1    Expressions_mouth04_min1    typeexasperation    description"	"1460600295880"
+"251"	""	"Expressions_brow03_min1    Expressions_eyes01_min1    Expressions_mouth04_min1    typetorment    description"	"1460600295881"
+"252"	""	"Expressions_brow01L_max1    Expressions_eyes02_max1    Expressions_mouth04_min1    typesuprise    description"	"1460600295883"
+"253"	""	"Expressions_brow01L_min1    Expressions_eyes02_max1    Expressions_mouth04_min1    typedisgust    description"	"1460600295884"
+"254"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth04_min1    typesympathy    description"	"1460600295885"
+"255"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth04_min1    typerage    description"	"1460600295886"
+"256"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth04_min1    typeenthrallment    description"	"1460600295895"
+"257"	"nervousness4"	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth04_min1    typenervousness    description"	"1460600295897"
+"258"	""	"Expressions_brow01L_max1    Expressions_eyes02_min1    Expressions_mouth04_min1    typehorror    description"	"1460600295898"
+"259"	"nervousness3"	"Expressions_brow01L_min1    Expressions_eyes02_min1    Expressions_mouth04_min1    typenervousness    description"	"1460600295899"
+"260"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth04_min1    typedisapointment    description"	"1460600295900"
+"261"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth04_min1    typeirritation    description"	"1460600295901"
+"262"	""	"Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth04_min1    typetorment    description"	"1460600295902"
+"263"	""	"Expressions_eyes03_max1    Expressions_mouth04_min1    typeexasperation    description"	"1460600295903"
+"264"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_max1    Expressions_mouth04_min1    typedisapointment    description"	"1460600295904"
+"265"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_max1    Expressions_mouth04_min1    typeirritation    description"	"1460600295905"
+"266"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth04_min1    typenervousness    description"	"1460600295906"
+"267"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth04_min1    typehorror    description"	"1460600295908"
+"268"	""	"Expressions_brow03_min1    Expressions_eyes03_min1    Expressions_mouth04_min1    typeirritation    description"	"1460600295909"
+"269"	""	"Expressions_eyes06_max1    Expressions_mouth04_min1    typedisapointment"	"1460600295910"
+"270"	""	"Expressions_brow01L_max1    Expressions_eyes06_max1    Expressions_mouth04_min1    typeshame    description"	"1460600295912"
+"271"	""	"Expressions_brow01L_min1    Expressions_eyes06_max1    Expressions_mouth04_min1    typedisgust    description"	"1460600295913"
+"272"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth04_min1    typeshame    description"	"1460600295914"
+"273"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth04_min1    typeirritation"	"1460600295916"
+"274"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth04_min1    typeneglect    description"	"1460600295917"
+"275"	"nervousness1"	"Expressions_brow01L_min1    Expressions_brow02R_max1    Expressions_eyes06_max1    Expressions_mouth04_min1    typenervousness    description"	"1460600295918"
+"276"	""	"Expressions_brow03_max1    Expressions_eyes06_max1    Expressions_mouth04_min1    typedisgust    description"	"1460600295919"
+"277"	""	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth04_min1    typesuffering    description"	"1460600295920"
+"278"	""	"Expressions_brow01L_max1    Expressions_mouth05_min1    typedisapointment    description"	"1460600295921"
+"279"	""	"Expressions_brow01L_min1    Expressions_mouth05_min1    typeirritation    description"	"1460600295922"
+"280"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth05_min1    typesadness    description"	"1460600295923"
+"281"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth05_min1    typetorment    description"	"1460600295926"
+"282"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth05_min1    typedisgust    description"	"1460600295927"
+"283"	""	"Expressions_brow03_min1    Expressions_mouth05_min1    typerage    description"	"1460600295928"
+"284"	""	"Expressions_eyes01_max1    Expressions_mouth05_min1    typedisapointment    description"	"1460600295931"
+"285"	""	"Expressions_brow01L_max1    Expressions_eyes01_max1    Expressions_mouth05_min1    typeshame    description"	"1460600295932"
+"286"	""	"Expressions_brow01L_min1    Expressions_eyes01_max1    Expressions_mouth05_min1    typeirritation"	"1460600295934"
+"287"	""	"Expressions_brow02L_min1    Expressions_eyes01_max1    Expressions_mouth05_min1    typetorment    description"	"1460600295935"
+"288"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth05_min1    typedisapointment    description"	"1460600295936"
+"289"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth05_min1    typeenvy    description"	"1460600295937"
+"290"	""	"Expressions_brow03_min1    Expressions_eyes01_max1    Expressions_mouth05_min1    typesuffering    description"	"1460600295938"
+"291"	""	"Expressions_brow01L_max1    Expressions_eyes01_min1    Expressions_mouth05_min1    typeshame    description"	"1460600295939"
+"292"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_min1    Expressions_mouth05_min1    typedisgust    description"	"1460600295940"
+"293"	""	"Expressions_brow03_min1    Expressions_eyes01_min1    Expressions_mouth05_min1    typedisgust"	"1460600295941"
+"294"	""	"Expressions_brow01L_min1    Expressions_eyes02_max1    Expressions_mouth05_min1    typerage    description"	"1460600295942"
+"295"	""	"Expressions_brow02L_min1    Expressions_eyes02_max1    Expressions_mouth05_min1    typeexasperation    description"	"1460600295943"
+"296"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth05_min1    typesadness    description"	"1460600295944"
+"297"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth05_min1    typeexasperation    description"	"1460600295945"
+"298"	""	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth05_min1    typerage"	"1460600295946"
+"299"	""	"Expressions_brow01L_max1    Expressions_eyes02_min1    Expressions_mouth05_min1    typedisgust    description"	"1460600295947"
+"300"	""	"Expressions_brow01L_min1    Expressions_eyes02_min1    Expressions_mouth05_min1    typerage    description"	"1460600295948"
+"301"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth05_min1    typehorror    description"	"1460600295950"
+"302"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth05_min1    typetorment    description"	"1460600295952"
+"303"	""	"Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth05_min1    typerage"	"1460600295953"
+"304"	""	"Expressions_brow01L_max1    Expressions_eyes03_max1    Expressions_mouth05_min1    typeneglect    description"	"1460600295954"
+"305"	""	"Expressions_brow01L_min1    Expressions_eyes03_max1    Expressions_mouth05_min1    typetorment    description"	"1460600295956"
+"306"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_max1    Expressions_mouth05_min1    typesuffering    description"	"1460600295957"
+"307"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_max1    Expressions_mouth05_min1    typetorment    description"	"1460600295958"
+"308"	""	"Expressions_brow01L_max1    Expressions_eyes03_min1    Expressions_mouth05_min1    typesuffering    description"	"1460600295960"
+"309"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth05_min1    typeshame    description"	"1460600295961"
+"310"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth05_min1    typetorment    description"	"1460600295962"
+"311"	""	"Expressions_brow01L_max1    Expressions_brow01R_min1    Expressions_eyes03_min1    Expressions_mouth05_min1    typedisgust    description!"	"1460600295963"
+"312"	""	"Expressions_brow03_min1    Expressions_eyes03_min1    Expressions_mouth05_min1    typesuffering"	"1460600295964"
+"313"	""	"Expressions_brow01L_min1    Expressions_mouth05_min1    typeirritation    description"	"1460600295965"
+"315"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth05_min1    typeexasperation    description"	"1460600295968"
+"316"	""	"Expressions_brow01L_max1    Expressions_eyes06_max1    Expressions_mouth05_min1    typesadness    description"	"1460600295969"
+"317"	""	"Expressions_brow01L_min1    Expressions_eyes06_max1    Expressions_mouth05_min1    typeshame    description"	"1460600295970"
+"318"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth05_min1    typesuffering    description"	"1460600295972"
+"319"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth05_min1    typeexasperation    description"	"1460600295973"
+"320"	"nervousness1"	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth05_min1    typenervousness    description"	"1460600295974"
+"321"	""	"Expressions_mouth06_max1    typesuprise"	"1460600295976"
+"322"	""	"Expressions_brow01L_max1    Expressions_mouth06_max1    typehorror"	"1460600295979"
+"323"	""	"Expressions_brow01L_min1    Expressions_mouth06_max1    typesuprise    description"	"1460600295980"
+"324"	""	"Expressions_brow02L_min1    Expressions_mouth06_max1    typesuprise    description"	"1460600295982"
+"325"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth06_max1    typehorror    description"	"1460600295983"
+"326"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth06_max1    typesuprise"	"1460600295985"
+"327"	""	"Expressions_brow03_max1    Expressions_mouth06_max1    typesuprise    description"	"1460600295987"
+"328"	""	"Expressions_brow01L_max1    Expressions_eyes01_max1    Expressions_mouth06_max1    typedisapointment    description"	"1460600295988"
+"329"	""	"Expressions_brow01L_min1    Expressions_eyes01_max1    Expressions_mouth06_max1    typeirritation    description"	"1460600295989"
+"330"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_max1    Expressions_mouth06_max1    typesadness    description"	"1460600295990"
+"331"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth06_max1    typeneglect    description"	"1460600295991"
+"332"	""	"Expressions_brow01L_max1    Expressions_eyes01_min1    Expressions_mouth06_max1    typesuprise    description"	"1460600295992"
+"333"	""	"Expressions_brow02L_min1    Expressions_eyes01_min1    Expressions_mouth06_max1    typesuprise    description"	"1460600295994"
+"334"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes01_min1    Expressions_mouth06_max1    typedisapointment"	"1460600295995"
+"335"	""	"Expressions_brow01L_max1    Expressions_eyes02_max1    Expressions_mouth06_max1    typehorror    description"	"1460600295996"
+"336"	""	"Expressions_brow01L_min1    Expressions_eyes02_max1    Expressions_mouth06_max1    typehorror    description"	"1460600295997"
+"337"	""	"Expressions_brow02L_min1    Expressions_eyes02_max1    Expressions_mouth06_max1    typesuprise    description"	"1460600295998"
+"338"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth06_max1    typedisapointment    description"	"1460600295999"
+"339"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth06_max1    typerage    description"	"1460600296000"
+"340"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth06_max1    typesuprise"	"1460600296001"
+"341"	""	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth06_max1    typehorror    description"	"1460600296002"
+"342"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth06_max1    typedisapointment    description"	"1460600296004"
+"343"	""	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth06_max1    typehorror    description"	"1460600296005"
+"344"	"shy"	"Expressions_brow01L_max1    Expressions_mouth06_min1    typezest    description"	"1460600296006"
+"345"	""	"Expressions_brow01L_min1    Expressions_mouth06_min1    typepride    description"	"1460600296009"
+"346"	""	"Expressions_brow02L_min1    Expressions_mouth06_min1    typesuprise"	"1460600296015"
+"347"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth06_min1    typesuprise"	"1460600296017"
+"348"	"laugh2"	"Expressions_brow03_max1    Expressions_eyes03_min1    Expressions_mouth06_min1    typecheerfulness    description"	"1460600296019"
+"349"	""	"Expressions_brow03_max1    Expressions_eyes06_max1    Expressions_mouth06_min1    typeenthrallment    description"	"1460600296020"
+"350"	""	"Expressions_brow01L_max1    Expressions_mouth07_max1    typehorror    description"	"1460600296021"
+"351"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth07_max1    typesuprise"	"1460600296022"
+"352"	""	"Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth07_max1    typesuprise"	"1460600296023"
+"353"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth07_max1    typesympathy"	"1460600296024"
+"354"	"nervousness3"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth07_max1    typenervousness    description"	"1460600296025"
+"355"	""	"Expressions_brow03_min1    Expressions_eyes02_min1    Expressions_mouth07_max1    typehorror    description"	"1460600296026"
+"356"	""	"Expressions_brow01L_min1    Expressions_eyes06_max1    Expressions_mouth07_max1    typedisgust    description"	"1460600296028"
+"357"	"lust1"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth07_max1    typelust    description"	"1460600296029"
+"358"	"ecstacy1"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth07_max1    typelust    description"	"1460600296030"
+"359"	"lust2"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes06_max1    Expressions_mouth07_max1    typelust    description"	"1460600296031"
+"360"	"lust3"	"Expressions_brow03_max1    Expressions_eyes06_max1    Expressions_mouth07_max1    typelust    description"	"1460600296032"
+"361"	"ecstacy1b"	"Expressions_brow03_min1    Expressions_eyes06_max1    Expressions_mouth07_max1    typelust    description"	"1460600296033"
+"362"	""	"Expressions_brow01L_max1    Expressions_mouth07_min1    typeshame    description"	"1460600296034"
+"363"	""	"Expressions_brow01L_min1    Expressions_mouth07_min1    typepride    description"	"1460600296035"
+"364"	""	"Expressions_brow02L_min1    Expressions_mouth07_min1    typeenthrallment    description"	"1460600296036"
+"365"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth07_min1    typesadness    description"	"1460600296037"
+"366"	""	"Expressions_brow03_max1    Expressions_mouth07_min1    typedisgust    description"	"1460600296038"
+"367"	""	"Expressions_brow03_min1    Expressions_mouth07_min1    typedisgust    description"	"1460600296039"
+"368"	""	"Expressions_brow01L_min1    Expressions_eyes01_max1    Expressions_mouth07_min1    typepride    description"	"1460600296042"
+"369"	""	"Expressions_eyes01_min1    Expressions_mouth07_min1    typerelief    description"	"1460600296043"
+"370"	""	"Expressions_brow02L_max1    Expressions_brow02R_max1    Expressions_eyes02_max1    Expressions_mouth07_min1    typepride    description"	"1460600296045"
+"371"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth07_min1    typeenthrallment"	"1460600296046"
+"372"	""	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth07_min1    typepride    description"	"1460600296047"
+"373"	"bittersmile"	"Expressions_brow01L_max1    Expressions_eyes03_min1    Expressions_mouth07_min1    typecheerfulness    description"	"1460600296048"
+"374"	""	"Expressions_brow02L_min1    Expressions_eyes03_min1    Expressions_mouth07_min1    typeirritation    description"	"1460600296049"
+"375"	"bittersmile"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth07_min1    typecheerfulness    description"	"1460600296050"
+"376"	""	"Expressions_eyes06_max1    Expressions_mouth07_min1    typeoptimism    description"	"1460600296051"
+"377"	"spiteful"	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth07_min1    typecheerfulness    description"	"1460600296052"
+"378"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth08_max1    typerage    description"	"1460600296054"
+"379"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes01_max1    Expressions_mouth08_max1    typeexasperation    description"	"1460600296055"
+"380"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes01_max1    Expressions_mouth08_max1    typedisgust    description"	"1460600296056"
+"381"	""	"Expressions_brow01L_max1    Expressions_eyes06_max1    Expressions_mouth08_max1    typeshame    description"	"1460600296057"
+"382"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth08_max1    typeshame    description"	"1460600296058"
+"383"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes06_max1    Expressions_mouth08_max1    typerage    description"	"1460600296059"
+"384"	""	"Expressions_brow01L_min1    Expressions_mouth08_min1    typepride"	"1460600296060"
+"385"	""	"Expressions_mouth09_max1    typesuprise"	"1460600296062"
+"386"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth09_max1    typehorror"	"1460600296063"
+"387"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth09_max1    typerage    description"	"1460600296064"
+"388"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_mouth09_max1    typesuprise    descriptioninteresting"	"1460600296067"
+"389"	""	"Expressions_eyes02_max1    Expressions_mouth09_max1    typesuprise    descriptionDumbfounded"	"1460600296068"
+"390"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth09_max1    typedisapointment    descriptionconfuse"	"1460600296070"
+"391"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth09_max1    typedisgust    descriptionprotest"	"1460600296071"
+"392"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth09_max1    typesuprise"	"1460600296072"
+"393"	""	"Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth09_max1    typesuprise    descriptionWaao!"	"1460600296073"
+"394"	""	"Expressions_brow03_min1    Expressions_eyes02_max1    Expressions_mouth09_max1    typesuprise    descriptionOh My Goo"	"1460600296074"
+"395"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_min1    Expressions_mouth09_max1    typedisapointment    descriptionAaaaa!"	"1460600296075"
+"396"	""	"Expressions_eyes06_max1    Expressions_mouth09_max1    typerelief    description Stick reading"	"1460600296077"
+"397"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth09_max1    typedisapointment    descriptionsigh"	"1460600296078"
+"398"	""	"Expressions_mouth09_min1    typesuprise    descriptionunexpected"	"1460600296079"
+"399"	""	"Expressions_brow01L_max1    Expressions_mouth09_min1    typeshame    descriptionbad taste"	"1460600296080"
+"400"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth09_min1    typerage    descriptionprotest"	"1460600296081"
+"401"	""	"Expressions_brow01L_max1    Expressions_eyes06_max1    Expressions_mouth09_min1    typedisapointment"	"1460600296082"
+"402"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes06_max1    Expressions_mouth09_min1    typedisapointment"	"1460600296083"
+"403"	""	"Expressions_brow01L_max1    Expressions_mouth10_max1    typeshame    descriptionbad taste"	"1460600296084"
+"404"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_mouth10_max1    typesadness    descriptionTo endure crying"	"1460600296085"
+"405"	""	"Expressions_brow01L_max1    Expressions_eyes02_max1    Expressions_mouth10_max1    typeshame"	"1460600296086"
+"406"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes02_max1    Expressions_mouth10_max1    typesuffering"	"1460600296087"
+"407"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_max1    Expressions_mouth10_max1    typeenvy"	"1460600296089"
+"408"	""	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes02_max1    Expressions_mouth10_max1    typesuprise"	"1460600296090"
+"409"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_mouth11_max1    typeshame"	"1460600296091"
+"410"	""	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_eyes03_min1    Expressions_mouth11_max1    typeshame    descriptionbe shy"	"1460600296092"
+"411"	"affection1"	"Expressions_brow03_max1    Expressions_eyes02_min1    Expressions_mouth01_max1    Expressions_mouth07_max0.72    Expressions_mouth08_max0.79    typeaffection    descriptionkindness"	"1460608474579"
+"412"	"affection2"	"Expressions_eyes03_min1    Expressions_mouth01_max1    Expressions_mouth07_max0.72    Expressions_mouth08_max0.79    typeaffection    descriptionwatch"	"1460608831719"
+"413"	"crazy"	"Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth08_min0.56    Expressions_mouth09_max0.4    Expressions_mouth10_max0.66    typesuprise    descriptionhorror with joy"	"1460640317220"
+"415"	"yawn"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes03_max1    Expressions_mouth06_max1    Expressions_mouth09_max1    typerelief"	"1460722413469"
+"416"	""	"Expressions_brow01L_min1    Expressions_brow01R_min1    Expressions_eyes02_min1    Expressions_mouth01_min0.51    Expressions_mouth07_max1    typedisgust    descriptionUee!"	"1460787785206"
+"417"	"pronounce_a"	"Expressions_mouth09_max1"	"1460791439262"
+"418"	"kind"	"Expressions_brow03_max0.35    Expressions_eyes03_min0.75    Expressions_mouth01_max0.6    Expressions_mouth02_min0.43    typeaffection"	"1461816370734"
+"419"	"open-mouse"	"Expressions_brow01L_max1    Expressions_brow01R_max1    Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes03_max1    Expressions_mouth01_max0.51    Expressions_mouth06_max0.46    Expressions_mouth09_max1"	"1464703194967"
+"420"	"peropero"	"Expressions_brow03_min1    Expressions_eyes01_max1    Expressions_mouth09_max1    Expressions_mouth99_min1    descriptionwith tongue min"	"1481629667889"
+"421"	"peropero2"	"Expressions_brow03_min0.5    Expressions_eyes03_max1    Expressions_mouth09_max1    Expressions_mouth99_min0.73    Expressions_mouth98_min1    descriptionwith tongue min"	"1481631641172"
+"422"	"broken"	"Expressions_brow02L_min1    Expressions_brow02R_min1    Expressions_eyes04_max1    Expressions_mouth11_max1    Expressions_mouth99_max1    descriptionwith tongue min"	"1481710108325"
+"423"	"delight"	"Expressions_brow03_max1    Expressions_eyes02_max1    Expressions_mouth02_max1    Expressions_mouth06_min0.65    descriptionwith gum"	"1481710242565"
+"424"	"smile"	"Expressions_brow03_max1    Expressions_mouth02_max1    Expressions_mouth04_max1    descriptionwith gum"	"1481720561507"
+"425"	"soft-smile"	"Expressions_brow03_max0.25    Expressions_eyes03_min0.18    Expressions_mouth02_max0.5    Expressions_mouth04_max0.5"	"1482023824509"
+"426"	"peropero"	"Expressions_brow03_min1    Expressions_eyes01_max1    Expressions_mouth09_max1    Expressions_mouth99_max1    descriptionwith tongue-max"	"1482206029375"
+"427"	"smileb"	"Expressions_brow03_max1    Expressions_eyes01_max0.17    Expressions_mouth01_max1    Expressions_mouth09_max0.41"	"1483007904594"
+"428"	"eyeblink"	"Expressions_brow03_max0.09    Expressions_eyes01_min0.93"	"1483587704868"
