@@ -144,7 +144,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 						String style="";
 						if(!isLargerTime(object)){
 							style="red";
-							LogUtils.log("style-red");
+							
 						}
 						TimeValue timeValue=new TimeValue((long)object.getTime());
 						
@@ -609,6 +609,10 @@ public class TimeTableDataPanel extends VerticalPanel{
 		private TextBox labelEditor;
 		private MinuteTimeEditor timeEditor;
 		private IntegerBox referenceIdEditor;
+		public IntegerBox getReferenceIdEditor() {
+			return referenceIdEditor;
+		}
+
 		private CheckBox referenceEditor;
 
 		public TimeTableData getValue() {
@@ -722,5 +726,14 @@ public class TimeTableDataPanel extends VerticalPanel{
 				referenceEditor.setValue(value.isReference());
 
 			}
+	}
+
+	public void setReferenceId(int id) {
+		if(editor.getValue()==null){
+			return;
+		}
+		//force update
+		editor.getValue().setReferenceId(id);
+		editor.getReferenceIdEditor().setValue(id);
 	}
 }

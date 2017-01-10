@@ -8,7 +8,7 @@ public String getLabel() {
 public void setLabel(String label) {
 	this.label = label;
 }
-private boolean reference;
+private boolean reference=true;//default is true
 public boolean isReference() {
 	return reference;
 }

@@ -433,8 +433,8 @@ public class Mbl3dExpressionEntryPoint extends ThreeAppEntryPointWithControler i
 					});
 					
 					
-					timeTableDataPanel = new TimeTableDataBlockPanel("timetableblock",storageControler);
-					tab.add(timeTableDataPanel,"TimeTable");
+					timeTableDataBlockPanel = new TimeTableDataBlockPanel("timetableblock",storageControler);
+					tab.add(timeTableDataBlockPanel,"TimeTable");
 					
 					tab.selectTab(4);
 				}
@@ -1392,8 +1392,15 @@ private void insertMaterialAlphaAnimations(Material material,double duration) {
 	private double duration=1;
 	private RecorderPanel recorderPanel;
 	private MeshPhongMaterial material2;
-	private TimeTableDataBlockPanel timeTableDataPanel;
+	private TimeTableDataBlockPanel timeTableDataBlockPanel;
 
+
+	public void selectTimeTableDataBlockPanel(){
+		tab.selectTab(4);
+	}
+	public TimeTableDataBlockPanel getTimeTableDataBlockPanel() {
+		return timeTableDataBlockPanel;
+	}
 
 	public List<Mbl3dData> getMbl3dDatas(){
 		return dataListPanel.getDatas();

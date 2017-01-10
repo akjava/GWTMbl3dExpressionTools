@@ -566,6 +566,10 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 		 return newDatas;
 	}
 	
+	public void setReferenceId(int id){
+		timeTableDataPanel.setReferenceId(id);
+	}
+	
 	private String baseFileName="TimeTableDataBlock";
 	private Button newBt;
 	private Button addOrUpdateBt;

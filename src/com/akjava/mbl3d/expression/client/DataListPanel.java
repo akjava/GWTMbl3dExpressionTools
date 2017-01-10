@@ -175,6 +175,20 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 			}
 		};
 		
+		HorizontalPanel timeTablePanel=new HorizontalPanel();
+		add(timeTablePanel);
+		Button updateTimeTableBt=new Button("Update TimeTable",new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if(dataObjects.getSelection()==null){
+					return;
+				}
+				Mbl3dExpressionEntryPoint.INSTANCE.getTimeTableDataBlockPanel().setReferenceId(dataObjects.getSelection().getId());
+				Mbl3dExpressionEntryPoint.INSTANCE.selectTimeTableDataBlockPanel();
+			}
+		});
+		timeTablePanel.add(updateTimeTableBt);
 		
 		comparator=new Mbl3dDataComparator(null);
 		comparator.setOrder(Mbl3dDataComparator.ORDER_ID_DESC);
