@@ -80,6 +80,14 @@ public class AnimationKeyFrameBuilder {
 		
 		//solving loop action
 		double timeAt=block.getStartAt();
+		
+		if(block.getBeforeMargin()!=0){
+			double t=0;
+			for(String key:keys){
+				frames.add(new Mbl3dAnimationKeyFrame(key, t, 0));
+			}
+		}
+		
 		timeAt+=block.getBeforeMargin();
 		for(int i=0;i<loopTime;i++){
 		for(TimeTableData timeTableData:block.getTimeTableDatas()){
@@ -108,6 +116,13 @@ public class AnimationKeyFrameBuilder {
 			}
 		}
 		
+		//after margin action
+		if(block.getAfterMargin()!=0){
+			timeAt+=block.getAfterMargin();
+			for(String key:keys){
+				frames.add(new Mbl3dAnimationKeyFrame(key, timeAt, 0));
+			}
+		}
 		
 	//modify remainTime
 	/*	if(remainTime>0){
