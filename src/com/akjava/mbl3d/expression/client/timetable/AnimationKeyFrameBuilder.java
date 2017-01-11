@@ -1,9 +1,14 @@
 package com.akjava.mbl3d.expression.client.timetable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.management.RuntimeErrorException;
+
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.akjava.mbl3d.expression.client.Mbl3dDataHolder;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
@@ -26,11 +31,11 @@ public class AnimationKeyFrameBuilder {
 		this.totalTime = totalTime;
 	}
 	
-	private Set<String> keys=Sets.newHashSet();
+	private Set<String> keys=null;
 	
 	//can set from morphtargets
 	public  void setKeys(Iterable<TimeTableDataBlock> blocks){
-		keys.clear();
+		keys=Sets.newHashSet();
 		for(TimeTableDataBlock block:blocks){
 			for(TimeTableData data:block.getTimeTableDatas()){
 				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId(),data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
@@ -43,6 +48,8 @@ public class AnimationKeyFrameBuilder {
 		}
 	}
 	public  AnimationKeyGroup createGroup(TimeTableDataBlock block){
+		checkNotNull(keys,"before createGroup,set keys first");
+		
 		List<Mbl3dAnimationKeyFrame> frames=Lists.newArrayList();
 		
 		//Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
@@ -115,12 +122,16 @@ public class AnimationKeyFrameBuilder {
 			//for reset
 			for(String key:remains){
 				frames.add(new Mbl3dAnimationKeyFrame(key, time, 0));
-				waitFrames.add(new Mbl3dAnimationKeyFrame(key, waitAt, 0));
+				if(timeTableData.getWaitTime()!=0){
+					waitFrames.add(new Mbl3dAnimationKeyFrame(key, waitAt, 0));
+				}
 			}
 			//copy wait frames
 			for(Mbl3dAnimationKeyFrame frame:waitFrames){
+				
 				frames.add(frame);
 			}
+			
 		}
 		timeAt+=block.getLastTime();
 		if(i!=loopTime-1){
@@ -135,7 +146,10 @@ public class AnimationKeyFrameBuilder {
 				frames.add(new Mbl3dAnimationKeyFrame(key, timeAt, 0));
 			}
 		}
-		
+		//debug
+		for(Mbl3dAnimationKeyFrame frame:frames){
+			LogUtils.log(frame);
+		}
 	//modify remainTime
 	/*	if(remainTime>0){
 			if(remainTime<=block.getLoopInterval()){

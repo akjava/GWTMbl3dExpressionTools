@@ -402,7 +402,9 @@ public class TimeTableDataPanel extends VerticalPanel{
 		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);*/
 		
 		AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
-		AnimationKeyGroup group=builder.createGroup(new TimeTableDataBlock(cellObjects.getDatas()));
+		TimeTableDataBlock block=new TimeTableDataBlock(cellObjects.getDatas());
+		builder.setKeys(Lists.newArrayList(block));
+		AnimationKeyGroup group=builder.createGroup(block);
 		
 		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
 		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier(),param);
@@ -610,8 +612,13 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 		double max=-1;
 		for(int i=0;i<index;i++){
-			if(max<cellObjects.getDatas().get(i).calcurateEndTime()){
-				max=cellObjects.getDatas().get(i).calcurateEndTime();
+			//to avoid overwrap endtime is minus 1 millisecond
+			double endTime=cellObjects.getDatas().get(i).calcurateEndTime();
+			if(cellObjects.getDatas().get(i).getWaitTime()!=0){
+				endTime--;
+			}
+			if(max<endTime){
+				max=endTime;
 			}
 		}
 		return data.getTime()>max;
