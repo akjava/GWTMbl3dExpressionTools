@@ -500,6 +500,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 	}
 
 	public void setValue(List<TimeTableData> datas){
+		cellObjects.unselect();//proble happen if selected and datas small than current.
+		
 		if(datas==null){
 		cellObjects.setDatas(new ArrayList<TimeTableData>());
 		cellObjects.update();
@@ -508,7 +510,6 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}else{
 		cellObjects.setDatas(datas);
 		cellObjects.update();
-		cellObjects.setSelected(null, true);
 		editor.setValue(new TimeTableData());//if already null never fire
 		}
 	}
@@ -548,6 +549,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	 }
 
 	public void onDataSelected(@Nullable TimeTableData selection) {
+	
 	//enabling buttons
 	if(selection==null){
 		newBt.setEnabled(false);
@@ -565,6 +567,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	
 	//update range
 	if(selection!=null){
+		
 		Mbl3dExpression expression=timeTableDataToMbl3dExpression(selection);
 		if(expression!=null){
 			Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().setMbl3dExpression(expression);
@@ -585,6 +588,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		timeTableDataBlockPanel.onDataUpdated(null);
 	}
 	public void onDataUpdated(TimeTableData data){
+		LogUtils.log("onDataUpdated");
 		//TODO link something
 		cellObjects.getSimpleCellTable().getCellTable().redraw();
 		timeTableDataBlockPanel.onDataUpdated(null);
