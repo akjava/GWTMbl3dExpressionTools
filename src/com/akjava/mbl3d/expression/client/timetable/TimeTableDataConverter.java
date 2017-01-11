@@ -16,6 +16,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		}
 		
 		wrapper.setDouble("time", data.getTime());
+		wrapper.setDouble("waittime", data.getWaitTime());
 		
 		wrapper.setBoolean("enableBrows", data.isEnableBrows());
 		wrapper.setBoolean("enableEyes", data.isEnableEyes());
@@ -40,6 +41,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		data.setLabel(wrapper.getString("label", data.getLabel()));
 		
 		data.setTime(wrapper.getDouble("time", data.getTime()));
+		data.setWaitTime(wrapper.getDouble("waittime", data.getWaitTime()));
 		
 		data.setEnableBrows(wrapper.getBoolean("enableBrows", data.isEnableBrows()));
 		data.setEnableEyes(wrapper.getBoolean("enableEyes", data.isEnableEyes()));

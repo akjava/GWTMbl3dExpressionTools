@@ -56,4 +56,15 @@ public double getTime() {
 public void setTime(double time) {
 	this.time = time;
 }
+
+private double waitTime;
+public double getWaitTime() {
+	return waitTime;
+}
+public void setWaitTime(double waitTime) {
+	this.waitTime = waitTime;
+}
+public double calcurateEndTime(){
+	return time+waitTime;
+}
 }

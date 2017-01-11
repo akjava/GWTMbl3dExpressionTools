@@ -202,4 +202,23 @@ public class AnimationKeyFrameLoopTest extends TestCase {
 		
 		execute(block,"loop8.txt",0);
 	}
+	
+	/**
+	 * no loop
+	 */
+	public void test_wait1(){
+		TimeTableData data1=new TimeTableData();
+		data1.setTime(0);
+		data1.setWaitTime(500);
+		data1.setReferenceId(1);
+		TimeTableData data2=new TimeTableData();
+		data2.setTime(1000);
+		data2.setReferenceId(1);
+		List<TimeTableData> datas=Lists.newArrayList(data1,data2);
+		TimeTableDataBlock block=new TimeTableDataBlock(datas);
+		block.setLoop(false);
+		
+		
+		execute(block,"wait1.txt",0);
+	}
 }

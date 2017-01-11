@@ -13,6 +13,10 @@ public class Mbl3dAnimationKeyFrame  extends MorphTargetKeyFrame{
 
 	private int type;//for easy filtering
 	
+
+public Mbl3dAnimationKeyFrame() {
+	this("",0,0);
+}
 public Mbl3dAnimationKeyFrame(String keyName, double time, double value) {
 		super(keyName,time,value);
 		
@@ -33,6 +37,12 @@ public int getType() {
 }
 public void setType(int type) {
 	this.type = type;
+}
+
+public Mbl3dAnimationKeyFrame copyTo(Mbl3dAnimationKeyFrame frame){
+	super.copyTo(frame);
+	frame.type=type;
+	return frame;
 }
 
 }

@@ -92,22 +92,34 @@ public class AnimationKeyFrameBuilder {
 		for(int i=0;i<loopTime;i++){
 		for(TimeTableData timeTableData:block.getTimeTableDatas()){
 			double time=timeAt+timeTableData.getTime();
+			double waitAt=time+timeTableData.getWaitTime()-1;//avoid
 			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId(),timeTableData.isEnableBrows(),timeTableData.isEnableEyes(),timeTableData.isEnableMouth());
 			if(data==null){
 				//LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
 				data=clerData;//-1 means empty
 			}
+			List<Mbl3dAnimationKeyFrame> waitFrames=Lists.newArrayList();
 			List<String> remains=Lists.newArrayList(keys);
 			for(String key:data.getValues().keySet()){
 				double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
 				Mbl3dAnimationKeyFrame frame=new Mbl3dAnimationKeyFrame(key, time, value);
 				frames.add(frame);
 				remains.remove(key);
+				if(timeTableData.getWaitTime()!=0){
+					Mbl3dAnimationKeyFrame waitFrame=frame.copyTo(new Mbl3dAnimationKeyFrame());
+					waitFrame.setTime(waitAt);
+					waitFrames.add(waitFrame);	
+				}
 			}
 			
 			//for reset
 			for(String key:remains){
 				frames.add(new Mbl3dAnimationKeyFrame(key, time, 0));
+				waitFrames.add(new Mbl3dAnimationKeyFrame(key, waitAt, 0));
+			}
+			//copy wait frames
+			for(Mbl3dAnimationKeyFrame frame:waitFrames){
+				frames.add(frame);
 			}
 		}
 		timeAt+=block.getLastTime();

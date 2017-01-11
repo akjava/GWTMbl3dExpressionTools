@@ -17,6 +17,7 @@ import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
+import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
@@ -368,7 +369,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 	
 }
 	protected void doPlay() {
-		List<Double> times=Lists.newArrayList();
+		//old direct making way
+		/*List<Double> times=Lists.newArrayList();
 		List<Mbl3dExpression> expressions=Lists.newArrayList();
 		
 		Mbl3dExpressionFunctionWithModifier mbl3dExpressionFunctionWithEyeModifier=new Mbl3dExpressionFunctionWithModifier(Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier());
@@ -397,9 +399,15 @@ public class TimeTableDataPanel extends VerticalPanel{
 			}
 		}
 		
+		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);*/
 		
+		AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel());
+		AnimationKeyGroup group=builder.createGroup(new TimeTableDataBlock(cellObjects.getDatas()));
+		
+		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
+		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier(),param);
 	
-		AnimationClip clip=Mbl3dExpressionEntryPoint.INSTANCE.converToAnimationClip("test", times, expressions);
+		
 		Mbl3dExpressionEntryPoint.INSTANCE.playAnimation(clip);
 		
 		
@@ -588,7 +596,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		timeTableDataBlockPanel.onDataUpdated(null);
 	}
 	public void onDataUpdated(TimeTableData data){
-		LogUtils.log("onDataUpdated");
+		
 		//TODO link something
 		cellObjects.getSimpleCellTable().getCellTable().redraw();
 		timeTableDataBlockPanel.onDataUpdated(null);
@@ -602,8 +610,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 		double max=-1;
 		for(int i=0;i<index;i++){
-			if(max<cellObjects.getDatas().get(i).getTime()){
-				max=cellObjects.getDatas().get(i).getTime();
+			if(max<cellObjects.getDatas().get(i).calcurateEndTime()){
+				max=cellObjects.getDatas().get(i).calcurateEndTime();
 			}
 		}
 		return data.getTime()>max;
@@ -613,6 +621,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		private TimeTableData value;
 		private TextBox labelEditor;
 		private MinuteTimeEditor timeEditor;
+		private MinuteTimeEditor waittimeEditor;
 		private IntegerBox referenceIdEditor;
 		public IntegerBox getReferenceIdEditor() {
 			return referenceIdEditor;
@@ -654,6 +663,17 @@ public class TimeTableDataPanel extends VerticalPanel{
 						timeEditor=new MinuteTimeEditor();
 			//timeEditor.setWidth("100px");
 						timePanel.add(timeEditor);
+						
+						HorizontalPanel waittimePanel=new HorizontalPanel();
+						waittimePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+						add(waittimePanel);
+						Label waittimeLabel=new Label("WaitTime");
+						waittimeLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+						waittimeLabel.setWidth(labelWidth);
+						waittimePanel.add(waittimeLabel);
+						waittimeEditor=new MinuteTimeEditor();
+			//timeEditor.setWidth("100px");
+						waittimePanel.add(waittimeEditor);
 
 
 						HorizontalPanel referenceIdPanel=new HorizontalPanel();
@@ -705,6 +725,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				
 				value.setLabel(labelEditor.getValue());
 				value.setTime(timeEditor.getValue());
+				value.setWaitTime(waittimeEditor.getValue());
 				value.setReferenceId(referenceIdEditor.getValue());
 				value.setReference(referenceEditor.getValue());
 
@@ -730,6 +751,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					//set disable
 					labelEditor.setEnabled(false);
 					timeEditor.setEnabled(false);
+					waittimeEditor.setEnabled(false);
 					referenceIdEditor.setEnabled(false);
 					referenceEditor.setEnabled(false);
 					enableEyesEditor.setEnabled(false);
@@ -741,6 +763,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					//set enable
 					labelEditor.setEnabled(true);
 					timeEditor.setEnabled(true);
+					waittimeEditor.setEnabled(true);
 					referenceIdEditor.setEnabled(true);
 					referenceEditor.setEnabled(true);
 					enableEyesEditor.setEnabled(true);
@@ -751,6 +774,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				
 				labelEditor.setValue(value.getLabel());
 				timeEditor.setValue(value.getTime());
+				waittimeEditor.setValue(value.getWaitTime());
 				referenceIdEditor.setValue(value.getReferenceId());
 				referenceEditor.setValue(value.isReference());
 

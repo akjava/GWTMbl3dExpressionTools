@@ -82,7 +82,8 @@ public double getLastTime(){
 	if(timeTableDatas.isEmpty()){
 		return 0;
 	}
-	return timeTableDatas.get(timeTableDatas.size()-1).getTime();
+	TimeTableData timeTableData=timeTableDatas.get(timeTableDatas.size()-1);
+	return timeTableData.calcurateEndTime();
 }
 /**
  * technically this is end time
