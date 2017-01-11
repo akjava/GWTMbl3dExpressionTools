@@ -20,6 +20,7 @@ import com.akjava.mbl3d.expression.client.datalist.CellTableResources;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparator;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox;
+import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataPredicates;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataComparatorValueBox.Mbl3dDataComparatorValue;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataEditor;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataSimpleTextConverter;
@@ -613,11 +614,33 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 		return dataObjects.getDatas();
 	}
 	
+	//TODO add ratio option
 	@Override
-	public Mbl3dData getDataById(int id){
+	public Mbl3dData getDataById(int id,boolean enableBrows,boolean enableEyes,boolean enableMouth){
 		for(Mbl3dData data:getDatas()){
 			if(data.getId()==id){
-				return data;
+				
+				Mbl3dData newData=new Mbl3dData();
+				//TODO make soft clone?
+				newData.setName(data.getName());
+				newData.setId(data.getId());
+				newData.setCdate(data.getCdate());
+				newData.setType(data.getType());
+				newData.setDescription(data.getDescription());
+				
+				for(String key:data.getValues().keySet()){
+					if(!enableBrows && Mbl3dDataPredicates.passBrowOnly().apply(key)){
+						continue;
+					}
+					if(!enableEyes && Mbl3dDataPredicates.passEyesOnly().apply(key)){
+						continue;
+					}
+					if(!enableMouth  && Mbl3dDataPredicates.passMouthOnly().apply(key)){
+						continue;
+					}
+					newData.getValues().put(key, data.getValues().get(key));
+				}
+				return newData;
 			}
 		}
 		return null;

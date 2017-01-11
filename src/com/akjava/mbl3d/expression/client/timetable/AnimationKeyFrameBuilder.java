@@ -33,7 +33,7 @@ public class AnimationKeyFrameBuilder {
 		keys.clear();
 		for(TimeTableDataBlock block:blocks){
 			for(TimeTableData data:block.getTimeTableDatas()){
-				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId());
+				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId(),data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
 				if(mbl3d!=null){
 					for(String key:mbl3d.getValues().keySet()){
 						keys.add(key);
@@ -92,7 +92,7 @@ public class AnimationKeyFrameBuilder {
 		for(int i=0;i<loopTime;i++){
 		for(TimeTableData timeTableData:block.getTimeTableDatas()){
 			double time=timeAt+timeTableData.getTime();
-			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId());
+			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId(),timeTableData.isEnableBrows(),timeTableData.isEnableEyes(),timeTableData.isEnableMouth());
 			if(data==null){
 				//LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
 				data=clerData;//-1 means empty
@@ -203,7 +203,7 @@ public class AnimationKeyFrameBuilder {
 	private Mbl3dData createClearData( List<TimeTableData> datas){
 		Map<String,String> values=Maps.newHashMap();
 		for(TimeTableData tdata:datas){
-			Mbl3dData data=mbl3dDataHolder.getDataById(tdata.getReferenceId());
+			Mbl3dData data=mbl3dDataHolder.getDataById(tdata.getReferenceId(),tdata.isEnableBrows(),tdata.isEnableEyes(),tdata.isEnableMouth());
 			if(data!=null){
 				for(String key:data.getValues().keySet()){
 					values.put(key, "0");

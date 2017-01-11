@@ -47,6 +47,9 @@ public  class Mbl3dData{
 		public Mbl3dData(){
 			this("","","",new HashMap<String,String>());
 		}
+		
+		
+		
 		public Mbl3dData(String name,String type, String description, Map<String, String> values) {
 			super();
 			this.name=name;

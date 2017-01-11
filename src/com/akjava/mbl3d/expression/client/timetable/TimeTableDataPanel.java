@@ -173,7 +173,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 						return "";
 					}
 					
-					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,object.isEnableBrows(),object.isEnableEyes(),object.isEnableMouth());
 					if(data==null){
 						return "#"+id+" NOT FOUND";
 					}else{
@@ -387,7 +387,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				
 				// * -1 is used as clear
 				 
-				Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+				Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
 				Mbl3dExpression expression=mbl3dExpressionFunctionWithEyeModifier.apply(mbl3dData);
 				
 				expressions.add(expression);
@@ -444,7 +444,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	public Mbl3dExpression timeTableDataToMbl3dExpression(TimeTableData data){
 		if(data.isReference()){
 			int id=data.getReferenceId();
-			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id);
+			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
 			if(mbl3dData==null){
 				return null;
 			}
@@ -508,7 +508,8 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}else{
 		cellObjects.setDatas(datas);
 		cellObjects.update();
-		editor.setValue(new TimeTableData());
+		cellObjects.setSelected(null, true);
+		editor.setValue(new TimeTableData());//if already null never fire
 		}
 	}
 
@@ -614,6 +615,10 @@ public class TimeTableDataPanel extends VerticalPanel{
 		}
 
 		private CheckBox referenceEditor;
+		
+		private CheckBox enableEyesEditor;
+		private CheckBox enableBrowsEditor;
+		private CheckBox enableMouthEditor;
 
 		public TimeTableData getValue() {
 			return value;
@@ -667,12 +672,20 @@ public class TimeTableDataPanel extends VerticalPanel{
 						referenceLabel.setWidth(labelWidth);
 						referencePanel.add(referenceLabel);
 						referenceEditor=new CheckBox();
-			referenceEditor.setWidth("100px");
+						referenceEditor.setWidth("100px");
 						referencePanel.add(referenceEditor);
 
 
+						HorizontalPanel enablePanel=new HorizontalPanel();
+						enablePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+						add(enablePanel);
 						
-						
+						enableBrowsEditor=new CheckBox("enable Brow");
+						enablePanel.add(enableBrowsEditor);
+						enableEyesEditor=new CheckBox("enable Eyes");
+						enablePanel.add(enableEyesEditor);
+						enableMouthEditor=new CheckBox("enable Mouth");
+						enablePanel.add(enableMouthEditor);
 		}
 
 
@@ -691,6 +704,11 @@ public class TimeTableDataPanel extends VerticalPanel{
 				value.setReferenceId(referenceIdEditor.getValue());
 				value.setReference(referenceEditor.getValue());
 
+				value.setEnableEyes(enableEyesEditor.getValue());
+				value.setEnableBrows(enableBrowsEditor.getValue());
+				value.setEnableMouth(enableMouthEditor.getValue());
+
+				
 				onDataUpdated(value);
 			}
 
@@ -710,6 +728,10 @@ public class TimeTableDataPanel extends VerticalPanel{
 					timeEditor.setEnabled(false);
 					referenceIdEditor.setEnabled(false);
 					referenceEditor.setEnabled(false);
+					enableEyesEditor.setEnabled(false);
+					enableBrowsEditor.setEnabled(false);
+					enableMouthEditor.setEnabled(false);
+
 					return;
 				}else{
 					//set enable
@@ -717,6 +739,9 @@ public class TimeTableDataPanel extends VerticalPanel{
 					timeEditor.setEnabled(true);
 					referenceIdEditor.setEnabled(true);
 					referenceEditor.setEnabled(true);
+					enableEyesEditor.setEnabled(true);
+					enableBrowsEditor.setEnabled(true);
+					enableMouthEditor.setEnabled(true);
 
 				}
 				
@@ -724,6 +749,10 @@ public class TimeTableDataPanel extends VerticalPanel{
 				timeEditor.setValue(value.getTime());
 				referenceIdEditor.setValue(value.getReferenceId());
 				referenceEditor.setValue(value.isReference());
+
+				enableEyesEditor.setValue(value.isEnableEyes());
+				enableBrowsEditor.setValue(value.isEnableBrows());
+				enableMouthEditor.setValue(value.isEnableMouth());
 
 			}
 	}
@@ -735,5 +764,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		//force update
 		editor.getValue().setReferenceId(id);
 		editor.getReferenceIdEditor().setValue(id);
+		
+		
 	}
 }

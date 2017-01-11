@@ -83,7 +83,7 @@ public class Mbl3dDataFunctions {
 					continue;
 				}
 				
-				LogUtils.log("Mbl3dExpressionFunctionWithModifier:key="+name);
+				//LogUtils.log("Mbl3dExpressionFunctionWithModifier:key="+name);
 				
 				expression.set(name, modifier.getModifiedValue(name, v));
 			}

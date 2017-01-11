@@ -25,6 +25,28 @@ public void setReferenceId(int referenceId) {
 private double time;
 //TODO have direct value
 
+private boolean enableMouth=true;
+public boolean isEnableMouth() {
+	return enableMouth;
+}
+public void setEnableMouth(boolean enableMouth) {
+	this.enableMouth = enableMouth;
+}
+public boolean isEnableEyes() {
+	return enableEyes;
+}
+public void setEnableEyes(boolean enableEyes) {
+	this.enableEyes = enableEyes;
+}
+public boolean isEnableBrows() {
+	return enableBrows;
+}
+public void setEnableBrows(boolean enableBrows) {
+	this.enableBrows = enableBrows;
+}
+private boolean enableEyes=true;
+private boolean enableBrows=true;
+
 /*
  * millisecond
  */
