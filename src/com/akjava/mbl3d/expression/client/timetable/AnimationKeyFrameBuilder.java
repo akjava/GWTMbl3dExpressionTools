@@ -33,7 +33,9 @@ public class AnimationKeyFrameBuilder {
 	
 	private Set<String> keys=null;
 	
-	//can set from morphtargets
+	/*
+	 * animation frame has only using key,but animation need all-key (set as 0)
+	 */
 	public  void setKeys(Iterable<TimeTableDataBlock> blocks){
 		keys=Sets.newHashSet();
 		for(TimeTableDataBlock block:blocks){
