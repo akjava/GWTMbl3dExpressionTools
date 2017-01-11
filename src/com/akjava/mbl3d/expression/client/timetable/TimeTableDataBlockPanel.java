@@ -174,7 +174,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 						}
 						 
 					 };
-			table.addColumn(startColumn);
+			table.addColumn(startColumn,"start");
 			
 			 StyledTextColumn<TimeTableDataBlock> endColumn=new StyledTextColumn<TimeTableDataBlock>(extentedCell){
 					@Override
@@ -193,7 +193,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 				 };
 				 
 
-					table.addColumn(endColumn);
+					table.addColumn(endColumn,"end");
 			
 			table.setColumnWidth(nameColumn, "120px");
 		}
