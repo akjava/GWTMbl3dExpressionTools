@@ -420,4 +420,5 @@ public class AnimationFrameMergeTest extends TestCase{
 		List<TimeTableDataBlock> blocks=Lists.newArrayList(block,block2,block3);
 		execute(blocks,"insert7.txt",0);
 	}
+	
 }
