@@ -103,7 +103,7 @@ public class AnimationKeyFrameBuilder {
 			double time=timeAt+timeTableData.getTime();
 			double waitAt=time+timeTableData.getWaitTime()-1;//avoid
 			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId(),timeTableData.isEnableBrows(),timeTableData.isEnableEyes(),timeTableData.isEnableMouth());
-			if(data==null){
+			if(data==null){//empty frame mean clear all
 				//LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
 				data=clerData;//-1 means empty
 			}
@@ -121,13 +121,17 @@ public class AnimationKeyFrameBuilder {
 				}
 			}
 			
-			//for reset
+			//I'm not sure really need reset?,some expression need TODO add Data
+			
+			if(!block.isNoClear()){
 			for(String key:remains){
 				frames.add(new Mbl3dAnimationKeyFrame(key, time, 0));
 				if(timeTableData.getWaitTime()!=0){
 					waitFrames.add(new Mbl3dAnimationKeyFrame(key, waitAt, 0));
 				}
 			}
+			}
+			
 			//copy wait frames
 			for(Mbl3dAnimationKeyFrame frame:waitFrames){
 				

@@ -688,6 +688,8 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 		private DoubleBox loopIntervalEditor;
 
 
+		private CheckBox noClearEditor;
+
 		public TimeTableDataBlock getValue() {
 			return value;
 		}
@@ -749,39 +751,47 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 									add(loopPanel);
 									Label loopLabel=new Label("Loop");
 									loopLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-									loopLabel.setWidth(labelWidth);
+									//loopLabel.setWidth(labelWidth);
 									loopPanel.add(loopLabel);
 									loopEditor=new CheckBox();
-						loopEditor.setWidth("100px");
+									loopEditor.setWidth("20px");
 									loopPanel.add(loopEditor);
 
 
-									HorizontalPanel loopTimePanel=new HorizontalPanel();
+								/*	HorizontalPanel loopTimePanel=new HorizontalPanel();
 									loopTimePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-									add(loopTimePanel);
+									add(loopTimePanel);*/
 									Label loopTimeLabel=new Label("LoopTime");
 									loopTimeLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-									loopTimeLabel.setWidth(labelWidth);
-									loopTimePanel.add(loopTimeLabel);
+									//loopTimeLabel.setWidth(labelWidth);
+									loopPanel.add(loopTimeLabel);
 									loopTimeEditor=new IntegerBox();
-						loopTimeEditor.setWidth("100px");
-									loopTimePanel.add(loopTimeEditor);
+									loopTimeEditor.setWidth("50px");
+									loopPanel.add(loopTimeEditor);
 
 
-									HorizontalPanel loopIntervalPanel=new HorizontalPanel();
+									/*HorizontalPanel loopIntervalPanel=new HorizontalPanel();
 									loopIntervalPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-									add(loopIntervalPanel);
+									add(loopIntervalPanel);*/
 									Label loopIntervalLabel=new Label("LoopInterval");
 									loopIntervalLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-									loopIntervalLabel.setWidth(labelWidth);
-									loopIntervalPanel.add(loopIntervalLabel);
+									//loopIntervalLabel.setWidth(labelWidth);
+									loopPanel.add(loopIntervalLabel);
 									loopIntervalEditor=new DoubleBox();
-						loopIntervalEditor.setWidth("100px");
-									loopIntervalPanel.add(loopIntervalEditor);
+									loopIntervalEditor.setWidth("50px");
+									loopPanel.add(loopIntervalEditor);
 
 
-
-
+									HorizontalPanel noClearPanel=new HorizontalPanel();
+									noClearPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+									add(noClearPanel);
+									Label noClearLabel=new Label("No Clear");
+									noClearLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+									noClearLabel.setWidth(labelWidth);
+									noClearPanel.add(noClearLabel);
+									
+									noClearEditor=new CheckBox();
+									noClearPanel.add(noClearEditor);
 						
 						
 		}
@@ -805,6 +815,8 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 				value.setLoopTime(loopTimeEditor.getValue());
 				value.setLoopInterval(loopIntervalEditor.getValue());
 
+				value.setNoClear(noClearEditor.getValue());
+				
 				onDataUpdated(value);
 			}
 
@@ -826,7 +838,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 					loopEditor.setEnabled(false);
 					loopTimeEditor.setEnabled(false);
 					loopIntervalEditor.setEnabled(false);
-
+					noClearEditor.setEnabled(false);
 					return;
 				}else{
 					//set enable
@@ -837,7 +849,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 					loopEditor.setEnabled(true);
 					loopTimeEditor.setEnabled(true);
 					loopIntervalEditor.setEnabled(true);
-
+					noClearEditor.setEnabled(true);
 
 				}
 				
@@ -849,6 +861,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 				loopTimeEditor.setValue(value.getLoopTime());
 				loopIntervalEditor.setValue(value.getLoopInterval());
 
+				noClearEditor.setValue(value.isNoClear());
 			}
 	}
 }

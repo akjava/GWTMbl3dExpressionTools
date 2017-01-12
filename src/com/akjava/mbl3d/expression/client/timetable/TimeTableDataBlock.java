@@ -104,4 +104,16 @@ public double calcurateEndTime(){
 	
 	return totalTime;
 }
+
+/*
+ * overwrite 0 value & better mux
+ */
+private boolean noClear;
+
+public boolean isNoClear() {
+	return noClear;
+}
+public void setNoClear(boolean noClear) {
+	this.noClear = noClear;
+}
 }

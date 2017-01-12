@@ -24,6 +24,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		
 		
 		
+		
 		wrapper.setBoolean("reference", data.isReference());
 		wrapper.setInt("referenceId",data.getReferenceId());
 		
@@ -46,6 +47,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		data.setEnableBrows(wrapper.getBoolean("enableBrows", data.isEnableBrows()));
 		data.setEnableEyes(wrapper.getBoolean("enableEyes", data.isEnableEyes()));
 		data.setEnableMouth(wrapper.getBoolean("enableMouth", data.isEnableMouth()));
+		
 		
 		data.setReference(wrapper.getBoolean("reference", data.isReference()));
 		data.setReferenceId(wrapper.getInt("referenceId",data.getReferenceId()));

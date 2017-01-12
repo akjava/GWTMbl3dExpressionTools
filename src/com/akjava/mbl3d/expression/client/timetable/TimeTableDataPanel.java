@@ -640,6 +640,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		private CheckBox enableBrowsEditor;
 		private CheckBox enableMouthEditor;
 
+		
 		public TimeTableData getValue() {
 			return value;
 		}
@@ -691,20 +692,15 @@ public class TimeTableDataPanel extends VerticalPanel{
 						referenceIdLabel.setWidth(labelWidth);
 						referenceIdPanel.add(referenceIdLabel);
 						referenceIdEditor=new IntegerBox();
-			referenceIdEditor.setWidth("100px");
+						referenceIdEditor.setWidth("50px");
 						referenceIdPanel.add(referenceIdEditor);
 
 
-						HorizontalPanel referencePanel=new HorizontalPanel();
-						referencePanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-						add(referencePanel);
-						Label referenceLabel=new Label("Reference");
-						referenceLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-						referenceLabel.setWidth(labelWidth);
-						referencePanel.add(referenceLabel);
-						referenceEditor=new CheckBox();
-						referenceEditor.setWidth("100px");
-						referencePanel.add(referenceEditor);
+						
+						referenceEditor=new CheckBox("Reference");
+						
+						referenceIdPanel.add(referenceEditor);
+						
 
 
 						HorizontalPanel enablePanel=new HorizontalPanel();
@@ -761,6 +757,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					waittimeEditor.setEnabled(false);
 					referenceIdEditor.setEnabled(false);
 					referenceEditor.setEnabled(false);
+					
 					enableEyesEditor.setEnabled(false);
 					enableBrowsEditor.setEnabled(false);
 					enableMouthEditor.setEnabled(false);
@@ -773,6 +770,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					waittimeEditor.setEnabled(true);
 					referenceIdEditor.setEnabled(true);
 					referenceEditor.setEnabled(true);
+					
 					enableEyesEditor.setEnabled(true);
 					enableBrowsEditor.setEnabled(true);
 					enableMouthEditor.setEnabled(true);
@@ -785,6 +783,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				referenceIdEditor.setValue(value.getReferenceId());
 				referenceEditor.setValue(value.isReference());
 
+				
 				enableEyesEditor.setValue(value.isEnableEyes());
 				enableBrowsEditor.setValue(value.isEnableBrows());
 				enableMouthEditor.setValue(value.isEnableMouth());

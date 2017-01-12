@@ -37,6 +37,8 @@ public class TimeTableDataBlockConverter extends Converter<TimeTableDataBlock,JS
 			wrapper.setArray("timeTableDatas", values);
 		}
 		
+		wrapper.setBoolean("noClear", data.isNoClear());
+		
 		return object;
 	}
 
@@ -64,6 +66,9 @@ public class TimeTableDataBlockConverter extends Converter<TimeTableDataBlock,JS
 		}
 		data.setTimeTableDatas(Lists.newArrayList(new TimeTableDataConverter().reverse().convertAll(objects)));
 	}
+	
+
+	data.setNoClear(wrapper.getBoolean("noClear", data.isNoClear()));
 	
 		return data;
 	}
