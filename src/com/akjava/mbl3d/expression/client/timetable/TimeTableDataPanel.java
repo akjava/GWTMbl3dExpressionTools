@@ -24,7 +24,6 @@ import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
-import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions.Mbl3dExpressionFunctionWithModifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style.Unit;
@@ -42,6 +41,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DoubleBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
@@ -174,7 +174,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 						return "";
 					}
 					
-					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,object.isEnableBrows(),object.isEnableEyes(),object.isEnableMouth());
+					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,object.isEnableBrows(),object.isEnableEyes(),object.isEnableMouth(),object.getRatio());
 					if(data==null){
 						return "#"+id+" NOT FOUND";
 					}else{
@@ -454,7 +454,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	public Mbl3dExpression timeTableDataToMbl3dExpression(TimeTableData data){
 		if(data.isReference()){
 			int id=data.getReferenceId();
-			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
+			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth(),data.getRatio());
 			if(mbl3dData==null){
 				return null;
 			}
@@ -630,6 +630,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		private MinuteTimeEditor timeEditor;
 		private MinuteTimeEditor waittimeEditor;
 		private IntegerBox referenceIdEditor;
+		private DoubleBox ratioEditor;
 		public IntegerBox getReferenceIdEditor() {
 			return referenceIdEditor;
 		}
@@ -701,6 +702,16 @@ public class TimeTableDataPanel extends VerticalPanel{
 						
 						referenceIdPanel.add(referenceEditor);
 						
+						HorizontalPanel ratioPanel=new HorizontalPanel();
+						ratioPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+						add(ratioPanel);
+						Label ratioLabel=new Label("Ratio");
+						ratioLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
+						ratioLabel.setWidth(labelWidth);
+						ratioPanel.add(ratioLabel);
+						ratioEditor=new DoubleBox();
+						ratioEditor.setWidth("50px");
+						ratioPanel.add(ratioEditor);
 
 
 						HorizontalPanel enablePanel=new HorizontalPanel();
@@ -736,6 +747,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				value.setEnableBrows(enableBrowsEditor.getValue());
 				value.setEnableMouth(enableMouthEditor.getValue());
 
+				value.setRatio(ratioEditor.getValue());
 				
 				onDataUpdated(value);
 			}
@@ -762,6 +774,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					enableBrowsEditor.setEnabled(false);
 					enableMouthEditor.setEnabled(false);
 
+					ratioEditor.setEnabled(false);
 					return;
 				}else{
 					//set enable
@@ -775,6 +788,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 					enableBrowsEditor.setEnabled(true);
 					enableMouthEditor.setEnabled(true);
 
+					ratioEditor.setEnabled(true);
 				}
 				
 				labelEditor.setValue(value.getLabel());
@@ -787,6 +801,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 				enableEyesEditor.setValue(value.isEnableEyes());
 				enableBrowsEditor.setValue(value.isEnableBrows());
 				enableMouthEditor.setValue(value.isEnableMouth());
+				ratioEditor.setValue(value.getRatio());
 
 			}
 	}

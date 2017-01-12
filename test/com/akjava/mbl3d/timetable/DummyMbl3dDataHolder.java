@@ -9,7 +9,7 @@ import com.google.common.collect.Maps;
 public class DummyMbl3dDataHolder implements Mbl3dDataHolder{
 
 	@Override
-	public Mbl3dData getDataById(int id,boolean brows,boolean eyes,boolean mouth) {
+	public Mbl3dData getDataById(int id,boolean brows,boolean eyes,boolean mouth,double ratio) {
 		Mbl3dData data=new Mbl3dData();
 		Map<String, String> values=Maps.newHashMap();
 		data.setValues(values);

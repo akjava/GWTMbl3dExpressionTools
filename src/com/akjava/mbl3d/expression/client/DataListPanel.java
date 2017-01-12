@@ -616,7 +616,7 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 	
 	//TODO add ratio option
 	@Override
-	public Mbl3dData getDataById(int id,boolean enableBrows,boolean enableEyes,boolean enableMouth){
+	public Mbl3dData getDataById(int id,boolean enableBrows,boolean enableEyes,boolean enableMouth,double ratio){
 		for(Mbl3dData data:getDatas()){
 			if(data.getId()==id){
 				
@@ -638,7 +638,8 @@ public class DataListPanel extends VerticalPanel implements SimpleTextDatasOwner
 					if(!enableMouth  && Mbl3dDataPredicates.passMouthOnly().apply(key)){
 						continue;
 					}
-					newData.getValues().put(key, data.getValues().get(key));
+					double tmpV=ValuesUtils.toDouble(data.getValues().get(key), 0);
+					newData.getValues().put(key, String.valueOf(tmpV*ratio));
 				}
 				return newData;
 			}

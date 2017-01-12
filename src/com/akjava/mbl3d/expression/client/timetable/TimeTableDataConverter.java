@@ -22,7 +22,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		wrapper.setBoolean("enableEyes", data.isEnableEyes());
 		wrapper.setBoolean("enableMouth", data.isEnableMouth());
 		
-		
+		wrapper.setDouble("ratio", data.getRatio());
 		
 		
 		wrapper.setBoolean("reference", data.isReference());
@@ -48,6 +48,7 @@ public class TimeTableDataConverter extends Converter<TimeTableData,JSONObject>{
 		data.setEnableEyes(wrapper.getBoolean("enableEyes", data.isEnableEyes()));
 		data.setEnableMouth(wrapper.getBoolean("enableMouth", data.isEnableMouth()));
 		
+		data.setRatio(wrapper.getDouble("ratio", data.getRatio()));
 		
 		data.setReference(wrapper.getBoolean("reference", data.isReference()));
 		data.setReferenceId(wrapper.getInt("referenceId",data.getReferenceId()));

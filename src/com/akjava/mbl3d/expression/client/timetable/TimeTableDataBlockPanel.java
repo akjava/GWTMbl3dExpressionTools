@@ -531,7 +531,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 	public Mbl3dExpression timeTableDataToMbl3dExpression(TimeTableData data){
 		if(data.isReference()){
 			int id=data.getReferenceId();
-			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
+			Mbl3dData mbl3dData=id==-1?new Mbl3dData():Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth(),data.getRatio());
 			if(mbl3dData==null){
 				return null;
 			}

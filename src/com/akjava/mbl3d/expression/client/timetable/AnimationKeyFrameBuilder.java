@@ -40,7 +40,7 @@ public class AnimationKeyFrameBuilder {
 		keys=Sets.newHashSet();
 		for(TimeTableDataBlock block:blocks){
 			for(TimeTableData data:block.getTimeTableDatas()){
-				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId(),data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth());
+				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId(),data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth(),data.getRatio());
 				if(mbl3d!=null){
 					for(String key:mbl3d.getValues().keySet()){
 						keys.add(key);
@@ -102,7 +102,7 @@ public class AnimationKeyFrameBuilder {
 		for(TimeTableData timeTableData:block.getTimeTableDatas()){
 			double time=timeAt+timeTableData.getTime();
 			double waitAt=time+timeTableData.getWaitTime()-1;//avoid
-			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId(),timeTableData.isEnableBrows(),timeTableData.isEnableEyes(),timeTableData.isEnableMouth());
+			Mbl3dData data=mbl3dDataHolder.getDataById(timeTableData.getReferenceId(),timeTableData.isEnableBrows(),timeTableData.isEnableEyes(),timeTableData.isEnableMouth(),timeTableData.getRatio());
 			if(data==null){//empty frame mean clear all
 				//LogUtils.log("somehow invalid data:"+timeTableData.getReferenceId());
 				data=clerData;//-1 means empty
@@ -235,7 +235,7 @@ public class AnimationKeyFrameBuilder {
 	private Mbl3dData createClearData( List<TimeTableData> datas){
 		Map<String,String> values=Maps.newHashMap();
 		for(TimeTableData tdata:datas){
-			Mbl3dData data=mbl3dDataHolder.getDataById(tdata.getReferenceId(),tdata.isEnableBrows(),tdata.isEnableEyes(),tdata.isEnableMouth());
+			Mbl3dData data=mbl3dDataHolder.getDataById(tdata.getReferenceId(),tdata.isEnableBrows(),tdata.isEnableEyes(),tdata.isEnableMouth(),tdata.getRatio());
 			if(data!=null){
 				for(String key:data.getValues().keySet()){
 					values.put(key, "0");
