@@ -49,6 +49,22 @@ public class AnimationKeyFrameBuilder {
 			}
 		}
 	}
+	
+	public  Set<String> generateKeys(TimeTableDataBlock block){
+		Set<String> keys=Sets.newHashSet();
+		
+			for(TimeTableData data:block.getTimeTableDatas()){
+				Mbl3dData mbl3d=mbl3dDataHolder.getDataById(data.getReferenceId(),data.isEnableBrows(),data.isEnableEyes(),data.isEnableMouth(),data.getRatio());
+				if(mbl3d!=null){
+					for(String key:mbl3d.getValues().keySet()){
+						keys.add(key);
+					}
+				}
+			}
+		
+			return keys;
+	}
+	
 	public  AnimationKeyGroup createGroup(TimeTableDataBlock block){
 		checkNotNull(keys,"before createGroup,set keys first");
 		
@@ -108,7 +124,8 @@ public class AnimationKeyFrameBuilder {
 				data=clerData;//-1 means empty
 			}
 			List<Mbl3dAnimationKeyFrame> waitFrames=Lists.newArrayList();
-			List<String> remains=Lists.newArrayList(keys);
+			//generate this block key or total key
+			List<String> remains=block.isNoClear()?Lists.newArrayList(generateKeys(block)):Lists.newArrayList(keys);
 			for(String key:data.getValues().keySet()){
 				double value=ValuesUtils.toDouble(data.getValues().get(key), 0);
 				Mbl3dAnimationKeyFrame frame=new Mbl3dAnimationKeyFrame(key, time, value);
@@ -123,14 +140,16 @@ public class AnimationKeyFrameBuilder {
 			
 			//I'm not sure really need reset?,some expression need TODO add Data
 			
-			if(!block.isNoClear()){
+			
+			
 			for(String key:remains){
 				frames.add(new Mbl3dAnimationKeyFrame(key, time, 0));
 				if(timeTableData.getWaitTime()!=0){
 					waitFrames.add(new Mbl3dAnimationKeyFrame(key, waitAt, 0));
 				}
 			}
-			}
+			
+			
 			
 			//copy wait frames
 			for(Mbl3dAnimationKeyFrame frame:waitFrames){
@@ -153,8 +172,9 @@ public class AnimationKeyFrameBuilder {
 			}
 		}
 		//debug
+		
 		for(Mbl3dAnimationKeyFrame frame:frames){
-			LogUtils.log(frame);
+		//	LogUtils.log(frame);
 		}
 	//modify remainTime
 	/*	if(remainTime>0){

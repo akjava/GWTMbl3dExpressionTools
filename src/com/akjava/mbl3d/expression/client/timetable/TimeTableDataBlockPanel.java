@@ -519,7 +519,8 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 		
 		AnimationKeyGroup group=builder.createMergedGroup(blocks);
 		
-		//LogUtils.log(group);
+		LogUtils.log("generateAnimationClip");
+		LogUtils.log(group);
 		
 		JSParameter param=Mbl3dExpressionEntryPoint.INSTANCE.getMesh().getMorphTargetDictionary().cast();
 		AnimationClip clip=group.converToAnimationClip("test",Mbl3dExpressionEntryPoint.INSTANCE.getBasicPanel().getMorphtargetsModifier(),param);
