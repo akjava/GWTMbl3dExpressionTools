@@ -91,6 +91,10 @@ public double getLastTime(){
  * @return
  */
 public double calcurateEndTime(){
+	if(loop&&loopTime==1){
+		return 0; //endless loop
+	}
+	
 	double lastTime=getLastTime();
 	
 	double totalTime=startAt;
