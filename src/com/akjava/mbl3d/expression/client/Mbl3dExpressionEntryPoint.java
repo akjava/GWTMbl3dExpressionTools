@@ -1355,6 +1355,7 @@ private void insertMaterialAlphaAnimations(Material material,double duration) {
 
 	public void stopAnimation() {
 		getMixer().stopAllAction();	
+		mesh.gwtClearMorphTargetInfluences();
 	}
 	
 	/*
