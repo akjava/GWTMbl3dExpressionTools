@@ -204,6 +204,7 @@ public class AnimationKeyFrameBuilder {
 		}*/
 		
 		AnimationKeyGroup group=new AnimationKeyGroup(frames);
+		group.setNoClear(block.isNoClear());
 		return group;
 	}
 	

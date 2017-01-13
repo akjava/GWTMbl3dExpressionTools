@@ -90,7 +90,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 
 	
 	//create easy cell tables
-	SimpleCellTable<TimeTableDataBlock> table=new SimpleCellTable<TimeTableDataBlock>() {
+	SimpleCellTable<TimeTableDataBlock> table=new SimpleCellTable<TimeTableDataBlock>(6) {
 		@Override
 		public void addColumns(CellTable<TimeTableDataBlock> table) {
 			
@@ -391,8 +391,14 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 	 downloadPanels.add(download);
 	 
 	 
+	 VerticalPanel v=new VerticalPanel();
+	 v.setHeight("200px");
+	 v.setVerticalAlignment(ALIGN_TOP);
+	 this.add(v);
 	 
-	 this.add(table);
+	 v.add(table);
+	 
+	 
 	 
 	 
 	 this.add(uploadPanel);

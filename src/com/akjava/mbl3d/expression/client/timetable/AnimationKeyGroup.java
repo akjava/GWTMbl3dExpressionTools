@@ -24,6 +24,14 @@ import com.google.gwt.core.client.JsArray;
  */
 public class AnimationKeyGroup {
 private List<Mbl3dAnimationKeyFrame> frames;
+private boolean noClear;
+public boolean isNoClear() {
+	return noClear;
+}
+
+public void setNoClear(boolean noClear) {
+	this.noClear = noClear;
+}
 
 public AnimationKeyGroup(List<Mbl3dAnimationKeyFrame> frames) {
 	super();
@@ -80,6 +88,11 @@ public List<String> getKeys(){
 }
 //cutting from after datas
 public void cut(AnimationKeyGroup group){
+	
+	if(group.isNoClear()){
+		return;
+	}
+	
 	double start=group.getStartTime();
 	double end=group.getEndTime();
 	

@@ -107,6 +107,8 @@ public double calcurateEndTime(){
 
 /*
  * overwrite 0 value & better mux
+ * 
+ * group not cut
  */
 private boolean noClear;
 

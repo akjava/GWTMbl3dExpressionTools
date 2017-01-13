@@ -350,7 +350,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 	  * some how directly set table,not good at VerticalAlignment
 	  */
 	 VerticalPanel v=new VerticalPanel();
-	 v.setHeight("180px");
+	 v.setHeight("200px");
 	 v.setVerticalAlignment(ALIGN_TOP);
 	 this.add(v);
 	 
