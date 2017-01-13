@@ -19,6 +19,7 @@ import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
+import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFile;
 import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFileConverter;
@@ -26,6 +27,7 @@ import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
 import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrameConverter;
 import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
+import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
@@ -170,7 +172,10 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 						public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableDataBlock object) {
 							String style="";
 							
-							return new StyleAndLabel(style,String.valueOf(object.getStartAt()));
+							TimeValue timeValue=new TimeValue((long)object.getStartAt());
+							
+							return new StyleAndLabel(style,timeValue.toMinuteString());
+							
 						}
 						 
 					 };
@@ -181,13 +186,14 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableDataBlock object) {
 						String style="";
 						
-						String text="";
 						double value=object.calcurateEndTime();
-						if(value!=0){
-							text=String.valueOf(value);
+						if(value==0){
+							return new StyleAndLabel(style,"");
 						}
 						
-						return new StyleAndLabel(style,text);
+						TimeValue timeValue=new TimeValue((long)value);
+						
+						return new StyleAndLabel(style,timeValue.toMinuteString());
 					}
 					 
 				 };
@@ -681,9 +687,9 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 		private TimeTableDataBlock value;
 		private TextBox nameEditor;
 	
-		private DoubleBox startAtEditor;
-		private DoubleBox beforeMarginEditor;
-		private DoubleBox afterMarginEditor;
+		private MinuteTimeEditor startAtEditor;
+		private MinuteTimeEditor beforeMarginEditor;
+		private MinuteTimeEditor afterMarginEditor;
 		private CheckBox loopEditor;
 		private IntegerBox loopTimeEditor;
 		private DoubleBox loopIntervalEditor;
@@ -718,7 +724,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 									startAtLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 									startAtLabel.setWidth(labelWidth);
 									startAtPanel.add(startAtLabel);
-									startAtEditor=new DoubleBox();
+									startAtEditor=new MinuteTimeEditor();
 						startAtEditor.setWidth("100px");
 									startAtPanel.add(startAtEditor);
 
@@ -730,7 +736,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 									beforeMarginLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 									beforeMarginLabel.setWidth(labelWidth);
 									beforeMarginPanel.add(beforeMarginLabel);
-									beforeMarginEditor=new DoubleBox();
+									beforeMarginEditor=new MinuteTimeEditor();
 						beforeMarginEditor.setWidth("100px");
 									beforeMarginPanel.add(beforeMarginEditor);
 
@@ -742,7 +748,7 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 									afterMarginLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
 									afterMarginLabel.setWidth(labelWidth);
 									afterMarginPanel.add(afterMarginLabel);
-									afterMarginEditor=new DoubleBox();
+									afterMarginEditor=new MinuteTimeEditor();
 						afterMarginEditor.setWidth("100px");
 									afterMarginPanel.add(afterMarginEditor);
 

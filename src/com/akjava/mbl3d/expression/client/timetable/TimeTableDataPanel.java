@@ -18,12 +18,15 @@ import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
 import com.akjava.gwt.three.client.gwt.JSParameter;
+import com.akjava.gwt.three.client.gwt.ui.LabeledInputRangeWidget2;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
+import com.google.common.base.Ascii;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gwt.dom.client.Style.Unit;
@@ -78,15 +81,39 @@ public class TimeTableDataPanel extends VerticalPanel{
 				 StyledTextColumn<TimeTableData> labelColumn=new StyledTextColumn<TimeTableData>(extentedCell){
 					@Override
 					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
-						// TODO Auto-generated method stub
-						return new StyleAndLabel("",object.getLabel());
+						String label="";
+						
+						int id=object.getReferenceId();
+						if(!object.isReference()||id==-1){
+							return new StyleAndLabel("","");
+						}else{
+						
+						Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,object.isEnableBrows(),object.isEnableEyes(),object.isEnableMouth(),object.getRatio());
+						if(data==null){
+							label= "#"+id+" NOT FOUND";
+						}else{
+							List<String> labels=Lists.newArrayList();
+							labels.add(object.getLabel()!=null?object.getLabel():"");
+							labels.add(data.getName());
+							labels.add(data.getDescription());
+							labels.add(data.getType());
+							labels.add("#"+id);
+							
+							label= Ascii.truncate(Joiner.on(" ").skipNulls().join(labels), 13, "..");
+						}
+						
+						return new StyleAndLabel("",label);
 					}
-					 
+						
+					}
 				 };
+				 
+				 
+				
+					table.addColumn(labelColumn);
+					table.setColumnWidth(labelColumn, "120px");
 			
 			
-			table.addColumn(labelColumn);
-			table.setColumnWidth(labelColumn, "120px");
 			
 			final SimpleContextMenu simpleMenu=new SimpleContextMenu();
 			
@@ -139,7 +166,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 			extentedCell.setCellContextMenu(simpleMenu);
 			
 			
-			 StyledTextColumn<TimeTableData> timeColumn=new StyledTextColumn<TimeTableData>(extentedCell){
+			 StyledTextColumn<TimeTableData> startColumn=new StyledTextColumn<TimeTableData>(extentedCell){
 					@Override
 					public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
 						String style="";
@@ -153,37 +180,26 @@ public class TimeTableDataPanel extends VerticalPanel{
 					}
 					 
 				 };
+				 table.addColumn(startColumn,"Start"); 
 				 
+				 
+				 StyledTextColumn<TimeTableData> endColumn=new StyledTextColumn<TimeTableData>(extentedCell){
+						@Override
+						public com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel getStyleAndLabel(TimeTableData object) {
+							String style="";
+						
+							TimeValue timeValue=new TimeValue((long)(object.getTime()+object.getWaitTime()));
+							
+							return new StyleAndLabel(style,timeValue.toMinuteString());
+						}
+						 
+					 };
+					 table.addColumn(endColumn,"End"); 
 			
 			
-			TextColumn<TimeTableData> typeColumn=new TextColumn<TimeTableData>() {
-				@Override
-				public String getValue(TimeTableData object) {
-					//TODO convert time label
-					TimeValue timeValue=new TimeValue((long)object.getTime());
-					return ""+timeValue.toMinuteString();
-				}
-			};
-			table.addColumn(timeColumn);
 			
-			TextColumn<TimeTableData> referenceColumn=new TextColumn<TimeTableData>() {
-				@Override
-				public String getValue(TimeTableData object) {
-					int id=object.getReferenceId();
-					if(!object.isReference()||id==-1){
-						return "";
-					}
-					
-					Mbl3dData data=Mbl3dExpressionEntryPoint.INSTANCE.getDataListPanel().getDataById(id,object.isEnableBrows(),object.isEnableEyes(),object.isEnableMouth(),object.getRatio());
-					if(data==null){
-						return "#"+id+" NOT FOUND";
-					}else{
-						return data.getName();
-					}
-				}
-			};
-			table.addColumn(referenceColumn);
-			table.setColumnWidth(referenceColumn, "120px");
+			
+			
 		}
 	};
 	
@@ -630,7 +646,7 @@ public class TimeTableDataPanel extends VerticalPanel{
 		private MinuteTimeEditor timeEditor;
 		private MinuteTimeEditor waittimeEditor;
 		private IntegerBox referenceIdEditor;
-		private DoubleBox ratioEditor;
+		private LabeledInputRangeWidget2 ratioEditor;
 		public IntegerBox getReferenceIdEditor() {
 			return referenceIdEditor;
 		}
@@ -705,12 +721,11 @@ public class TimeTableDataPanel extends VerticalPanel{
 						HorizontalPanel ratioPanel=new HorizontalPanel();
 						ratioPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
 						add(ratioPanel);
-						Label ratioLabel=new Label("Ratio");
-						ratioLabel.getElement().getStyle().setFontSize(fontSize, Unit.PX);
-						ratioLabel.setWidth(labelWidth);
-						ratioPanel.add(ratioLabel);
-						ratioEditor=new DoubleBox();
-						ratioEditor.setWidth("50px");
+						
+						ratioEditor=new LabeledInputRangeWidget2("Ratio", 0.01, 1.0, 0.01);
+						ratioEditor.getLabel().setWidth(labelWidth);
+						ratioEditor.getRange().setWidth("170px");
+						
 						ratioPanel.add(ratioEditor);
 
 
