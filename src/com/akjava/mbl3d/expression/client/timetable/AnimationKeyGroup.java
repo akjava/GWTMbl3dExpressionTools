@@ -89,9 +89,7 @@ public List<String> getKeys(){
 //cutting from after datas
 public void cut(AnimationKeyGroup group){
 	
-	if(group.isNoClear()){
-		return;
-	}
+	
 	
 	double start=group.getStartTime();
 	double end=group.getEndTime();
@@ -102,6 +100,34 @@ public void cut(AnimationKeyGroup group){
 		//TODO
 		throw new RuntimeException("cut:same time,not support yet.start="+start+",end="+end);
 	}else{
+		//no clear only remove same key in time
+		if(group.isNoClear()){
+			List<String> keys=group.getKeys();
+			
+			for(Mbl3dAnimationKeyFrame frame:frames){
+				double time=frame.getTime();
+				if(time>start&&time<end){
+					//skip
+					if(!keys.contains(frame.getKeyName())){
+						//LogUtils.log("not contain:"+frame.getKeyName());
+						newFrames.add(frame);
+					}else{
+						//LogUtils.log("key removed:"+frame.getKeyName());
+					}
+				}else{
+					//LogUtils.log("out of time:"+frame.getKeyName());
+					newFrames.add(frame);
+				}
+			}
+			
+			frames=newFrames;//replace
+			Collections.sort(frames, new AnimationKeyFrameComparator());
+			return;
+		}
+		
+		
+		
+		
 		
 		for(Mbl3dAnimationKeyFrame frame:frames){
 			double time=frame.getTime();
