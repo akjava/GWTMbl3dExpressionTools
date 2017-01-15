@@ -86,9 +86,15 @@ public class AnimationKeyFrameBuilder {
 			
 			if(time>lastTime){
 				time-=lastTime;
-				int tmp=(int)(time/(lastTime+block.getLoopInterval()));
+				
+				double progressTime=lastTime+block.getLoopInterval();
+				if(progressTime<=0){
+					progressTime=1;//TODO set validate on editor
+				}
+				
+				int tmp=(int)(time/(progressTime));
 				loopTime=1+tmp;
-				remainTime=time%(lastTime+block.getLoopInterval());
+				remainTime=time%(progressTime);
 			}else{
 				remainTime=time;
 			}
