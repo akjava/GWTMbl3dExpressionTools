@@ -36,7 +36,7 @@ private boolean loop;
 /*
  * very important ,if use loop ,must greater than 0
  */
-private double loopInterval=1;
+private double loopInterval=100;
 
 public boolean isLoop() {
 	return loop;

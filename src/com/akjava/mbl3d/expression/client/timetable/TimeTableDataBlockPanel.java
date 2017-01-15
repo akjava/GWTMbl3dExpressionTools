@@ -189,6 +189,10 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 							return new StyleAndLabel(style,"");
 						}
 						
+						if(object.isLoop() && object.getLastTime()==0){
+							return new StyleAndLabel(style,"");
+						}
+						
 						TimeValue timeValue=new TimeValue((long)value);
 						
 						return new StyleAndLabel(style,timeValue.toMinuteString());
