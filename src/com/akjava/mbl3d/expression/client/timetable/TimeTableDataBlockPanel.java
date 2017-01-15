@@ -9,7 +9,6 @@ import com.akjava.gwt.html5.client.file.File;
 import com.akjava.gwt.html5.client.file.FileUploadForm;
 import com.akjava.gwt.html5.client.file.FileUtils;
 import com.akjava.gwt.html5.client.file.FileUtils.DataURLListener;
-import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.StorageControler;
 import com.akjava.gwt.lib.client.StorageException;
@@ -19,7 +18,6 @@ import com.akjava.gwt.lib.client.widget.cell.ExtentedSafeHtmlCell;
 import com.akjava.gwt.lib.client.widget.cell.SimpleCellTable;
 import com.akjava.gwt.lib.client.widget.cell.SimpleContextMenu;
 import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn;
-import com.akjava.gwt.lib.client.widget.cell.StyledTextColumn.StyleAndLabel;
 import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFile;
 import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFileConverter;
@@ -32,10 +30,10 @@ import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dData;
 import com.akjava.mbl3d.expression.client.datalist.Mbl3dDataFunctions;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.editor.client.Editor;
 import com.google.gwt.editor.client.EditorDelegate;
@@ -347,7 +345,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 		public void onClick(ClickEvent event) {
 			download.clear();
 			String text=toStoreText();
-			String fileName=getDownloadFileName();
+			String fileName=getDownloadFileName(cellObjects.getDatas());
 			int selection=downloadTypeBox.getSelectedIndex();
 			
 			if(selection==1){
@@ -597,8 +595,16 @@ AnimationKeyFrameBuilder builder=new AnimationKeyFrameBuilder(Mbl3dExpressionEnt
 	private Button removeBt;
 	private Button copyBt;
 	private TimeTableDataPanel timeTableDataPanel;
-	protected String getDownloadFileName() {
-		return baseFileName+".json";
+	protected String getDownloadFileName(List<TimeTableDataBlock> blocks) {
+		List<String> names=Lists.newArrayList();
+		if(blocks!=null){
+			for(TimeTableDataBlock block:blocks){
+				if(!Strings.isNullOrEmpty(block.getName())){
+				names.add(block.getName());
+				}
+			}
+		}
+		return baseFileName+"-"+Joiner.on("-").join(names)+".json";
 	}
 
 	public TimeTableDataBlock copy(TimeTableDataBlock data){
