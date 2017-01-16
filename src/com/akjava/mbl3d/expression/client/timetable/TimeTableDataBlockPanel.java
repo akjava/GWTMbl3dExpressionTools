@@ -1,5 +1,6 @@
 package com.akjava.mbl3d.expression.client.timetable;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -24,7 +25,11 @@ import com.akjava.gwt.three.client.java.file.JSONMorphTargetsFileConverter;
 import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrame;
 import com.akjava.gwt.three.client.java.file.MorphTargetKeyFrameConverter;
 import com.akjava.gwt.three.client.java.file.MorphtargetsModifier;
+import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.animation.AnimationClip;
+import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
+import com.akjava.lib.common.utils.CSVUtils;
+import com.akjava.lib.common.utils.FileNames;
 import com.akjava.lib.common.utils.TimeUtils.TimeValue;
 import com.akjava.mbl3d.expression.client.Mbl3dExpression;
 import com.akjava.mbl3d.expression.client.Mbl3dExpressionEntryPoint;
@@ -40,10 +45,13 @@ import com.google.gwt.editor.client.EditorDelegate;
 import com.google.gwt.editor.client.ValueAwareEditor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
@@ -56,6 +64,7 @@ import com.google.gwt.user.client.ui.IntegerBox;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class TimeTableDataBlockPanel extends VerticalPanel{
@@ -308,22 +317,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 		
 		@Override
 		public void uploaded(File file, String text) {
-			if(uploadModeBox.getSelectedIndex()==0){//replace
-				clearAllData();
-			}
-			
-			Iterable<TimeTableDataBlock> newDatas=jsonTextToTimeTableDatas(text);
-			
-			if(newDatas==null){
-				Window.alert("invalid file format.see log");
-				return;
-			}
-			
-			 for(TimeTableDataBlock newData:newDatas){
-				 addData(newData,false);
-				 cellObjects.setSelected(newData, true);//maybe last selected
-			 }
-			 storeData();
+			uploadText(text,uploadModeBox.getSelectedIndex()==0);
 			
 		}
 	}, true, "UTF-8");
@@ -521,7 +515,92 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 	 uploadPanel2.add(upload2);
 	 this.add(uploadPanel2);
 	
+	 createPresetPanel();
 }
+	protected void uploadText(String text,boolean replace) {
+		if(replace){//replace
+			clearAllData();
+		}
+		
+		Iterable<TimeTableDataBlock> newDatas=jsonTextToTimeTableDatas(text);
+		
+		if(newDatas==null){
+			Window.alert("invalid file format.see log");
+			return;
+		}
+		
+		 for(TimeTableDataBlock newData:newDatas){
+			 addData(newData,false);
+			 cellObjects.setSelected(newData, true);//maybe last selected
+		 }
+		 storeData();
+	}
+	private void createPresetPanel() {
+		HorizontalPanel panel=new HorizontalPanel();
+		add(panel);
+		
+		panel.setVerticalAlignment(ALIGN_MIDDLE);
+		panel.add(new Label("Preset:"));
+		final  CheckBox confirmCheckBox=new CheckBox("Confirm");
+		confirmCheckBox.setValue(true);
+		panel.add(confirmCheckBox);
+		final ValueListBox<String> fileListBox=new ValueListBox<String>(new Renderer<String>() {
+			@Override
+			public String render(String object) {
+				if(object.isEmpty()){
+					return "";
+				}
+				String removeExtension=FileNames.getRemovedExtensionName(object);
+				String nameOnly=FileNames.getFileNameAsSlashFileSeparator(removeExtension);
+				
+				String prefix="TimeTableDataBlock-";
+				if(nameOnly.startsWith(prefix)){
+					nameOnly=nameOnly.substring(prefix.length());
+				}
+				return nameOnly;
+			}
+
+			@Override
+			public void render(String object, Appendable appendable) throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		panel.add(fileListBox);
+		THREE.XHRLoader().load("examples/index.txt", new XHRLoadHandler() {
+			@Override
+			public void onLoad(String text) {
+				List<String> keys=CSVUtils.splitLinesWithGuava(text);
+				List<String> arrayList=Lists.newArrayList(keys);
+				arrayList.add(0, "");
+				fileListBox.setValue("");
+				fileListBox.setAcceptableValues(arrayList);
+			}
+		});
+		fileListBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String value=event.getValue();
+				if(value.isEmpty()){
+					return;
+				}
+				
+				THREE.XHRLoader().load("examples/"+value, new XHRLoadHandler() {
+					@Override
+					public void onLoad(String text) {
+						if(confirmCheckBox.getValue()){
+							boolean conf=Window.confirm("load preset data.replace current data.do you finished to save?");
+							if(!conf){
+								return;
+							}
+						}
+						uploadText(text, true);
+					}
+				});
+			}
+		});
+	}
 	private AnimationClip uploadClip;
 	protected void doPlay() {
 		List<TimeTableDataBlock> blocks=cellObjects.getDatas();
