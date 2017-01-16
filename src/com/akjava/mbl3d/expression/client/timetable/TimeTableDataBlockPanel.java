@@ -534,6 +534,7 @@ public class TimeTableDataBlockPanel extends VerticalPanel{
 			 cellObjects.setSelected(newData, true);//maybe last selected
 		 }
 		 storeData();
+		 Mbl3dExpressionEntryPoint.INSTANCE.stopAnimation();
 	}
 	private void createPresetPanel() {
 		HorizontalPanel panel=new HorizontalPanel();
